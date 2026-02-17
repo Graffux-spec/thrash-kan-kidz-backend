@@ -5,10 +5,13 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../src/context/AppContext';
+
+const BACKGROUND_IMAGE = 'https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgy2com2_enhanced-1771247671181.jpg';
 
 export default function GoalsScreen() {
   const { user, userGoals, allCards } = useApp();
@@ -16,8 +19,10 @@ export default function GoalsScreen() {
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
+        <Image source={{ uri: BACKGROUND_IMAGE }} style={styles.backgroundImage} resizeMode="cover" />
+        <View style={styles.backgroundOverlay} />
         <View style={styles.centerContainer}>
-          <Ionicons name="lock-closed" size={64} color="#666" />
+          <Text style={styles.lockIcon}>🔒</Text>
           <Text style={styles.lockedText}>Please login to view your goals</Text>
         </View>
       </SafeAreaView>
@@ -27,15 +32,15 @@ export default function GoalsScreen() {
   const getGoalIcon = (goalType: string) => {
     switch (goalType) {
       case 'daily_login':
-        return 'calendar';
+        return '📅';
       case 'profile_complete':
-        return 'person';
+        return '👤';
       case 'collect_coins':
-        return 'wallet';
+        return '💰';
       case 'collect_cards':
-        return 'albums';
+        return '🃏';
       default:
-        return 'star';
+        return '⭐';
     }
   };
 
@@ -50,6 +55,8 @@ export default function GoalsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Image source={{ uri: BACKGROUND_IMAGE }} style={styles.backgroundImage} resizeMode="cover" />
+      <View style={styles.backgroundOverlay} />
       <View style={styles.header}>
         <Text style={styles.title}>Goals</Text>
         <Text style={styles.subtitle}>
