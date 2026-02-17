@@ -153,7 +153,7 @@ export default function ShopScreen() {
                     </View>
                   </View>
                   <View style={styles.cardInfo}>
-                    <Text style={styles.cardNameHidden}>???</Text>
+                    <Text style={styles.cardName}>{card.name}</Text>
                   </View>
                   <TouchableOpacity
                     style={[styles.buyButton, styles.buyButtonUnavailable]}
