@@ -144,25 +144,25 @@ INITIAL_CARDS = [
         "id": "card_scotch_ian",
         "name": "Scotch Ian",
         "description": "The kilted warrior with a taste for fine spirits! His battle cry echoes through the highlands as he charges into the mosh pit.",
-        "rarity": "rare",
+        "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["scotch_ian"],
-        "coin_cost": 150
+        "coin_cost": 50
     },
     {
         "id": "card_chuck_roast",
         "name": "Chuck Roast",
         "description": "The devil's own pitmaster! With his pitchfork and hellfire grill, he serves up the hottest BBQ this side of the underworld.",
-        "rarity": "rare",
+        "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["chuck_roast"],
-        "coin_cost": 150
+        "coin_cost": 50
     },
     {
         "id": "card_scott_eaten",
         "name": "Scott Eaten",
         "description": "The unluckiest metalhead in the zombie apocalypse! Even undead creatures can't resist his legendary rhythm section.",
-        "rarity": "epic",
+        "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["scott_eaten"],
-        "coin_cost": 300
+        "coin_cost": 50
     }
 ]
 
