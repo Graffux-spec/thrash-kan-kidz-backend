@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
   Dimensions,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,9 +19,50 @@ import { BlurView } from 'expo-blur';
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2;
 
+interface RareCardStatus {
+  card: any;
+  owned: boolean;
+  required_cards: number;
+  progress: number;
+  can_unlock: boolean;
+}
+
 export default function ShopScreen() {
-  const { user, allCards, userCards, purchaseCard } = useApp();
+  const { user, allCards, userCards, purchaseCard, apiUrl } = useApp();
   const [purchasing, setPurchasing] = useState<string | null>(null);
+  const [rareCardsStatus, setRareCardsStatus] = useState<RareCardStatus[]>([]);
+  const [totalCards, setTotalCards] = useState(0);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [unlockedCard, setUnlockedCard] = useState<any>(null);
+  const [loadingRare, setLoadingRare] = useState(false);
+
+  // Fetch rare card status when user changes or after purchase
+  const fetchRareCardStatus = async () => {
+    if (!user) return;
+    
+    try {
+      setLoadingRare(true);
+      const response = await fetch(`${apiUrl}/api/users/${user.id}/check-rare-cards`);
+      const data = await response.json();
+      
+      setRareCardsStatus(data.rare_cards || []);
+      setTotalCards(data.total_cards || 0);
+      
+      // Check if any card was newly unlocked
+      if (data.newly_unlocked) {
+        setUnlockedCard(data.newly_unlocked);
+        setShowCelebration(true);
+      }
+    } catch (error) {
+      console.error('Error fetching rare card status:', error);
+    } finally {
+      setLoadingRare(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRareCardStatus();
+  }, [user, userCards]);
 
   if (!user) {
     return (
@@ -54,8 +96,18 @@ export default function ShopScreen() {
           onPress: async () => {
             setPurchasing(cardId);
             try {
-              await purchaseCard(cardId);
-              Alert.alert('Success!', `You got ${cardName}!`);
+              const result = await purchaseCard(cardId);
+              
+              // Check if a rare card was unlocked with this purchase
+              if (result?.newly_unlocked_rare_card) {
+                setUnlockedCard(result.newly_unlocked_rare_card);
+                setShowCelebration(true);
+              } else {
+                Alert.alert('Success!', `You got ${cardName}!`);
+              }
+              
+              // Refresh rare card status
+              await fetchRareCardStatus();
             } catch (error: any) {
               Alert.alert('Error', error.response?.data?.detail || 'Failed to purchase card');
             } finally {
@@ -72,12 +124,49 @@ export default function ShopScreen() {
     return uc?.quantity || 0;
   };
 
-  // Separate available and unavailable cards
-  const availableCards = allCards.filter(card => card.available !== false);
-  const unavailableCards = allCards.filter(card => card.available === false);
+  // Separate available, unavailable, and rare cards
+  const availableCards = allCards.filter(card => card.available !== false && card.rarity !== 'rare');
+  const unavailableCards = allCards.filter(card => card.available === false && card.rarity !== 'rare');
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Celebration Modal for Rare Card Unlock */}
+      <Modal
+        visible={showCelebration}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowCelebration(false)}
+      >
+        <View style={styles.celebrationOverlay}>
+          <View style={styles.celebrationModal}>
+            <Text style={styles.celebrationEmoji}>🎉✨🏆✨🎉</Text>
+            <Text style={styles.celebrationTitle}>RARE CARD UNLOCKED!</Text>
+            {unlockedCard && (
+              <>
+                <Image
+                  source={{ uri: unlockedCard.front_image_url }}
+                  style={styles.celebrationCardImage}
+                  resizeMode="contain"
+                />
+                <Text style={styles.celebrationCardName}>{unlockedCard.name}</Text>
+                <Text style={styles.celebrationDescription}>
+                  You've earned this legendary card by collecting cards!
+                </Text>
+              </>
+            )}
+            <TouchableOpacity
+              style={styles.celebrationButton}
+              onPress={() => {
+                setShowCelebration(false);
+                setUnlockedCard(null);
+              }}
+            >
+              <Text style={styles.celebrationButtonText}>AWESOME!</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Card Shop</Text>
@@ -90,6 +179,67 @@ export default function ShopScreen() {
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Rare Cards Section */}
+        <View style={styles.rareSectionHeader}>
+          <Text style={styles.rareSectionTitle}>⭐ Rare Achievement Cards ⭐</Text>
+          <Text style={styles.rareSectionSubtitle}>Collect cards to unlock these special rewards!</Text>
+          <Text style={styles.progressText}>Your Collection: {totalCards} cards</Text>
+        </View>
+        
+        <View style={styles.rareCardsGrid}>
+          {rareCardsStatus.map((rareStatus) => (
+            <View 
+              key={rareStatus.card.id} 
+              style={[
+                styles.rareCard,
+                rareStatus.owned && styles.rareCardOwned
+              ]}
+            >
+              {rareStatus.owned ? (
+                // Show the card if owned
+                <Image
+                  source={{ uri: rareStatus.card.front_image_url }}
+                  style={styles.rareCardImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                // Show blurred/locked version if not owned
+                <View style={styles.rareBlurContainer}>
+                  <Image
+                    source={{ uri: rareStatus.card.front_image_url }}
+                    style={[styles.rareCardImage, styles.blurredImage]}
+                    resizeMode="cover"
+                    blurRadius={20}
+                  />
+                  <View style={styles.rareLockedOverlay}>
+                    <Text style={styles.rareLockedIcon}>🔒</Text>
+                    <Text style={styles.rareRequirement}>
+                      Collect {rareStatus.required_cards} cards
+                    </Text>
+                    <View style={styles.progressBarContainer}>
+                      <View 
+                        style={[
+                          styles.progressBar,
+                          { width: `${(rareStatus.progress / rareStatus.required_cards) * 100}%` }
+                        ]} 
+                      />
+                    </View>
+                    <Text style={styles.progressNumbers}>
+                      {rareStatus.progress}/{rareStatus.required_cards}
+                    </Text>
+                  </View>
+                </View>
+              )}
+              <View style={styles.rareCardInfo}>
+                <Text style={styles.rareCardName}>{rareStatus.card.name}</Text>
+                {rareStatus.owned && (
+                  <Text style={styles.rareOwnedBadge}>✅ UNLOCKED</Text>
+                )}
+              </View>
+            </View>
+          ))}
+        </View>
+
         {/* Available Cards */}
         <Text style={styles.sectionTitle}>Thrash Kan Kidz Cards</Text>
         <View style={styles.cardsGrid}>
