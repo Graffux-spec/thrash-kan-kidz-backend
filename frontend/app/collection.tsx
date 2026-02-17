@@ -423,12 +423,35 @@ const styles = StyleSheet.create({
   cardImageLocked: {
     opacity: 0.3,
   },
+  cardImageComingSoon: {
+    opacity: 0.5,
+  },
   lockedOverlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 12,
+  },
+  lockedIcon: {
+    fontSize: 32,
+  },
+  comingSoonOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: 12,
+  },
+  comingSoonIcon: {
+    fontSize: 32,
+    marginBottom: 8,
+  },
+  comingSoonText: {
+    color: '#FFD700',
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   quantityBadge: {
     position: 'absolute',
