@@ -211,6 +211,26 @@ INITIAL_CARDS = [
         "back_image_url": CARD_BACK_IMAGE_URLS["billy_chuck"],
         "coin_cost": 50,
         "available": True
+    },
+    {
+        "id": "card_cliff_diver",
+        "name": "Cliff Diver",
+        "description": "Cliff Diver dives headfirst off amps and lands on unlucky fans, puking out beer, pizza, and whiskey often as he goes. His stage dives are as epic as his hangovers.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["cliff_diver"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver"],
+        "coin_cost": 50,
+        "available": False
+    },
+    {
+        "id": "card_blood_bonder",
+        "name": "Blood Bonder",
+        "description": "With all the blood he spews, you'll swear Blood Bonder has thrash flowing through his veins. He showers the crowd with plasma and laughs as he bathes in the gore.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["blood_bonder"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder"],
+        "coin_cost": 50,
+        "available": False
     }
 ]
 
