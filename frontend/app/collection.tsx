@@ -218,6 +218,8 @@ export default function CollectionScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
+        <Image source={{ uri: BACKGROUND_IMAGE }} style={styles.backgroundImage} resizeMode="cover" />
+        <View style={styles.backgroundOverlay} />
         <View style={styles.header}>
           <Text style={styles.title}>My Collection</Text>
           <Text style={styles.subtitle}>
