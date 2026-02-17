@@ -808,6 +808,10 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#FFD700',
   },
+  celebrationModalEpic: {
+    borderColor: '#FF4500',
+    backgroundColor: '#2a1010',
+  },
   celebrationEmoji: {
     fontSize: 32,
     marginBottom: 16,
@@ -818,6 +822,9 @@ const styles = StyleSheet.create({
     color: '#FFD700',
     textAlign: 'center',
     marginBottom: 20,
+  },
+  celebrationTitleEpic: {
+    color: '#FF4500',
   },
   celebrationCardImage: {
     width: 200,
