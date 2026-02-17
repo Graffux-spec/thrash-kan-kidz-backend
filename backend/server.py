@@ -181,6 +181,24 @@ INITIAL_CARDS = [
         "front_image_url": CARD_IMAGE_URLS["scott_eaten"],
         "back_image_url": CARD_BACK_IMAGE_URLS["scott_eaten"],
         "coin_cost": 50
+    },
+    {
+        "id": "card_tom_da_playa",
+        "name": "Tom da Playa",
+        "description": "The flashiest bassist in the game! With his leopard coat, gold chains, and skull-topped pimp cane, he brings the bling to every gig.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tom_da_playa"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tom_da_playa"],
+        "coin_cost": 50
+    },
+    {
+        "id": "card_billy_chuck",
+        "name": "Billy Chuck",
+        "description": "The moonshine-chugging hillbilly rocker! Armed with his shotgun and XXX jug, he brings country chaos to the metal scene.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["billy_chuck"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["billy_chuck"],
+        "coin_cost": 50
     }
 ]
 
