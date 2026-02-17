@@ -81,10 +81,11 @@ interface AppContextType {
   trades: Trade[];
   allUsers: User[];
   loading: boolean;
+  apiUrl: string;
   login: (username: string) => Promise<void>;
   logout: () => Promise<void>;
   claimDailyLogin: () => Promise<{ streak: number; bonus_coins: number; message: string }>;
-  purchaseCard: (cardId: string) => Promise<void>;
+  purchaseCard: (cardId: string) => Promise<any>;
   updateProfile: (bio: string) => Promise<void>;
   createTrade: (toUserId: string, offeredCardIds: string[], requestedCardIds: string[]) => Promise<void>;
   acceptTrade: (tradeId: string) => Promise<void>;
