@@ -37,6 +37,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": "https://thrash-kan-kidz-card-col-1-pjuqh6f1.stage-preview.emergentagent.com"
+      }
     }
   }
 }
