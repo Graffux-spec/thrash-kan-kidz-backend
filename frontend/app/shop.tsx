@@ -176,12 +176,18 @@ export default function ShopScreen() {
         onRequestClose={() => setShowCelebration(false)}
       >
         <View style={styles.celebrationOverlay}>
-          <View style={styles.celebrationModal}>
+          <View style={[
+            styles.celebrationModal,
+            celebrationType === 'epic' && styles.celebrationModalEpic
+          ]}>
             <Text style={styles.celebrationEmoji}>
-              {celebrationType === 'rare' ? '🎉✨🏆✨🎉' : '🎁✨🃏✨🎁'}
+              {celebrationType === 'epic' ? '🔥👑💎👑🔥' : celebrationType === 'rare' ? '🎉✨🏆✨🎉' : '🎁✨🃏✨🎁'}
             </Text>
-            <Text style={styles.celebrationTitle}>
-              {celebrationType === 'rare' ? 'RARE CARD UNLOCKED!' : 'MILESTONE BONUS!'}
+            <Text style={[
+              styles.celebrationTitle,
+              celebrationType === 'epic' && styles.celebrationTitleEpic
+            ]}>
+              {celebrationType === 'epic' ? 'EPIC CARD UNLOCKED!' : celebrationType === 'rare' ? 'RARE CARD UNLOCKED!' : 'MILESTONE BONUS!'}
             </Text>
             {unlockedCard && (
               <>
@@ -192,14 +198,19 @@ export default function ShopScreen() {
                 />
                 <Text style={styles.celebrationCardName}>{unlockedCard.name}</Text>
                 <Text style={styles.celebrationDescription}>
-                  {celebrationType === 'rare' 
+                  {celebrationType === 'epic' 
+                    ? "Legendary reward for your dedication! Keep that streak going!"
+                    : celebrationType === 'rare' 
                     ? "You've earned this legendary card by collecting cards!"
                     : "Free card for reaching a 5-card milestone!"}
                 </Text>
               </>
             )}
             <TouchableOpacity
-              style={styles.celebrationButton}
+              style={[
+                styles.celebrationButton,
+                celebrationType === 'epic' && styles.celebrationButtonEpic
+              ]}
               onPress={() => {
                 setShowCelebration(false);
                 setUnlockedCard(null);
