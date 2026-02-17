@@ -315,6 +315,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         trades,
         allUsers,
         loading,
+        apiUrl: API_URL,
         login,
         logout,
         claimDailyLogin,
