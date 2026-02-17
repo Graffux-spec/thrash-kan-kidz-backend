@@ -27,47 +27,67 @@ interface RareCardStatus {
   can_unlock: boolean;
 }
 
+interface EpicCardStatus {
+  card: any;
+  owned: boolean;
+  required_streak: number;
+  progress: number;
+  can_unlock: boolean;
+}
+
 export default function ShopScreen() {
   const { user, allCards, userCards, purchaseCard, apiUrl } = useApp();
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [rareCardsStatus, setRareCardsStatus] = useState<RareCardStatus[]>([]);
+  const [epicCardsStatus, setEpicCardsStatus] = useState<EpicCardStatus[]>([]);
   const [totalCards, setTotalCards] = useState(0);
+  const [currentStreak, setCurrentStreak] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
   const [unlockedCard, setUnlockedCard] = useState<any>(null);
-  const [celebrationType, setCelebrationType] = useState<'rare' | 'milestone'>('rare');
+  const [celebrationType, setCelebrationType] = useState<'rare' | 'milestone' | 'epic'>('rare');
   const [milestoneInfo, setMilestoneInfo] = useState<any>(null);
   const [loadingRare, setLoadingRare] = useState(false);
 
   const BACKGROUND_IMAGE = 'https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgy2com2_enhanced-1771247671181.jpg';
 
-  // Fetch rare card status when user changes or after purchase
-  const fetchRareCardStatus = async () => {
+  // Fetch rare and epic card status
+  const fetchCardStatus = async () => {
     if (!user) return;
     
     try {
       setLoadingRare(true);
-      const response = await fetch(`${apiUrl}/api/users/${user.id}/check-rare-cards`);
-      const data = await response.json();
       
-      setRareCardsStatus(data.rare_cards || []);
-      setTotalCards(data.total_cards || 0);
-      setMilestoneInfo(data.milestone_info || null);
+      // Fetch rare cards status
+      const rareResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-rare-cards`);
+      const rareData = await rareResponse.json();
       
-      // Check if any card was newly unlocked
-      if (data.newly_unlocked) {
-        setUnlockedCard(data.newly_unlocked);
+      setRareCardsStatus(rareData.rare_cards || []);
+      setTotalCards(rareData.total_cards || 0);
+      setMilestoneInfo(rareData.milestone_info || null);
+      
+      // Check if any rare card was newly unlocked
+      if (rareData.newly_unlocked) {
+        setUnlockedCard(rareData.newly_unlocked);
         setCelebrationType('rare');
         setShowCelebration(true);
       }
+      
+      // Fetch epic cards status
+      const epicResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-epic-cards`);
+      const epicData = await epicResponse.json();
+      
+      setEpicCardsStatus(epicData.epic_cards || []);
+      setCurrentStreak(epicData.current_streak || 0);
+      
     } catch (error) {
-      console.error('Error fetching rare card status:', error);
+      console.error('Error fetching card status:', error);
     } finally {
       setLoadingRare(false);
     }
   };
 
   useEffect(() => {
-    fetchRareCardStatus();
+    fetchCardStatus();
   }, [user, userCards]);
 
   if (!user) {
