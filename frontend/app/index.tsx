@@ -331,6 +331,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#333',
   },
+  statEmoji: {
+    fontSize: 28,
+  },
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
