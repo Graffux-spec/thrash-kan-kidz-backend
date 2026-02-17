@@ -324,12 +324,16 @@ const styles = StyleSheet.create({
   },
   rewardsContainer: {
     flexDirection: 'row',
-    gap: 16,
+    marginTop: 8,
   },
   rewardItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    marginRight: 16,
+  },
+  rewardEmoji: {
+    fontSize: 14,
+    marginRight: 4,
   },
   rewardText: {
     color: '#ccc',
