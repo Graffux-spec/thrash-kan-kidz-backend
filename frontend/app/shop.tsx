@@ -851,6 +851,9 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 30,
   },
+  celebrationButtonEpic: {
+    backgroundColor: '#FF4500',
+  },
   celebrationButtonText: {
     color: '#000',
     fontSize: 18,
