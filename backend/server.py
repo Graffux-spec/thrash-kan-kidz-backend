@@ -377,6 +377,8 @@ async def seed_database():
                 update_fields["achievement_required"] = card_data["achievement_required"]
             if card_data.get("rarity") != existing.get("rarity"):
                 update_fields["rarity"] = card_data["rarity"]
+            if card_data.get("streak_required") is not None:
+                update_fields["streak_required"] = card_data["streak_required"]
             if update_fields:
                 await db.cards.update_one({"id": card_data["id"]}, {"$set": update_fields})
                 logger.info(f"Updated card: {card_data['name']} with {update_fields}")
@@ -404,6 +406,12 @@ async def get_rare_cards():
     """Get all rare achievement cards"""
     rare_cards = await db.cards.find({"rarity": "rare"}).to_list(100)
     return [Card(**rare_card) for rare_card in rare_cards]
+
+@api_router.get("/cards/epic")
+async def get_epic_cards():
+    """Get all epic streak cards"""
+    epic_cards = await db.cards.find({"rarity": "epic"}).to_list(100)
+    return [Card(**epic_card) for epic_card in epic_cards]
 
 @api_router.get("/cards/{card_id}")
 async def get_card(card_id: str):
