@@ -22,8 +22,8 @@ import Animated, {
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - 48) / 2;
-const CARD_HEIGHT = CARD_WIDTH * 1.2; // Reduced from 1.4 for less vertical cards
+const CARD_WIDTH = (width - 56) / 3; // 3 cards per row for smaller size
+const CARD_HEIGHT = CARD_WIDTH * 1.5; // Full card aspect ratio
 
 interface Card {
   id: string;
