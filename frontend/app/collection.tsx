@@ -23,7 +23,7 @@ import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-g
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2;
-const CARD_HEIGHT = CARD_WIDTH * 1.4;
+const CARD_HEIGHT = CARD_WIDTH * 1.2; // Reduced from 1.4 for less vertical cards
 
 interface Card {
   id: string;
