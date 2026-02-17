@@ -141,7 +141,16 @@ CARD_BACK_IMAGE_URLS = {
     "tom_da_playa": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/8u33xp9j_enhanced-1771276506337.jpg",
     "billy_chuck": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/67cnskj3_enhanced-1771277248056.jpg",
     "cliff_diver": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/ff6yk5mf_enhanced-1771277691515.jpg",
-    "blood_bonder": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/cvjsunwj_enhanced-1771277815451.jpg"
+    "blood_bonder": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/cvjsunwj_enhanced-1771277815451.jpg",
+    # Rare achievement cards backs
+    "martin_van_druid": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/wzu9cgqo_file_00000000581c71fd9f6943c516c13338.png",
+    "tardy_donald": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/aiui1nef_file_000000009e4871f8b270fdb6a2aa38de.png"
+}
+
+# Rare card achievement requirements
+RARE_CARD_ACHIEVEMENTS = {
+    "card_martin_van_druid": {"required_cards": 10, "name": "Martin Van Druid"},
+    "card_tardy_donald": {"required_cards": 20, "name": "Tardy Donald"}
 }
 
 INITIAL_CARDS = [
