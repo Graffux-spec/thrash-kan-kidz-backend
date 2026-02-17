@@ -247,8 +247,12 @@ const styles = StyleSheet.create({
   },
   loginContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     paddingHorizontal: 32,
+    paddingBottom: 100,
+  },
+  loginContent: {
+    width: '100%',
   },
   logoContainer: {
     alignItems: 'center',
