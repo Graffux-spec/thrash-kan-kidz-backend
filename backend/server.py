@@ -243,6 +243,29 @@ INITIAL_CARDS = [
         "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder"],
         "coin_cost": 50,
         "available": False
+    },
+    # RARE ACHIEVEMENT CARDS - Not purchasable, earned by collecting cards
+    {
+        "id": "card_martin_van_druid",
+        "name": "Martin Van Druid",
+        "description": "The dark sorcerer of Assfux! Martin Van Druid conjures foul flatulent forces with his eerie cauldron. He casts gaseous spells and trumpets doom from his rear.",
+        "rarity": "rare",
+        "front_image_url": CARD_IMAGE_URLS["martin_van_druid"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["martin_van_druid"],
+        "coin_cost": 0,  # Cannot be purchased
+        "available": False,  # Achievement only
+        "achievement_required": 10  # Unlocked at 10 cards
+    },
+    {
+        "id": "card_tardy_donald",
+        "name": "Tardy Donald",
+        "description": "The drummer of Ohbitchuary who's never on time! Known for sweating beer, smelling like the night before, and delaying entire festivals by running to the taco truck.",
+        "rarity": "rare",
+        "front_image_url": CARD_IMAGE_URLS["tardy_donald"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tardy_donald"],
+        "coin_cost": 0,  # Cannot be purchased
+        "available": False,  # Achievement only
+        "achievement_required": 20  # Unlocked at 20 cards
     }
 ]
 
