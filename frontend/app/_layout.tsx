@@ -1,8 +1,12 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { AppProvider } from '../src/context/AppContext';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
+
+// Tab icon component using emojis for reliable rendering
+const TabIcon = ({ emoji, focused }: { emoji: string; focused: boolean }) => (
+  <Text style={[styles.tabIcon, focused && styles.tabIconFocused]}>{emoji}</Text>
+);
 
 export default function TabLayout() {
   return (
@@ -20,8 +24,8 @@ export default function TabLayout() {
           name="index"
           options={{
             title: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home-outline" size={size} color={color} />
+            tabBarIcon: ({ focused }) => (
+              <TabIcon emoji="🏠" focused={focused} />
             ),
           }}
         />
@@ -29,8 +33,8 @@ export default function TabLayout() {
           name="collection"
           options={{
             title: 'Collection',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="layers-outline" size={size} color={color} />
+            tabBarIcon: ({ focused }) => (
+              <TabIcon emoji="🃏" focused={focused} />
             ),
           }}
         />
@@ -38,8 +42,8 @@ export default function TabLayout() {
           name="shop"
           options={{
             title: 'Shop',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="cart-outline" size={size} color={color} />
+            tabBarIcon: ({ focused }) => (
+              <TabIcon emoji="🛒" focused={focused} />
             ),
           }}
         />
@@ -47,8 +51,8 @@ export default function TabLayout() {
           name="goals"
           options={{
             title: 'Goals',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="trophy-outline" size={size} color={color} />
+            tabBarIcon: ({ focused }) => (
+              <TabIcon emoji="🏆" focused={focused} />
             ),
           }}
         />
@@ -56,8 +60,8 @@ export default function TabLayout() {
           name="trade"
           options={{
             title: 'Trade',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="swap-horizontal-outline" size={size} color={color} />
+            tabBarIcon: ({ focused }) => (
+              <TabIcon emoji="🔄" focused={focused} />
             ),
           }}
         />
