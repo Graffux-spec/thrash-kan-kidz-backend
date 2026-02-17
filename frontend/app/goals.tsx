@@ -84,11 +84,7 @@ export default function GoalsScreen() {
             {inProgressGoals.map(({ user_goal, goal }) => (
               <View key={user_goal.id} style={styles.goalCard}>
                 <View style={styles.goalIcon}>
-                  <Ionicons
-                    name={getGoalIcon(goal.goal_type) as any}
-                    size={24}
-                    color="#FFD700"
-                  />
+                  <Text style={styles.goalIconEmoji}>{getGoalIcon(goal.goal_type)}</Text>
                 </View>
                 <View style={styles.goalContent}>
                   <Text style={styles.goalTitle}>{goal.title}</Text>
@@ -117,7 +113,7 @@ export default function GoalsScreen() {
                   {/* Rewards */}
                   <View style={styles.rewardsContainer}>
                     <View style={styles.rewardItem}>
-                      <Ionicons name="wallet" size={14} color="#FFD700" />
+                      <Text style={styles.rewardEmoji}>💰</Text>
                       <Text style={styles.rewardText}>+{goal.reward_coins}</Text>
                     </View>
                     {goal.reward_card_id && (
