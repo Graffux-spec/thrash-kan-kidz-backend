@@ -117,15 +117,12 @@ export default function ShopScreen() {
                 {purchasing === card.id ? (
                   <ActivityIndicator size="small" color="#000" />
                 ) : (
-                  <>
-                    <Ionicons name="logo-usd" size={16} color={user.coins >= card.coin_cost ? '#000' : '#666'} />
-                    <Text style={[
-                      styles.buyButtonText,
-                      user.coins < card.coin_cost && styles.buyButtonTextDisabled
-                    ]}>
-                      {card.coin_cost}
-                    </Text>
-                  </>
+                  <Text style={[
+                    styles.buyButtonText,
+                    user.coins < card.coin_cost && styles.buyButtonTextDisabled
+                  ]}>
+                    {card.coin_cost} COINS
+                  </Text>
                 )}
               </TouchableOpacity>
             </View>
