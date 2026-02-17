@@ -37,6 +37,7 @@ class Card(BaseModel):
     front_image_url: str  # URL to the front image
     back_image_url: str = ""  # URL to the back image
     coin_cost: int = 100
+    available: bool = True  # Whether the card is available for purchase
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class User(BaseModel):
