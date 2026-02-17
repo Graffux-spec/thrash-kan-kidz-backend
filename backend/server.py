@@ -116,11 +116,11 @@ class TradeActionRequest(BaseModel):
 # =====================
 
 CARD_IMAGE_URLS = {
-    "silly_mille": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgbfbhem_file_00000000499871f888b862576600e427.png",
-    "scotch_ian": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zcekiedi_file_0000000013e071fd85ece28d1911153b.png",
+    "silly_mille": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/rofaamfd_file_00000000e17071f582be5805f1e745cc.png",
+    "scotch_ian": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/bfe7vlxj_file_00000000e86871fda14428df7c29ecbc.jpg",
     "chuck_roast": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/4tm2n04w_file_000000006b8071fdbfd0b8b8447216c1.jpg",
-    "cliff_burpin": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/bfe7vlxj_file_00000000e86871fda14428df7c29ecbc.jpg",
-    "scott_eaten": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/rofaamfd_file_00000000e17071f582be5805f1e745cc.png"
+    "cliff_burpin": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zcekiedi_file_0000000013e071fd85ece28d1911153b.png",
+    "scott_eaten": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgbfbhem_file_00000000499871f888b862576600e427.png"
 }
 
 INITIAL_CARDS = [
