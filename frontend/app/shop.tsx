@@ -219,6 +219,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  coinIcon: {
+    fontSize: 18,
+  },
   scrollView: {
     flex: 1,
     paddingHorizontal: 16,
