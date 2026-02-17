@@ -154,7 +154,10 @@ CARD_BACK_IMAGE_URLS = {
     "blood_bonder": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/cvjsunwj_enhanced-1771277815451.jpg",
     # Rare achievement cards backs
     "martin_van_druid": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/wzu9cgqo_file_00000000581c71fd9f6943c516c13338.png",
-    "tardy_donald": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/aiui1nef_file_000000009e4871f8b270fdb6a2aa38de.png"
+    "tardy_donald": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/aiui1nef_file_000000009e4871f8b270fdb6a2aa38de.png",
+    # Epic streak cards backs
+    "tom_angeltipper": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/g775jo99_file_000000002c3871fda4d75a8c5b504ef3.png",
+    "tom_angelflipper": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/vc9gdgee_file_0000000089a071f8a6fe8ea7b7eefa41.png"
 }
 
 # Rare card achievement requirements
