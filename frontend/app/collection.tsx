@@ -166,12 +166,15 @@ export default function CollectionScreen() {
 
   const ownedCardIds = new Set(userCards.map(uc => uc.card.id));
   
+  // Filter out rare cards from the main collection (they have their own section in shop)
+  const commonCards = allCards.filter(card => card.rarity !== 'rare');
+  
   const getFilteredCards = () => {
     switch (filter) {
       case 'owned':
         return userCards;
       case 'missing':
-        return allCards
+        return commonCards
           .filter(card => !ownedCardIds.has(card.id))
           .map(card => ({
             user_card_id: `missing_${card.id}`,
@@ -181,7 +184,7 @@ export default function CollectionScreen() {
           }));
       default:
         const owned = userCards;
-        const missing = allCards
+        const missing = commonCards
           .filter(card => !ownedCardIds.has(card.id))
           .map(card => ({
             user_card_id: `missing_${card.id}`,
