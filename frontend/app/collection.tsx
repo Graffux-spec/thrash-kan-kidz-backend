@@ -474,11 +474,32 @@ const styles = StyleSheet.create({
   },
   swipeHint: {
     position: 'absolute',
-    bottom: 8,
+    bottom: 28,
     right: 8,
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 4,
     borderRadius: 10,
+  },
+  swipeHintText: {
+    color: '#666',
+    fontSize: 12,
+  },
+  cardNameBadge: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+  },
+  cardNameText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   cardBack: {
     width: '100%',
