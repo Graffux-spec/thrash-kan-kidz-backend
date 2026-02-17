@@ -461,6 +461,10 @@ async def purchase_card(user_id: str, request: PurchaseCardRequest):
     if not card:
         raise HTTPException(status_code=404, detail="Card not found")
     
+    # Check if card is available
+    if not card.get("available", True):
+        raise HTTPException(status_code=400, detail="This card is not yet available")
+    
     if user.get("coins", 0) < card["coin_cost"]:
         raise HTTPException(status_code=400, detail="Not enough coins")
     
