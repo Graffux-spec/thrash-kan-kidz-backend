@@ -350,7 +350,7 @@ export default function ShopScreen() {
           <>
             <View style={styles.epicSectionHeader}>
               <Text style={styles.epicSectionTitle}>🔥 Epic Streak Cards 🔥</Text>
-              <Text style={styles.epicSectionSubtitle}>Login daily to unlock these legendary cards!</Text>
+              <Text style={styles.epicSectionSubtitle}>Login daily to unlock these for purchase!</Text>
               <Text style={styles.epicStreakText}>Current Streak: {currentStreak} days</Text>
             </View>
             
@@ -360,10 +360,18 @@ export default function ShopScreen() {
                   key={epicStatus.card.id} 
                   style={[
                     styles.epicCard,
-                    epicStatus.owned && styles.epicCardOwned
+                    epicStatus.owned && styles.epicCardOwned,
+                    epicStatus.unlocked && !epicStatus.owned && styles.epicCardUnlocked
                   ]}
                 >
                   {epicStatus.owned ? (
+                    <Image
+                      source={{ uri: epicStatus.card.front_image_url }}
+                      style={styles.rareCardImage}
+                      resizeMode="cover"
+                    />
+                  ) : epicStatus.unlocked ? (
+                    // Unlocked but not owned - show card with purchase option
                     <Image
                       source={{ uri: epicStatus.card.front_image_url }}
                       style={styles.rareCardImage}
@@ -398,9 +406,26 @@ export default function ShopScreen() {
                   )}
                   <View style={styles.epicCardInfo}>
                     <Text style={styles.epicCardName}>{epicStatus.card.name}</Text>
-                    {epicStatus.owned && (
-                      <Text style={styles.epicOwnedBadge}>🔥 UNLOCKED</Text>
-                    )}
+                    {epicStatus.owned ? (
+                      <Text style={styles.epicOwnedBadge}>🔥 OWNED</Text>
+                    ) : epicStatus.unlocked ? (
+                      <TouchableOpacity
+                        style={[
+                          styles.epicPurchaseButton,
+                          (user?.coins || 0) < epicStatus.card.coin_cost && styles.epicPurchaseButtonDisabled
+                        ]}
+                        onPress={() => handlePurchase(epicStatus.card.id, epicStatus.card.coin_cost, epicStatus.card.name, true)}
+                        disabled={purchasing === epicStatus.card.id || (user?.coins || 0) < epicStatus.card.coin_cost}
+                      >
+                        {purchasing === epicStatus.card.id ? (
+                          <ActivityIndicator size="small" color="#000" />
+                        ) : (
+                          <Text style={styles.epicPurchaseButtonText}>
+                            BUY {epicStatus.card.coin_cost} 💰
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    ) : null}
                   </View>
                 </View>
               ))}
