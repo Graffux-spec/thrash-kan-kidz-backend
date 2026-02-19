@@ -252,7 +252,7 @@ INITIAL_CARDS = [
         "front_image_url": CARD_IMAGE_URLS["cliff_diver"],
         "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver"],
         "coin_cost": 50,
-        "available": False
+        "available": True
     },
     {
         "id": "card_blood_bonder",
@@ -261,6 +261,57 @@ INITIAL_CARDS = [
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["blood_bonder"],
         "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder"],
+        "coin_cost": 50,
+        "available": True
+    },
+    # COMING SOON CARDS (Wave 2)
+    {
+        "id": "card_don_doody",
+        "name": "Don Doody",
+        "description": "From Shit Slayer! Don Doody brings the brown note to every show. His bass drops are legendary, and so is the smell. You've been warned!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["don_doody"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["don_doody"],
+        "coin_cost": 50,
+        "available": False
+    },
+    {
+        "id": "card_billy_mylanta",
+        "name": "Billy Mylanta",
+        "description": "From Gas Attack! Billy Mylanta's gut is a weapon of mass destruction. His toxic burps and explosive performances leave fans gasping for air!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["billy_mylanta"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["billy_mylanta"],
+        "coin_cost": 50,
+        "available": False
+    },
+    {
+        "id": "card_tommy_spewart",
+        "name": "Tommy Spewart",
+        "description": "The legendary vomit virtuoso! Tommy Spewart hurls with precision and rhythm. His rainbow projections have become his signature move!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tommy_spewart"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tommy_spewart"],
+        "coin_cost": 50,
+        "available": False
+    },
+    {
+        "id": "card_piggy_in_a_blanket",
+        "name": "Piggy in a Blanket",
+        "description": "The swine of thrash! Wrapped in his signature blanket, this pork-powered performer squeals through guitar solos that would make any pig proud!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["piggy_in_a_blanket"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["piggy_in_a_blanket"],
+        "coin_cost": 50,
+        "available": False
+    },
+    {
+        "id": "card_beer_schmier",
+        "name": "Beer Schmier",
+        "description": "The foam-spewing legend! Beer Schmier drowns crowds in golden showers of brew. His performances are 50% music, 50% alcohol poisoning!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["beer_schmier"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["beer_schmier"],
         "coin_cost": 50,
         "available": False
     },
