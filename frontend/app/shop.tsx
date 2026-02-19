@@ -22,17 +22,19 @@ const CARD_WIDTH = (width - 48) / 2;
 interface RareCardStatus {
   card: any;
   owned: boolean;
+  unlocked: boolean;
+  can_purchase: boolean;
   required_cards: number;
   progress: number;
-  can_unlock: boolean;
 }
 
 interface EpicCardStatus {
   card: any;
   owned: boolean;
+  unlocked: boolean;
+  can_purchase: boolean;
   required_streak: number;
   progress: number;
-  can_unlock: boolean;
 }
 
 export default function ShopScreen() {
