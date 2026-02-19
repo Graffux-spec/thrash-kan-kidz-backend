@@ -54,17 +54,22 @@ const FlippableCard = ({
 }) => {
   const flipProgress = useSharedValue(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  
+  // Check if card can be flipped (only owned cards that are available)
+  const canFlip = isOwned && userCard.card.available !== false;
 
   const flipCard = () => {
+    if (!canFlip) return; // Don't flip if not allowed
     const newValue = isFlipped ? 0 : 1;
     flipProgress.value = withTiming(newValue, { duration: 400 });
     setIsFlipped(!isFlipped);
   };
 
-  // Swipe gesture for flipping
+  // Swipe gesture for flipping - only enabled for owned, available cards
   const swipeGesture = Gesture.Pan()
+    .enabled(canFlip)
     .onEnd((event) => {
-      if (Math.abs(event.velocityX) > 200 || Math.abs(event.translationX) > 50) {
+      if (canFlip && (Math.abs(event.velocityX) > 200 || Math.abs(event.translationX) > 50)) {
         runOnJS(flipCard)();
       }
     });
