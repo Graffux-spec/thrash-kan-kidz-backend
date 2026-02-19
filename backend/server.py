@@ -346,7 +346,7 @@ INITIAL_CARDS = [
         "rarity": "epic",
         "front_image_url": CARD_IMAGE_URLS["tom_angeltipper"],
         "back_image_url": CARD_BACK_IMAGE_URLS["tom_angeltipper"],
-        "coin_cost": 0,  # Cannot be purchased
+        "coin_cost": 100,  # Value: 100 coins
         "available": False,  # Streak reward only
         "streak_required": 7  # Unlocked at 7 day streak
     },
@@ -357,7 +357,7 @@ INITIAL_CARDS = [
         "rarity": "epic",
         "front_image_url": CARD_IMAGE_URLS["tom_angelflipper"],
         "back_image_url": CARD_BACK_IMAGE_URLS["tom_angelflipper"],
-        "coin_cost": 0,  # Cannot be purchased
+        "coin_cost": 100,  # Value: 100 coins
         "available": False,  # Streak reward only
         "streak_required": 14  # Unlocked at 14 day streak
     }
