@@ -428,6 +428,13 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 10,
   },
+  cardBackContainer: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: '#1a1a2e',
+  },
   cardImageLocked: {
     opacity: 0.4,
   },
