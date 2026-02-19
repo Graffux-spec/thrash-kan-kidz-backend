@@ -434,7 +434,7 @@ async def seed_database():
             await db.cards.insert_one(card.dict())
             logger.info(f"Seeded card: {card.name}")
         else:
-            # Update existing cards with new fields (like achievement_required for rare cards)
+            # Update existing cards with new fields
             update_fields = {}
             if card_data.get("achievement_required") is not None:
                 update_fields["achievement_required"] = card_data["achievement_required"]
@@ -442,6 +442,9 @@ async def seed_database():
                 update_fields["rarity"] = card_data["rarity"]
             if card_data.get("streak_required") is not None:
                 update_fields["streak_required"] = card_data["streak_required"]
+            # Update availability status
+            if card_data.get("available") != existing.get("available"):
+                update_fields["available"] = card_data["available"]
             if update_fields:
                 await db.cards.update_one({"id": card_data["id"]}, {"$set": update_fields})
                 logger.info(f"Updated card: {card_data['name']} with {update_fields}")
