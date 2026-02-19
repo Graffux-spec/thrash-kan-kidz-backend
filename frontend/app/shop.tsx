@@ -756,6 +756,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 4,
   },
+  rareCardUnlocked: {
+    borderColor: '#FFD700',
+    borderWidth: 3,
+  },
+  rarePurchaseButton: {
+    backgroundColor: '#FFD700',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginTop: 8,
+  },
+  rarePurchaseButtonDisabled: {
+    backgroundColor: '#555',
+  },
+  rarePurchaseButtonText: {
+    color: '#000',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
   // Epic Cards Section
   epicSectionHeader: {
     backgroundColor: 'rgba(139, 0, 0, 0.3)',
