@@ -137,11 +137,13 @@ const FlippableCard = ({
 
         {/* Back of card */}
         <Animated.View style={[backAnimatedStyle]}>
-          <Image
-            source={{ uri: userCard.card.back_image_url }}
-            style={styles.cardImage}
-            resizeMode="cover"
-          />
+          <View style={styles.cardBackContainer}>
+            <Image
+              source={{ uri: userCard.card.back_image_url }}
+              style={styles.cardImage}
+              resizeMode="cover"
+            />
+          </View>
         </Animated.View>
 
         {/* Card name badge */}
