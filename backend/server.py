@@ -417,6 +417,40 @@ INITIAL_CARDS = [
         "coin_cost": 100,  # Value: 100 coins
         "available": False,  # Streak reward only
         "streak_required": 14  # Unlocked at 14 day streak
+    },
+    # ENGAGEMENT MILESTONE CARDS - Unlocked by special achievements
+    {
+        "id": "card_maxi_pad",
+        "name": "Maxi Pad",
+        "description": "The ultimate pad slapper! Maxi Pad crashes every show with absorption levels off the charts. A legendary collector's item for the most dedicated fans!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["maxi_pad"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["maxi_pad"],
+        "coin_cost": 50,
+        "available": False,  # Unlocked by 30-day login streak (Dedicated Fan)
+        "engagement_milestone": "dedicated_fan"
+    },
+    {
+        "id": "card_musty_dave",
+        "name": "Musty Dave",
+        "description": "The stinkiest shredder in all the land! Musty Dave's aroma clears mosh pits and melts faces. Only the biggest spenders can unlock this funky legend!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["musty_dave"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["musty_dave"],
+        "coin_cost": 50,
+        "available": False,  # Unlocked by spending 750 coins (Big Spender)
+        "engagement_milestone": "big_spender"
+    },
+    {
+        "id": "card_chum_araya",
+        "name": "Chum Araya",
+        "description": "From the depths of Sleigher! Chum Araya baits the crowd with bloody riffs. Only monthly masters who show true dedication can unlock this fishy legend!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["chum_araya"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya"],
+        "coin_cost": 50,
+        "available": False,  # Unlocked by logging in 20 days in a month (Monthly Master)
+        "engagement_milestone": "monthly_master"
     }
 ]
 
