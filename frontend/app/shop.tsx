@@ -96,7 +96,10 @@ export default function ShopScreen() {
       setCurrentStreak(epicData.current_streak || 0);
       
       // Fetch engagement milestones status
+      console.log('About to fetch engagement milestones for user:', user.id);
+      console.log('API URL:', `${apiUrl}/api/users/${user.id}/check-engagement-milestones`);
       const engagementResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-engagement-milestones`);
+      console.log('Engagement response status:', engagementResponse.status);
       const engagementData = await engagementResponse.json();
       
       console.log('Engagement data received:', engagementData);
