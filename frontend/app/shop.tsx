@@ -165,12 +165,12 @@ export default function ShopScreen() {
   // Common cards that are available for purchase
   const availableCards = allCards.filter(card => 
     card.available === true && 
-    card.rarity === 'common'
+    card.rarity?.toLowerCase() === 'common'
   );
   // Coming soon cards (common cards not yet available)
   const unavailableCards = allCards.filter(card => 
     card.available === false && 
-    card.rarity === 'common'
+    card.rarity?.toLowerCase() === 'common'
   );
 
   return (
