@@ -249,7 +249,7 @@ export default function ShopScreen() {
           <View style={styles.milestoneBanner}>
             <Text style={styles.milestoneTitle}>🎁 Milestone Bonus 🎁</Text>
             <Text style={styles.milestoneSubtitle}>
-              Get a FREE card every 5 cards collected!
+              Get a FREE card every 10 cards collected!
             </Text>
             <View style={styles.milestoneProgressContainer}>
               <View style={styles.milestoneProgressBar}>
