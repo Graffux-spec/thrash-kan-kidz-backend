@@ -37,6 +37,17 @@ interface EpicCardStatus {
   progress: number;
 }
 
+interface EngagementMilestoneStatus {
+  card: any;
+  owned: boolean;
+  unlocked: boolean;
+  can_purchase: boolean;
+  milestone_type: string;
+  requirement: number;
+  progress: number;
+  description: string;
+}
+
 export default function ShopScreen() {
   const { user, allCards, userCards, purchaseCard, apiUrl } = useApp();
   const [purchasing, setPurchasing] = useState<string | null>(null);
