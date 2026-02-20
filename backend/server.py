@@ -804,6 +804,147 @@ async def check_user_epic_cards(user_id: str):
     }
 
 # =====================
+# Engagement Milestone System
+# =====================
+
+async def check_engagement_milestones(user_id: str):
+    """Check and unlock engagement milestone cards based on user progress"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        return None
+    
+    unlocked_engagement = user.get("unlocked_engagement_cards", [])
+    newly_unlocked = None
+    
+    # Get all engagement milestone cards
+    engagement_cards = await db.cards.find({"engagement_milestone": {"$ne": None}}).to_list(100)
+    
+    for eng_card in engagement_cards:
+        milestone_type = eng_card.get("engagement_milestone")
+        card_id = eng_card["id"]
+        
+        if card_id in unlocked_engagement:
+            continue
+        
+        unlocked = False
+        
+        if milestone_type == "dedicated_fan":
+            # 30-day login streak
+            if user.get("daily_login_streak", 0) >= 30:
+                unlocked = True
+                
+        elif milestone_type == "big_spender":
+            # 750 total coins spent
+            if user.get("total_spent_coins", 0) >= 750:
+                unlocked = True
+                
+        elif milestone_type == "monthly_master":
+            # 20 days in a single month
+            monthly_logins = user.get("monthly_logins", {})
+            for month, days in monthly_logins.items():
+                if len(days) >= 20:
+                    unlocked = True
+                    break
+        
+        if unlocked:
+            await db.users.update_one(
+                {"id": user_id},
+                {"$addToSet": {"unlocked_engagement_cards": card_id}}
+            )
+            logger.info(f"User {user_id} unlocked engagement card: {eng_card['name']} ({milestone_type})")
+            newly_unlocked = Card(**eng_card)
+    
+    return newly_unlocked
+
+@api_router.get("/users/{user_id}/check-engagement-milestones")
+async def check_user_engagement_milestones(user_id: str):
+    """Check status of all engagement milestone cards for a user"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    unlocked_engagement = user.get("unlocked_engagement_cards", [])
+    current_streak = user.get("daily_login_streak", 0)
+    total_spent = user.get("total_spent_coins", 0)
+    monthly_logins = user.get("monthly_logins", {})
+    
+    # Find best month login count
+    best_month_logins = 0
+    current_month = datetime.utcnow().strftime("%Y-%m")
+    current_month_logins = 0
+    
+    for month, days in monthly_logins.items():
+        if len(days) > best_month_logins:
+            best_month_logins = len(days)
+        if month == current_month:
+            current_month_logins = len(days)
+    
+    # Get all engagement milestone cards
+    engagement_cards = await db.cards.find({"engagement_milestone": {"$ne": None}}).to_list(100)
+    
+    engagement_status = []
+    newly_unlocked = None
+    
+    for eng_card in engagement_cards:
+        milestone_type = eng_card.get("engagement_milestone")
+        card_id = eng_card["id"]
+        
+        owned = await db.user_cards.find_one({
+            "user_id": user_id,
+            "card_id": card_id
+        })
+        
+        # Determine progress and requirement based on milestone type
+        if milestone_type == "dedicated_fan":
+            requirement = 30  # 30-day streak
+            progress = current_streak
+            description = "30-day login streak"
+        elif milestone_type == "big_spender":
+            requirement = 750  # 750 coins spent
+            progress = total_spent
+            description = "Spend 750 total coins"
+        elif milestone_type == "monthly_master":
+            requirement = 20  # 20 days in a month
+            progress = current_month_logins
+            description = "Log in 20 days this month"
+        else:
+            requirement = 0
+            progress = 0
+            description = ""
+        
+        is_unlocked = card_id in unlocked_engagement or progress >= requirement
+        
+        # Auto-unlock if requirement met
+        if progress >= requirement and card_id not in unlocked_engagement:
+            await db.users.update_one(
+                {"id": user_id},
+                {"$addToSet": {"unlocked_engagement_cards": card_id}}
+            )
+            is_unlocked = True
+            if not owned:
+                newly_unlocked = Card(**eng_card)
+        
+        engagement_status.append({
+            "card": Card(**eng_card),
+            "owned": owned is not None,
+            "unlocked": is_unlocked,
+            "milestone_type": milestone_type,
+            "requirement": requirement,
+            "progress": progress,
+            "description": description,
+            "can_purchase": is_unlocked and not owned
+        })
+    
+    return {
+        "current_streak": current_streak,
+        "total_spent_coins": total_spent,
+        "current_month_logins": current_month_logins,
+        "best_month_logins": best_month_logins,
+        "engagement_milestones": engagement_status,
+        "newly_unlocked": newly_unlocked
+    }
+
+# =====================
 # User Cards & Collection
 # =====================
 
