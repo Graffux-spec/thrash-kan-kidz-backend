@@ -327,6 +327,17 @@ INITIAL_CARDS = [
         "coin_cost": 50,
         "available": True
     },
+    # COMING SOON WAVE 3
+    {
+        "id": "card_philled_up",
+        "name": "Philled Up",
+        "description": "From Sacrud Ryche! Phil never met a cheese pizza he didn't love, or finish. If a dinner is all-you-can-eat, he treats it like an Olympic sport. No matter who he opens for, he always closes down the buffet!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["philled_up"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["philled_up"],
+        "coin_cost": 50,
+        "available": False
+    },
     # RARE ACHIEVEMENT CARDS - Not purchasable, earned by collecting cards
     {
         "id": "card_martin_van_druid",
