@@ -825,7 +825,7 @@ async def purchase_card(user_id: str, request: PurchaseCardRequest):
 # =====================
 
 async def check_milestone_reward(user_id: str):
-    """Award a free common card every 5 cards collected"""
+    """Award a free common card every 10 cards collected"""
     # Get user's total cards (including duplicates)
     user_cards = await db.user_cards.find({"user_id": user_id}).to_list(1000)
     total_cards = sum(uc.get("quantity", 1) for uc in user_cards)
