@@ -289,8 +289,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_billy_mylanta",
-        "name": "Billy Mylanta",
-        "description": "From Gas Attack! Billy Mylanta's gut is a weapon of mass destruction. His toxic burps and explosive performances leave fans gasping for air!",
+        "name": "Piggy in a Blanket",
+        "description": "The swine of thrash from Voivodka! Wrapped in his signature blanket, this pork-powered performer squeals through guitar solos that would make any pig proud!",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["billy_mylanta"],
         "back_image_url": CARD_BACK_IMAGE_URLS["billy_mylanta"],
