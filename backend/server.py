@@ -51,6 +51,8 @@ class User(BaseModel):
     profile_completed: bool = False
     bio: str = ""
     avatar_url: str = ""
+    total_spent_coins: int = 0  # Track total coins spent for Big Spender milestone
+    monthly_logins: dict = Field(default_factory=dict)  # Track logins per month {"YYYY-MM": [day1, day2...]}
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class UserCard(BaseModel):
@@ -145,7 +147,11 @@ CARD_IMAGE_URLS = {
     "kerry_the_king": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/8sfdw92q_file_000000001f5071fd88973aa9c05bebac.png",
     "jeff_possess_ya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/s0jimvhs_file_000000006fcc71fd80e12f47bd0524f3.png",
     # Coming Soon Wave 3
-    "philled_up": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/i3cgqtwz_enhanced-1771278999569.jpg"
+    "philled_up": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/i3cgqtwz_enhanced-1771278999569.jpg",
+    # Engagement Milestone Cards
+    "maxi_pad": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/i3cgqtwz_enhanced-1771278999569.jpg",
+    "musty_dave": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/i3cgqtwz_enhanced-1771278999569.jpg",
+    "chum_araya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/i3cgqtwz_enhanced-1771278999569.jpg"
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -174,7 +180,11 @@ CARD_BACK_IMAGE_URLS = {
     "kerry_the_king": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/sxac7kjw_file_00000000833071fd8adc51da518e9550.png",
     "jeff_possess_ya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/hzkwnsri_file_00000000564871fd915c1ecfbac3aacc.png",
     # Coming Soon Wave 3 backs
-    "philled_up": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/pru66o9k_enhanced-1771280383938.jpg"
+    "philled_up": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/pru66o9k_enhanced-1771280383938.jpg",
+    # Engagement Milestone Cards backs
+    "maxi_pad": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/pru66o9k_enhanced-1771280383938.jpg",
+    "musty_dave": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/pru66o9k_enhanced-1771280383938.jpg",
+    "chum_araya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/pru66o9k_enhanced-1771280383938.jpg"
 }
 
 # Rare card achievement requirements
