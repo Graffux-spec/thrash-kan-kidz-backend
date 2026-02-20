@@ -964,7 +964,7 @@ async def check_user_rare_cards(user_id: str):
     
     # Calculate milestone info
     milestones_claimed = user.get("milestones_claimed", 0)
-    next_milestone_at = (milestones_claimed + 1) * 5
+    next_milestone_at = (milestones_claimed + 1) * 10
     cards_to_next_milestone = max(0, next_milestone_at - total_cards)
     
     return {
