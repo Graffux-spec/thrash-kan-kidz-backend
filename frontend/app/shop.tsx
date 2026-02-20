@@ -99,6 +99,8 @@ export default function ShopScreen() {
       const engagementResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-engagement-milestones`);
       const engagementData = await engagementResponse.json();
       
+      console.log('Engagement data received:', engagementData);
+      console.log('Setting engagementStatus to:', engagementData.engagement_milestones);
       setEngagementStatus(engagementData.engagement_milestones || []);
       setTotalSpent(engagementData.total_spent_coins || 0);
       setCurrentMonthLogins(engagementData.current_month_logins || 0);
