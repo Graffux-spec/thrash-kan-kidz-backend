@@ -823,6 +823,9 @@ async def purchase_card(user_id: str, request: PurchaseCardRequest):
     unique_cards = await db.user_cards.count_documents({"user_id": user_id})
     await check_and_update_goals(user_id, "collect_cards", unique_cards)
     
+    # Check all-rarities goal (collect one of each: common, rare, epic)
+    await check_all_rarities_goal(user_id)
+    
     # Check for rare card achievements
     newly_unlocked_rare = await check_rare_card_achievements(user_id)
     
