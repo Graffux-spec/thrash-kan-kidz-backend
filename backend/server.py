@@ -176,7 +176,9 @@ CARD_BACK_IMAGE_URLS = {
 # Rare card achievement requirements
 RARE_CARD_ACHIEVEMENTS = {
     "card_martin_van_druid": {"required_cards": 10, "name": "Martin Van Druid"},
-    "card_tardy_donald": {"required_cards": 20, "name": "Tardy Donald"}
+    "card_tardy_donald": {"required_cards": 20, "name": "Tardy Donald"},
+    "card_kerry_the_king": {"required_cards": 30, "name": "Kerry The King"},
+    "card_jeff_possess_ya": {"required_cards": 40, "name": "Jeff Possess Ya"}
 }
 
 INITIAL_CARDS = [
