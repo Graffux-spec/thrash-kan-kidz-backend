@@ -72,10 +72,12 @@ export default function ShopScreen() {
     
     try {
       setLoadingRare(true);
+      console.log('[Shop] Fetching card status for user:', user.id);
       
       // Fetch rare cards status
       const rareResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-rare-cards`);
       const rareData = await rareResponse.json();
+      console.log('[Shop] Rare cards data:', rareData);
       
       setRareCardsStatus(rareData.rare_cards || []);
       setTotalCards(rareData.total_cards || 0);
@@ -91,13 +93,17 @@ export default function ShopScreen() {
       // Fetch epic cards status
       const epicResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-epic-cards`);
       const epicData = await epicResponse.json();
+      console.log('[Shop] Epic cards data:', epicData);
       
       setEpicCardsStatus(epicData.epic_cards || []);
       setCurrentStreak(epicData.current_streak || 0);
       
       // Fetch engagement milestones status
+      console.log('[Shop] Fetching engagement milestones...');
       const engagementResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-engagement-milestones`);
       const engagementData = await engagementResponse.json();
+      console.log('[Shop] Engagement milestones data:', engagementData);
+      console.log('[Shop] Setting engagement status with', engagementData.engagement_milestones?.length || 0, 'milestones');
       
       setEngagementStatus(engagementData.engagement_milestones || []);
       setTotalSpent(engagementData.total_spent_coins || 0);
