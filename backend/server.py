@@ -540,6 +540,9 @@ async def seed_database():
             # Update coin_cost if changed
             if card_data.get("coin_cost") != existing.get("coin_cost"):
                 update_fields["coin_cost"] = card_data["coin_cost"]
+            # Update engagement_milestone if set
+            if card_data.get("engagement_milestone") is not None:
+                update_fields["engagement_milestone"] = card_data["engagement_milestone"]
             if update_fields:
                 await db.cards.update_one({"id": card_data["id"]}, {"$set": update_fields})
                 logger.info(f"Updated card: {card_data['name']} with {update_fields}")
