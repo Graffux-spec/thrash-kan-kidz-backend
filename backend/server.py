@@ -983,7 +983,22 @@ async def purchase_card(user_id: str, request: PurchaseCardRequest):
     
     # For rare/epic cards, check if user has unlocked them
     if not card_available:
-        if card_rarity == "rare":
+        engagement_milestone = card.get("engagement_milestone")
+        
+        if engagement_milestone:
+            # Check if user has unlocked this engagement milestone card
+            unlocked_engagement = user.get("unlocked_engagement_cards", [])
+            if card["id"] not in unlocked_engagement:
+                # Get milestone info for error message
+                if engagement_milestone == "dedicated_fan":
+                    raise HTTPException(status_code=400, detail="Reach a 30-day login streak to unlock this card")
+                elif engagement_milestone == "big_spender":
+                    raise HTTPException(status_code=400, detail="Spend 750 total coins to unlock this card")
+                elif engagement_milestone == "monthly_master":
+                    raise HTTPException(status_code=400, detail="Log in 20 days in a single month to unlock this card")
+                else:
+                    raise HTTPException(status_code=400, detail="This card is not yet available")
+        elif card_rarity == "rare":
             # Check if user has unlocked this rare card
             unlocked_rares = user.get("unlocked_rare_cards", [])
             if card["id"] not in unlocked_rares:
