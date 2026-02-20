@@ -876,7 +876,7 @@ async def check_milestone_reward(user_id: str):
             return {
                 "milestone_number": milestones_claimed + 1,
                 "card": Card(**reward_card),
-                "next_milestone_at": (milestones_claimed + 2) * 5
+                "next_milestone_at": (milestones_claimed + 2) * 10
             }
     
     return None
