@@ -288,16 +288,6 @@ INITIAL_CARDS = [
         "available": True
     },
     {
-        "id": "card_billy_mylanta",
-        "name": "Piggy in a Blanket",
-        "description": "The swine of thrash from Voivodka! Wrapped in his signature blanket, this pork-powered performer squeals through guitar solos that would make any pig proud!",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["billy_mylanta"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["billy_mylanta"],
-        "coin_cost": 50,
-        "available": True
-    },
-    {
         "id": "card_tommy_spewart",
         "name": "Tommy Spewart",
         "description": "The legendary vomit virtuoso! Tommy Spewart hurls with precision and rhythm. His rainbow projections have become his signature move!",
