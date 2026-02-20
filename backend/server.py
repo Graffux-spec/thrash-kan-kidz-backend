@@ -448,19 +448,19 @@ INITIAL_GOALS = [
     {
         "id": "goal_collect_cards_3",
         "title": "Card Enthusiast",
-        "description": "Collect 3 different cards",
-        "goal_type": "collect_cards",
+        "description": "Collect a card from all 3 rarities (Common, Rare, Epic)",
+        "goal_type": "collect_all_rarities",
         "target_value": 3,
-        "reward_coins": 200,
-        "reward_card_id": "card_cliff_burpin"
+        "reward_coins": 150,
+        "reward_card_id": None
     },
     {
         "id": "goal_collect_all",
         "title": "Thrash Master",
-        "description": "Collect all 7 Thrash Kan Kidz cards",
+        "description": "Collect 50 cards total",
         "goal_type": "collect_cards",
-        "target_value": 7,
-        "reward_coins": 500,
+        "target_value": 50,
+        "reward_coins": 250,
         "reward_card_id": None
     }
 ]
