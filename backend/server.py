@@ -40,6 +40,7 @@ class Card(BaseModel):
     available: bool = True  # Whether the card is available for purchase
     achievement_required: Optional[int] = None  # Number of cards needed to unlock (for rare cards)
     streak_required: Optional[int] = None  # Number of consecutive login days needed to unlock (for epic cards)
+    engagement_milestone: Optional[str] = None  # Type of engagement milestone required (dedicated_fan, big_spender, monthly_master)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class User(BaseModel):
