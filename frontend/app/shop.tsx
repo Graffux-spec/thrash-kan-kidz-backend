@@ -161,9 +161,17 @@ export default function ShopScreen() {
     return uc?.quantity || 0;
   };
 
-  // Separate available, unavailable, and rare cards
-  const availableCards = allCards.filter(card => card.available !== false && card.rarity !== 'rare');
-  const unavailableCards = allCards.filter(card => card.available === false && card.rarity !== 'rare');
+  // Separate available, unavailable, and special cards
+  // Common cards that are available for purchase
+  const availableCards = allCards.filter(card => 
+    card.available === true && 
+    card.rarity === 'common'
+  );
+  // Coming soon cards (common cards not yet available)
+  const unavailableCards = allCards.filter(card => 
+    card.available === false && 
+    card.rarity === 'common'
+  );
 
   return (
     <SafeAreaView style={styles.container}>
