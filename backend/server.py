@@ -684,12 +684,26 @@ async def claim_daily_login(user_id: str):
     
     new_coins = user.get("coins", 0) + bonus_coins
     
+    # Track monthly logins for Monthly Master milestone
+    current_month = datetime.utcnow().strftime("%Y-%m")
+    today_day = datetime.utcnow().day
+    monthly_logins = user.get("monthly_logins", {})
+    
+    # Get or create the list for this month
+    if current_month not in monthly_logins:
+        monthly_logins[current_month] = []
+    
+    # Add today if not already logged
+    if today_day not in monthly_logins[current_month]:
+        monthly_logins[current_month].append(today_day)
+    
     await db.users.update_one(
         {"id": user_id},
         {"$set": {
             "last_login_date": today,
             "daily_login_streak": new_streak,
-            "coins": new_coins
+            "coins": new_coins,
+            "monthly_logins": monthly_logins
         }}
     )
     
@@ -702,12 +716,16 @@ async def claim_daily_login(user_id: str):
     # Check for newly unlocked epic cards (notify user they can now purchase)
     newly_unlocked_epic = await check_epic_streak_unlocks(user_id, new_streak)
     
+    # Check for engagement milestone unlocks
+    engagement_unlock = await check_engagement_milestones(user_id)
+    
     return {
         "streak": new_streak,
         "bonus_coins": bonus_coins,
         "total_coins": new_coins,
         "message": f"Day {new_streak} streak! +{bonus_coins} coins",
-        "newly_unlocked_epic_card": newly_unlocked_epic
+        "newly_unlocked_epic_card": newly_unlocked_epic,
+        "engagement_unlock": engagement_unlock
     }
 
 # =====================
