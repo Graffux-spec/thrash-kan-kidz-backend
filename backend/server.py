@@ -1025,6 +1025,65 @@ async def get_user_goals(user_id: str):
     
     return result
 
+async def check_all_rarities_goal(user_id: str):
+    """Check if user has collected at least one card from each rarity (common, rare, epic)"""
+    # Get the goal
+    goal = await db.goals.find_one({"goal_type": "collect_all_rarities"})
+    if not goal:
+        return
+    
+    # Get user's goal progress
+    user_goal = await db.user_goals.find_one({
+        "user_id": user_id,
+        "goal_id": goal["id"]
+    })
+    
+    if not user_goal:
+        user_goal_obj = UserGoal(user_id=user_id, goal_id=goal["id"])
+        await db.user_goals.insert_one(user_goal_obj.dict())
+        user_goal = user_goal_obj.dict()
+    
+    if user_goal.get("completed"):
+        return
+    
+    # Get user's cards with their rarities
+    user_cards = await db.user_cards.find({"user_id": user_id}).to_list(1000)
+    rarities_collected = set()
+    
+    for uc in user_cards:
+        card = await db.cards.find_one({"id": uc["card_id"]})
+        if card:
+            rarities_collected.add(card.get("rarity"))
+    
+    # Count how many of the 3 rarities they have
+    required_rarities = {"common", "rare", "epic"}
+    collected_count = len(rarities_collected.intersection(required_rarities))
+    
+    # Update progress
+    await db.user_goals.update_one(
+        {"id": user_goal["id"]},
+        {"$set": {"progress": collected_count}}
+    )
+    
+    # Check if completed (has all 3 rarities)
+    if collected_count >= 3:
+        await db.user_goals.update_one(
+            {"id": user_goal["id"]},
+            {"$set": {
+                "completed": True,
+                "completed_at": datetime.utcnow()
+            }}
+        )
+        
+        # Award coins
+        user = await db.users.find_one({"id": user_id})
+        new_coins = user.get("coins", 0) + goal["reward_coins"]
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {"coins": new_coins}}
+        )
+        logging.info(f"User {user_id} completed Card Enthusiast goal! +{goal['reward_coins']} coins")
+
 async def check_and_update_goals(user_id: str, goal_type: str, current_value: int):
     """Check and update goals based on progress"""
     goals = await db.goals.find({"goal_type": goal_type}).to_list(100)
