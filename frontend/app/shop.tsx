@@ -484,12 +484,12 @@ export default function ShopScreen() {
         {/* Engagement Milestones Section */}
         {engagementStatus.length > 0 && (
           <>
-            <View style={styles.engagementSectionHeader}>
+            <View style={styles.engagementSectionHeader} data-testid="engagement-milestones-header">
               <Text style={styles.engagementSectionTitle}>🏆 Engagement Milestones 🏆</Text>
               <Text style={styles.engagementSectionSubtitle}>Special achievements unlock exclusive cards!</Text>
             </View>
             
-            <View style={styles.rareCardsGrid}>
+            <View style={styles.rareCardsGrid} data-testid="engagement-milestones-grid">
               {engagementStatus.map((engStatus) => {
                 // Get icon based on milestone type
                 const getMilestoneIcon = (type: string) => {
