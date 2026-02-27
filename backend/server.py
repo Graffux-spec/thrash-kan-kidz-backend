@@ -1740,6 +1740,18 @@ async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_
     if not package:
         raise HTTPException(status_code=400, detail="Invalid package")
     
+    # Check if this is user's first purchase
+    has_purchased = await db.payment_transactions.find_one({
+        "user_id": user_id,
+        "payment_status": "paid"
+    })
+    is_first_purchase = has_purchased is None
+    
+    # Calculate total coins including first-purchase bonus
+    base_coins = package["coins"]
+    bonus_coins = int(base_coins * FIRST_PURCHASE_BONUS_PERCENTAGE / 100) if is_first_purchase else 0
+    total_coins = base_coins + bonus_coins
+    
     # Get Stripe API key
     stripe_api_key = os.environ.get("STRIPE_API_KEY")
     if not stripe_api_key:
@@ -1766,7 +1778,10 @@ async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_
         metadata={
             "user_id": user_id,
             "package_id": request.package_id,
-            "coins_amount": str(package["coins"]),
+            "coins_amount": str(total_coins),
+            "base_coins": str(base_coins),
+            "bonus_coins": str(bonus_coins),
+            "is_first_purchase": str(is_first_purchase),
             "source": "thrashkan_app"
         }
     )
@@ -1781,13 +1796,16 @@ async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_
             package_id=request.package_id,
             amount=package["price"],
             currency=package["currency"],
-            coins_amount=package["coins"],
+            coins_amount=total_coins,  # Total including bonus
             payment_status="pending",
             status="initiated",
             metadata={
                 "user_id": user_id,
                 "package_id": request.package_id,
-                "coins_amount": str(package["coins"])
+                "base_coins": str(base_coins),
+                "bonus_coins": str(bonus_coins),
+                "total_coins": str(total_coins),
+                "is_first_purchase": str(is_first_purchase)
             }
         )
         await db.payment_transactions.insert_one(transaction.dict())
@@ -1795,7 +1813,10 @@ async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_
         return {
             "checkout_url": session.url,
             "session_id": session.session_id,
-            "package": package
+            "package": package,
+            "is_first_purchase": is_first_purchase,
+            "bonus_coins": bonus_coins,
+            "total_coins": total_coins
         }
     except Exception as e:
         logger.error(f"Error creating checkout session: {e}")
