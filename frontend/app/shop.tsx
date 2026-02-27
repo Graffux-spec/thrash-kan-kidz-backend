@@ -274,14 +274,30 @@ export default function ShopScreen() {
         </View>
       </Modal>
 
+      {/* Buy Coins Modal */}
+      <BuyCoinsModal 
+        visible={showBuyCoins} 
+        onClose={() => setShowBuyCoins(false)} 
+      />
+
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Card Shop</Text>
           <Text style={styles.subtitle}>Buy cards with your coins</Text>
         </View>
-        <View style={styles.coinDisplay}>
-          <Text style={styles.coinIcon}>💰</Text>
-          <Text style={styles.coinText}>{user.coins}</Text>
+        <View style={styles.coinSection}>
+          <View style={styles.coinDisplay}>
+            <Text style={styles.coinIcon}>💰</Text>
+            <Text style={styles.coinText}>{user.coins}</Text>
+          </View>
+          <TouchableOpacity 
+            style={styles.buyCoinsButton}
+            onPress={() => setShowBuyCoins(true)}
+            data-testid="buy-coins-button"
+          >
+            <Ionicons name="add-circle" size={16} color="#000" />
+            <Text style={styles.buyCoinsText}>Buy</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
