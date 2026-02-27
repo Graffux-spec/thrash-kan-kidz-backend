@@ -64,6 +64,7 @@ export default function ShopScreen() {
   const [celebrationType, setCelebrationType] = useState<'rare' | 'milestone' | 'epic' | 'engagement'>('rare');
   const [milestoneInfo, setMilestoneInfo] = useState<any>(null);
   const [loadingRare, setLoadingRare] = useState(false);
+  const [showBuyCoins, setShowBuyCoins] = useState(false);
 
   const BACKGROUND_IMAGE = 'https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgy2com2_enhanced-1771247671181.jpg';
 
