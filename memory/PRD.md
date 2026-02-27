@@ -6,6 +6,7 @@ Build a mobile card collecting app for "Thrash Kan Kidz" cards where users:
 - Purchase cards from a shop
 - View their collection (showing owned vs missing cards)
 - Unlock special cards through achievements and milestones
+- Buy coins with real money (Stripe integration)
 
 ## Core Features
 
@@ -22,11 +23,27 @@ Build a mobile card collecting app for "Thrash Kan Kidz" cards where users:
 4. **Milestone Cards** - Free random common card every 10 cards collected
 5. **Coming Soon Cards** - Visible but unavailable for purchase
 
-### Engagement Milestones (NEW - Implemented Feb 20, 2026)
+### Engagement Milestones (Implemented Feb 20, 2026)
 Special "Coming Soon" cards unlocked by meeting engagement criteria:
 - **Dedicated Fan** (30-day login streak) → Unlocks "Maxi Pad"
 - **Big Spender** (750 total coins spent) → Unlocks "Musty Dave"
 - **Monthly Master** (20 days login in single month) → Unlocks "Chum Araya"
+
+### Coin Purchase System (NEW - Implemented Feb 27, 2026)
+Users can purchase coins with real money via Stripe:
+| Package | Coins | Price |
+|---------|-------|-------|
+| Starter Pack | 200 | $1.99 |
+| Collector Pack | 500 | $4.99 |
+| Ultimate Pack | 1000 | $9.99 |
+
+Features:
+- Stripe Checkout integration for secure payments
+- Payment transaction history tracking
+- Automatic coin crediting after successful payment
+- Payment status polling for real-time updates
+- Webhook support for payment confirmations
+- IAP structure prepared for future iOS/Android native purchases
 
 ### Goals System
 - First Card: Collect first card (25 coins)
