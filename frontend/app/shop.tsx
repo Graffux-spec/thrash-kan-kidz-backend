@@ -751,6 +751,25 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
   },
+  coinSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  buyCoinsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFD700',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    gap: 4,
+  },
+  buyCoinsText: {
+    color: '#000',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
   coinText: {
     color: '#FFD700',
     fontSize: 18,
