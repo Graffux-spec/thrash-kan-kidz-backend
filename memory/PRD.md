@@ -145,10 +145,19 @@ Features:
 2. (P3) Web preview scrolling can be unreliable
 
 ## Upcoming Tasks
-- Privacy Policy screen for app store compliance
-- App store submission process
+- App store submission process (binary build, App Store Connect setup)
 
 ## Future/Backlog
+- Add In-App Purchases (IAP) for iOS/Android native checkout
+- Purchase receipts/confirmation emails
 - Refactor server.py into separate route/model files
 - Refactor shop.tsx into smaller components
 - Improve database seeding logic
+
+## Recently Completed (March 2026)
+- ✅ Privacy Policy screen (`/app/frontend/app/privacy.tsx`)
+- ✅ Profile screen enhancements:
+  - Buy Coins quick action with cart icon
+  - Payment History viewer with receipt icon
+  - Privacy Policy link with shield icon at bottom
+  - Improved logout button with Ionicons

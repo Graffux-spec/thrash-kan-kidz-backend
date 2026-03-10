@@ -242,11 +242,71 @@ export default function ProfileScreen() {
           </View>
         </View>
 
+        {/* Quick Actions Section */}
+        <View style={styles.actionsSection}>
+          <Text style={styles.sectionTitle}>💳 Quick Actions</Text>
+          
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => router.push('/shop')}
+          >
+            <View style={styles.actionIconContainer}>
+              <Ionicons name="cart" size={24} color="#FFD700" />
+            </View>
+            <View style={styles.actionTextContainer}>
+              <Text style={styles.actionTitle}>Buy Coins</Text>
+              <Text style={styles.actionSubtitle}>Purchase coin packages</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#666" />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={async () => {
+              try {
+                const response = await fetch(`${apiUrl}/api/users/${user.id}/payment-history`);
+                const history = await response.json();
+                if (history.length === 0) {
+                  Alert.alert('Payment History', 'No purchases yet. Buy some coins to get started!');
+                } else {
+                  const recent = history.slice(0, 3);
+                  const historyText = recent.map((t: any) => 
+                    `${t.package_id} - ${t.coins_amount} coins - ${t.payment_status}`
+                  ).join('\n');
+                  Alert.alert('Recent Purchases', historyText);
+                }
+              } catch (error) {
+                Alert.alert('Error', 'Failed to load payment history');
+              }
+            }}
+          >
+            <View style={styles.actionIconContainer}>
+              <Ionicons name="receipt" size={24} color="#4CAF50" />
+            </View>
+            <View style={styles.actionTextContainer}>
+              <Text style={styles.actionTitle}>Payment History</Text>
+              <Text style={styles.actionSubtitle}>View your purchases</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#666" />
+          </TouchableOpacity>
+        </View>
+
         {/* Logout Button */}
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutIcon}>🚪</Text>
+          <Ionicons name="log-out-outline" size={24} color="#ff6b6b" />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
+
+        {/* Legal Section */}
+        <View style={styles.legalSection}>
+          <TouchableOpacity 
+            style={styles.legalButton}
+            onPress={() => router.push('/privacy')}
+          >
+            <Ionicons name="shield-checkmark-outline" size={20} color="#888" />
+            <Text style={styles.legalButtonText}>Privacy Policy</Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Thrash Kan Kidz v1.0</Text>
@@ -512,6 +572,42 @@ const styles = StyleSheet.create({
     color: '#666',
     fontFamily: 'monospace',
   },
+  // Quick Actions Section
+  actionsSection: {
+    marginBottom: 24,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#333',
+  },
+  actionIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  actionTextContainer: {
+    flex: 1,
+  },
+  actionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  actionSubtitle: {
+    fontSize: 12,
+    color: '#888',
+    marginTop: 2,
+  },
   // Logout Button
   logoutButton: {
     flexDirection: 'row',
@@ -522,16 +618,34 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     borderColor: '#F44336',
-    marginBottom: 24,
+    marginBottom: 16,
+    gap: 8,
   },
   logoutIcon: {
     fontSize: 20,
     marginRight: 8,
   },
   logoutText: {
-    color: '#F44336',
+    color: '#ff6b6b',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  // Legal Section
+  legalSection: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  legalButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  legalButtonText: {
+    color: '#888',
+    fontSize: 14,
+    textDecorationLine: 'underline',
   },
   // Footer
   footer: {
