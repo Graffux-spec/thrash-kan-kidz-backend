@@ -11,7 +11,7 @@ Build a mobile card collecting app for "Thrash Kan Kidz" cards where users:
 
 ## Core Features
 
-### Series System (NEW - March 2026)
+### Series System (March 2026)
 Cards are organized into series. Users must complete one series before accessing the next:
 - **Series 1**: 16 cards (8 bands × 2 cards each: A & B)
 - **Series 2-4**: Future series (same structure)
@@ -19,17 +19,17 @@ Cards are organized into series. Users must complete one series before accessing
   - A **Rare card reward**
   - Access to the **next series**
 
-**Series 1 Bands:**
+**Series 1 Bands (UPDATED March 15, 2026):**
 | Band | Card A | Card B |
 |------|--------|--------|
-| Mille | Silly Mille | Mille Gorezza |
-| Cliff | Cliff Burpin | Cliff Diver |
-| Scott | Scotch Ian | Scott Eaten |
-| Chuck | Chuck Roast | Blood Bonder |
-| Tom | Tom da Playa | Billy Chuck |
-| Don | Don Doody | Tommy Spewart |
-| Beer | Beer Schmier | Philled Up |
-| Piggy | Piggy in a Blanket | Billy Mylanta |
+| $LAYA | Slaya da Playa | Chum Araya |
+| Megadef | Musty Dave | Dave's Mustang |
+| Sepulchura | Maxi Pad | Maximum |
+| Testyment | Billy Chuck | Chuck Roast |
+| Metallikuh | Cliff Diver | Cliff Burpin |
+| Anthrash | Scotch Ian | Scott Eaten |
+| Kreaturd | Silly Mille | Mille Gorezza |
+| Eggsodus | Paul Bawl Off | Blood Bonder |
 
 **Series Rewards:**
 - Series 1 → Martin Van Druid (Rare)
@@ -43,10 +43,6 @@ Users spin a roulette wheel to randomly win cards from their current series:
 - **Duplicates**: Added to collection for trading
 - **Visual**: Animated wheel with card previews, progress bar, series info
 
-### Other Card Types (Goal Rewards)
-- **Epic Cards**: 7-day streak (Tom Angeltipper), 14-day streak (Tom Angelflipper)
-- **Engagement Cards**: 30-day streak (Maxi Pad), 750 coins spent (Musty Dave), 20 days/month (Chum Araya)
-
 ### Coin Purchase System (Implemented Feb 27, 2026)
 Users can purchase coins with real money via Stripe:
 | Package | Base Coins | Price | Coins/$ |
@@ -56,19 +52,6 @@ Users can purchase coins with real money via Stripe:
 | Ultimate Pack | 1000 | $9.99 | ~100 |
 
 **First Purchase Bonus:** New users get **50% extra coins** on their first purchase!
-- Starter: 200 + 100 bonus = 300 coins
-- Collector: 500 + 250 bonus = 750 coins  
-- Ultimate: 1000 + 500 bonus = 1500 coins
-
-Features:
-- Stripe Checkout integration for secure payments
-- First-purchase bonus (50% extra coins)
-- "Best Value" indicator on Ultimate Pack
-- Coins per dollar display for savings comparison
-- Payment transaction history tracking
-- Automatic coin crediting after successful payment
-- Webhook support for payment confirmations
-- IAP structure prepared for future iOS/Android native purchases
 
 ### Goals System
 - First Card: Collect first card (25 coins)
@@ -86,22 +69,25 @@ Features:
 
 ### Frontend (Expo/React Native)
 - `/app/frontend/app/` - Main app screens
-  - `index.tsx` - Home/Login screen
-  - `shop.tsx` - Card shop with all tier sections
-  - `collection.tsx` - User's card collection
-  - `goals/index.tsx` - Goals and achievements
-  - `profile/index.tsx` - User profile
-  - `trade.tsx` - Card trading
+  - `screens/home/index.tsx` - Home/Login screen
+  - `screens/shop.tsx` - Card Spinner roulette wheel
+  - `screens/collection/index.tsx` - User's card collection
+  - `screens/goals/index.tsx` - Goals and achievements
+  - `screens/profile/index.tsx` - User profile
+  - `screens/trade.tsx` - Card trading (placeholder)
+  - `screens/privacy.tsx` - Privacy Policy
+  - `screens/payment-success.tsx` - Payment confirmation
+  - `components/BuyCoinsModal.tsx` - Coin purchase modal
 
 ### Key API Endpoints
 - `POST /api/users` - Create user
 - `GET /api/users/{user_id}` - Get user data
 - `POST /api/users/{user_id}/daily-login` - Claim daily bonus
-- `POST /api/users/{user_id}/purchase-card` - Buy a card
-- `GET /api/users/{user_id}/check-rare-cards` - Check rare card unlock status
-- `GET /api/users/{user_id}/check-epic-cards` - Check epic card unlock status
-- `GET /api/users/{user_id}/check-engagement-milestones` - Check engagement milestone status (NEW)
-- `GET /api/users/{user_id}/goals` - Get user's goal progress
+- `POST /api/users/{user_id}/spin` - Spin the wheel for a random card
+- `GET /api/users/{user_id}/spin-pool` - Get available cards in spin pool
+- `GET /api/cards` - Get all cards
+- `POST /api/create-checkout-session` - Create Stripe checkout
+- `GET /api/payment-success` - Handle successful payment
 
 ## Database Schema
 
@@ -115,9 +101,8 @@ Features:
   "last_login_date": "string (YYYY-MM-DD)",
   "total_spent_coins": "int",
   "monthly_logins": {"YYYY-MM": [day1, day2, ...]},
-  "unlocked_rare_cards": ["card_id", ...],
-  "unlocked_epic_cards": ["card_id", ...],
-  "unlocked_engagement_cards": ["card_id", ...]
+  "unlocked_series": [1, 2, ...],
+  "completed_series": [1, ...]
 }
 ```
 
@@ -127,55 +112,57 @@ Features:
   "id": "card_xxx",
   "name": "string",
   "description": "string",
-  "rarity": "common|rare|epic",
+  "rarity": "common|rare",
   "front_image_url": "string",
   "back_image_url": "string",
   "coin_cost": "int",
   "available": "bool",
+  "series": "int",
+  "band": "string",
+  "card_type": "A|B",
   "achievement_required": "int|null",
-  "streak_required": "int|null",
-  "engagement_milestone": "dedicated_fan|big_spender|monthly_master|null"
+  "series_reward": "int|null"
 }
 ```
 
 ## What's Been Implemented
 
-### February 20, 2026
-- ✅ **Engagement Milestones Feature**
-  - Added tracking for `total_spent_coins` and `monthly_logins` in user model
-  - Created 3 engagement milestone cards (Maxi Pad, Musty Dave, Chum Araya)
-  - Added `check_engagement_milestones` function for automatic unlocking
-  - Added `/api/users/{user_id}/check-engagement-milestones` endpoint
-  - Updated purchase endpoint to track spending
-  - Updated daily login to track monthly logins
-  - Added Engagement Milestones section UI in shop.tsx
+### March 15, 2026 - Series 1 Card Update
+- ✅ **Updated all 16 Series 1 cards with user-provided artwork**
+  - 8 bands with unique card images (front + back for each)
+  - New band names: $LAYA, Megadef, Sepulchura, Testyment, Metallikuh, Anthrash, Kreaturd, Eggsodus
+  - New card names and descriptions matching artwork
+  - All image URLs updated to user-provided assets
+- ✅ **Cleaned up deprecated cards**
+  - Removed Epic streak cards (tom_angeltipper, tom_angelflipper)
+  - Removed old engagement milestone cards
+  - Kept 4 rare reward cards for series completion
 
 ### Previous Sessions
-- Full card shop with Common, Rare, Epic, Coming Soon sections
+- Full card spinner roulette wheel
+- Series progression system
+- Stripe integration for coin purchases
 - Collection view with card flip animation
 - Goals system with coin rewards
 - Daily login bonus with streak tracking
 - Tab navigation (Home, Collection, Shop, Goals, Trade, Profile)
 - Custom logo and background theming
+- Privacy Policy page
+- Payment success handling
 
-## Pending Issues
-1. (P2) Cliff Diver card image may appear missing - likely mobile caching issue
-2. (P3) Web preview scrolling can be unreliable
+## Known Issues
+1. (P0) Expo Go error on mobile device - may need cache clear
+2. (P1) TouchableOpacity login button unreliable in web preview
+3. (P3) Web preview scrolling can be unreliable on long lists
 
 ## Upcoming Tasks
-- App store submission process (binary build, App Store Connect setup)
+1. Implement Series 2+ cards (need artwork)
+2. Card trading feature
+3. App store submission process (binary build, App Store Connect setup)
 
 ## Future/Backlog
 - Add In-App Purchases (IAP) for iOS/Android native checkout
+- Re-introduce engagement milestones as long-term goals
 - Purchase receipts/confirmation emails
 - Refactor server.py into separate route/model files
-- Refactor shop.tsx into smaller components
-- Improve database seeding logic
-
-## Recently Completed (March 2026)
-- ✅ Privacy Policy screen (`/app/frontend/app/privacy.tsx`)
-- ✅ Profile screen enhancements:
-  - Buy Coins quick action with cart icon
-  - Payment History viewer with receipt icon
-  - Privacy Policy link with shield icon at bottom
-  - Improved logout button with Ionicons
+- Improve scrolling performance with @shopify/flash-list

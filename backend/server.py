@@ -225,323 +225,299 @@ COIN_PACKAGES = {
 FIRST_PURCHASE_BONUS_PERCENTAGE = 50  # 50% extra coins on first purchase
 
 # =====================
-# Seed Data
+# Seed Data - Series 1 Cards (8 bands, 16 cards)
 # =====================
 
 CARD_IMAGE_URLS = {
-    "silly_mille": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/rofaamfd_file_00000000e17071f582be5805f1e745cc.png",
-    "scotch_ian": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/bfe7vlxj_file_00000000e86871fda14428df7c29ecbc.jpg",
-    "chuck_roast": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/4tm2n04w_file_000000006b8071fdbfd0b8b8447216c1.jpg",
-    "cliff_burpin": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zcekiedi_file_0000000013e071fd85ece28d1911153b.png",
-    "scott_eaten": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgbfbhem_file_00000000499871f888b862576600e427.png",
-    "tom_da_playa": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/x9pn7yxa_enhanced-1771255929218.jpg",
-    "billy_chuck": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/u4fz71ye_enhanced-1771256129678.jpg",
-    "cliff_diver": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/9ty58q1e_enhanced-1771255741945.jpg",
-    "blood_bonder": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/17uzbwmx_enhanced-1771256230913.jpg",
-    # Rare achievement cards
+    # Band 1: $LAYA
+    "slaya_da_playa": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/8p3eb259_file_00000000172471f8a3d8c4e632f699f7.png",
+    "chum_araya": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/19mw7g72_file_000000008df471f5b300702b42b32cd0.png",
+    # Band 2: Megadef
+    "musty_dave": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/nggi41l4_file_00000000319871f583003b0145086e96.png",
+    "daves_mustang": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/8t15nt7u_file_0000000079ec71fdbe0a31c88426db30.png",
+    # Band 3: Sepulchura
+    "maxi_pad": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/6cc9oltm_file_000000000a5471f5ae6a72ba59efab72.png",
+    "maximum": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/2revzgsz_file_000000000f8c71f5a1ceebe96981364d.png",
+    # Band 4: Testyment
+    "billy_chuck": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/wyz5xr3e_file_00000000fb00722fa6b9aa0e95bdfee0.png",
+    "chuck_roast": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/tt9zf49y_file_000000009cf471fd9f9ec310d1d825f1%20%282%29.png",
+    # Band 5: Metallikuh
+    "cliff_diver": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/3253t70u_file_00000000da2c71f8a3882344e443bca5.png",
+    "cliff_burpin": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/vj8zbqec_file_00000000efb871f8aff2dad98e7da9e0.png",
+    # Band 6: Anthrash
+    "scotch_ian": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/wfx5afyp_file_0000000067c071fd8fbea79ea1359879.png",
+    "scott_eaten": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/g7kyk9s9_file_00000000d70c71fdb7b87b53d2b770cd.png",
+    # Band 7: Kreaturd
+    "silly_mille": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/paaodduf_file_0000000018b871fda0fd7e44b8c11def.png",
+    "mille_gorezza": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/g91wp9yv_file_000000002b6871f8adc873413d3619f3.png",
+    # Band 8: Eggsodus
+    "paul_bawl_off": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/qwai8wue_file_00000000442871fd8945003a4fd9662a.png",
+    "blood_bonder": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/63m30i4q_file_00000000a374722f8343b54e3a06558f.png",
+    # Rare achievement cards (Series completion rewards)
     "martin_van_druid": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/1qvok3an_file_00000000b1bc71fda2cfbe35b2441dbe.png",
     "tardy_donald": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/4jtbdfkr_file_00000000bef871fdb4e76de0e490ad1a.png",
-    # Epic streak cards
-    "tom_angeltipper": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/ils699vw_file_00000000f3cc71fda6baa4d7c29e92a0.png",
-    "tom_angelflipper": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/38vylb1j_file_00000000617471fd90c3846604962dda.png",
-    # Coming Soon cards (Wave 2)
-    "don_doody": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/gha4gfuz_enhanced-1771278042580.jpg",
-    "billy_mylanta": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/xkucxxap_enhanced-1771278196496.jpg",
-    "tommy_spewart": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/r8qvr3ex_enhanced-1771278293743.jpg",
-    "piggy_in_a_blanket": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/w8mjufnl_enhanced-1771278196496.jpg",
-    "beer_schmier": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/o7ytl1mj_enhanced-1771279108828.jpg",
-    # New Rare achievement cards (30 and 40 cards)
     "kerry_the_king": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/8sfdw92q_file_000000001f5071fd88973aa9c05bebac.png",
     "jeff_possess_ya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/s0jimvhs_file_000000006fcc71fd80e12f47bd0524f3.png",
-    # Coming Soon Wave 3
-    "philled_up": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/i3cgqtwz_enhanced-1771278999569.jpg",
-    # Engagement Milestone Cards
-    "maxi_pad": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/i3cgqtwz_enhanced-1771278999569.jpg",
-    "musty_dave": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/i3cgqtwz_enhanced-1771278999569.jpg",
-    "chum_araya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/i3cgqtwz_enhanced-1771278999569.jpg"
 }
 
 CARD_BACK_IMAGE_URLS = {
-    "silly_mille": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/xnbwdtzm_enhanced-1771276393918.jpg",
-    "scotch_ian": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/z1p5iwct_enhanced-1771276079050.jpg",
-    "chuck_roast": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/k748ickv_enhanced-1771277329420.jpg",
-    "cliff_burpin": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zonv9a4q_enhanced-1771277427890.jpg",
-    "scott_eaten": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/203eblu2_enhanced-1771276134869.jpg",
-    "tom_da_playa": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/8u33xp9j_enhanced-1771276506337.jpg",
-    "billy_chuck": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/67cnskj3_enhanced-1771277248056.jpg",
-    "cliff_diver": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/ff6yk5mf_enhanced-1771277691515.jpg",
-    "blood_bonder": "https://customer-assets.emergentagent.com/job_earn-cards/artifacts/cvjsunwj_enhanced-1771277815451.jpg",
-    # Rare achievement cards backs
+    # Band 1: $LAYA
+    "slaya_da_playa": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jlg546ha_file_00000000369c71f580be8b548f7c5be7.png",
+    "chum_araya": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/ah6bgu7l_file_000000002aa0722fb5a83a6a51706776.png",
+    # Band 2: Megadef
+    "musty_dave": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/z7kf9k7g_file_00000000ae7c722f8927ccf43d190b52.png",
+    "daves_mustang": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/05n3fgpt_file_000000008f0471fd8eb6563d4dc546d5.png",
+    # Band 3: Sepulchura
+    "maxi_pad": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/rstninpu_file_00000000ed6c71f8801642ff21a5d10f.png",
+    "maximum": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/xkztrnkt_file_00000000ea9871f8985aecfb04305ed7.png",
+    # Band 4: Testyment
+    "billy_chuck": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/hxqdjff7_file_00000000a10c71f884e6b3625a31bd00.png",
+    "chuck_roast": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/m158yvhx_file_00000000ee187230978fd25aac62ddc5.png",
+    # Band 5: Metallikuh
+    "cliff_diver": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/qpm4wvvq_file_0000000079d471f88a22462a2aded95c.png",
+    "cliff_burpin": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/4yuf3wp5_file_00000000475471fd8fee6d503fb9b32c.png",
+    # Band 6: Anthrash
+    "scotch_ian": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/ecjxi0zu_file_0000000058b071fda35cc951b6f03a0b.png",
+    "scott_eaten": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/mgyvbjh8_file_00000000c9dc71fdb2de5295e9fe4e18.png",
+    # Band 7: Kreaturd
+    "silly_mille": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jfks6ym6_file_0000000044cc71f5b295bcd8f73d0398.png",
+    "mille_gorezza": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/1asg9g5i_file_00000000674c71f5a6ddd9c12c7ffcdb.png",
+    # Band 8: Eggsodus
+    "paul_bawl_off": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/9dv3gzga_file_00000000b82471fdb1ce4df389a3cdb3.png",
+    "blood_bonder": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/uknhwlhn_file_00000000e53871f8b1042baf1259181b.png",
+    # Rare achievement cards backs (Series completion rewards)
     "martin_van_druid": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/wzu9cgqo_file_00000000581c71fd9f6943c516c13338.png",
     "tardy_donald": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/aiui1nef_file_000000009e4871f8b270fdb6a2aa38de.png",
-    # Epic streak cards backs
-    "tom_angeltipper": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/g775jo99_file_000000002c3871fda4d75a8c5b504ef3.png",
-    "tom_angelflipper": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/vc9gdgee_file_0000000089a071f8a6fe8ea7b7eefa41.png",
-    # Coming Soon cards backs (use front as placeholder for now)
-    "don_doody": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/gha4gfuz_enhanced-1771278042580.jpg",
-    "billy_mylanta": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/xkucxxap_enhanced-1771278196496.jpg",
-    "tommy_spewart": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/r8qvr3ex_enhanced-1771278293743.jpg",
-    "piggy_in_a_blanket": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/f5c5jnwj_enhanced-1771279398630.jpg",
-    "beer_schmier": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/o7ytl1mj_enhanced-1771279108828.jpg",
-    # New Rare achievement cards backs (30 and 40 cards)
     "kerry_the_king": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/sxac7kjw_file_00000000833071fd8adc51da518e9550.png",
     "jeff_possess_ya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/hzkwnsri_file_00000000564871fd915c1ecfbac3aacc.png",
-    # Coming Soon Wave 3 backs
-    "philled_up": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/pru66o9k_enhanced-1771280383938.jpg",
-    # Engagement Milestone Cards backs
-    "maxi_pad": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/pru66o9k_enhanced-1771280383938.jpg",
-    "musty_dave": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/pru66o9k_enhanced-1771280383938.jpg",
-    "chum_araya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/pru66o9k_enhanced-1771280383938.jpg"
 }
 
-# Rare card achievement requirements
+# Rare card achievement requirements (Series completion rewards)
 RARE_CARD_ACHIEVEMENTS = {
-    "card_martin_van_druid": {"required_cards": 10, "name": "Martin Van Druid"},
-    "card_tardy_donald": {"required_cards": 20, "name": "Tardy Donald"},
-    "card_kerry_the_king": {"required_cards": 30, "name": "Kerry The King"},
-    "card_jeff_possess_ya": {"required_cards": 40, "name": "Jeff Possess Ya"}
-}
-
-# Engagement Milestone requirements for unlocking Coming Soon cards
-ENGAGEMENT_MILESTONES = {
-    "card_maxi_pad": {
-        "name": "Maxi Pad",
-        "type": "dedicated_fan",
-        "requirement": 30,  # 30-day login streak
-        "description": "Dedicated Fan: 30-day login streak"
-    },
-    "card_musty_dave": {
-        "name": "Musty Dave",
-        "type": "big_spender",
-        "requirement": 750,  # 750 coins spent
-        "description": "Big Spender: Spend 750 total coins"
-    },
-    "card_chum_araya": {
-        "name": "Chum Araya",
-        "type": "monthly_master",
-        "requirement": 20,  # 20 days in a single month
-        "description": "Monthly Master: Log in 20 days in a single month"
-    }
+    "card_martin_van_druid": {"required_cards": 16, "name": "Martin Van Druid"},  # Complete Series 1
+    "card_tardy_donald": {"required_cards": 32, "name": "Tardy Donald"},  # Complete Series 2
+    "card_kerry_the_king": {"required_cards": 48, "name": "Kerry The King"},  # Complete Series 3
+    "card_jeff_possess_ya": {"required_cards": 64, "name": "Jeff Possess Ya"}  # Complete Series 4
 }
 
 INITIAL_CARDS = [
     # =====================
     # SERIES 1 - 8 bands, 16 cards (A & B for each band)
     # =====================
-    # Band 1: Silly Mille / Mille Gorezza
+    # Band 1: $LAYA
     {
-        "id": "card_silly_mille",
-        "name": "Silly Mille",
-        "description": "The wild guitarist who rocks harder than anyone! With his flying V guitar and legendary tongue-out pose, he brings the chaos to every show.",
+        "id": "card_slaya_da_playa",
+        "name": "Slaya da Playa",
+        "description": "Slaya spends more time flossing gold chains than tuning his guitar. Watch out—he'll sell you merch AND steal your girlfriend.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["silly_mille"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["silly_mille"],
+        "front_image_url": CARD_IMAGE_URLS["slaya_da_playa"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["slaya_da_playa"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Mille",
+        "band": "$LAYA",
         "card_type": "A"
     },
     {
-        "id": "card_mille_gorezza",
-        "name": "Mille Gorezza",
-        "description": "The legendary shredder returns! Mille Gorezza brings even more chaos with his signature style and unstoppable riffs.",
+        "id": "card_chum_araya",
+        "name": "Chum Araya",
+        "description": "When Chum steps on stage, it smells Raining Blood. Watch yourself—he'll kick your face and eat all your pizza.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS.get("mille_gorezza", CARD_IMAGE_URLS["silly_mille"]),
-        "back_image_url": CARD_BACK_IMAGE_URLS.get("mille_gorezza", CARD_BACK_IMAGE_URLS["silly_mille"]),
+        "front_image_url": CARD_IMAGE_URLS["chum_araya"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Mille",
+        "band": "$LAYA",
         "card_type": "B"
     },
-    # Band 2: Cliff Burpin / Cliff Diver
+    # Band 2: Megadef
     {
-        "id": "card_cliff_burpin",
-        "name": "Cliff Burpin",
-        "description": "The bass-slapping, fire-breathing beast! His legendary burps can melt faces from 50 feet away. Don't stand too close!",
+        "id": "card_musty_dave",
+        "name": "Musty Dave",
+        "description": "Musty Dave hasn't showered since the Cold War. He smells like rust, sweat, and bad ideas.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["cliff_burpin"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_burpin"],
+        "front_image_url": CARD_IMAGE_URLS["musty_dave"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["musty_dave"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Cliff",
+        "band": "Megadef",
         "card_type": "A"
     },
     {
-        "id": "card_cliff_diver",
-        "name": "Cliff Diver",
-        "description": "Taking the plunge! Cliff Diver launches from the highest amps into the wildest crowd surfs ever witnessed!",
+        "id": "card_daves_mustang",
+        "name": "Dave's Mustang",
+        "description": "Dave's Mustang leaves a trail of tire smoke and broken eardrums. He drives like he solos: loud and a little out of control.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["cliff_diver"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver"],
+        "front_image_url": CARD_IMAGE_URLS["daves_mustang"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["daves_mustang"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Cliff",
+        "band": "Megadef",
         "card_type": "B"
     },
-    # Band 3: Scotch Ian / Scott Eaten
+    # Band 3: Sepulchura
     {
-        "id": "card_scotch_ian",
-        "name": "Scotch Ian",
-        "description": "The kilted warrior with a taste for fine spirits! His battle cry echoes through the highlands as he charges into the mosh pit.",
+        "id": "card_maxi_pad",
+        "name": "Maxi Pad",
+        "description": "Maxi Pad is a walking snot rag, dripping sweat, slime, and blood. He uses his gross collection of filth for guitar solos that leave you queasy.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["scotch_ian"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["scotch_ian"],
+        "front_image_url": CARD_IMAGE_URLS["maxi_pad"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["maxi_pad"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Scott",
+        "band": "Sepulchura",
         "card_type": "A"
     },
     {
-        "id": "card_scott_eaten",
-        "name": "Scott Eaten",
-        "description": "The zombie frontman of Antichrax! He's been eaten alive by fans but keeps coming back for more brutal shows!",
+        "id": "card_maximum",
+        "name": "Maximum",
+        "description": "Maximum is pissed off about everything – except the size of his ego. He's so angry that even his rage is loud enough to make your grandma cover her ears.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["scott_eaten"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["scott_eaten"],
+        "front_image_url": CARD_IMAGE_URLS["maximum"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["maximum"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Scott",
+        "band": "Sepulchura",
         "card_type": "B"
     },
-    # Band 4: Chuck Roast / Blood Bonder  
-    {
-        "id": "card_chuck_roast",
-        "name": "Chuck Roast",
-        "description": "The devil's own pitmaster! With his pitchfork and hellfire grill, he serves up the hottest BBQ this side of the underworld.",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["chuck_roast"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["chuck_roast"],
-        "coin_cost": 50,
-        "available": True,
-        "series": 1,
-        "band": "Chuck",
-        "card_type": "A"
-    },
-    {
-        "id": "card_blood_bonder",
-        "name": "Blood Bonder",
-        "description": "The bonding agent of chaos! Blood Bonder glues the band together with his dark rituals and heavier-than-hell riffs.",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["blood_bonder"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder"],
-        "coin_cost": 50,
-        "available": True,
-        "series": 1,
-        "band": "Chuck",
-        "card_type": "B"
-    },
-    # Band 5: Tom da Playa / Billy Chuck
-    {
-        "id": "card_tom_da_playa",
-        "name": "Tom da Playa",
-        "description": "The smooth operator of thrash! Tom da Playa brings the beach vibes to the pit with his surf-metal fusion madness!",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["tom_da_playa"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["tom_da_playa"],
-        "coin_cost": 50,
-        "available": True,
-        "series": 1,
-        "band": "Tom",
-        "card_type": "A"
-    },
+    # Band 4: Testyment
     {
         "id": "card_billy_chuck",
         "name": "Billy Chuck",
-        "description": "The dynamic duo rolled into one! Billy Chuck throws punches and riffs with equal ferocity!",
+        "description": "Billy Chuck mumbles when he's sober, roars when he's hammered, and snorts when he's drunk.",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["billy_chuck"],
         "back_image_url": CARD_BACK_IMAGE_URLS["billy_chuck"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Tom",
-        "card_type": "B"
-    },
-    # Band 6: Don Doody / Tommy Spewart
-    {
-        "id": "card_don_doody",
-        "name": "Don Doody",
-        "description": "The godfather of gross! Don Doody runs the filthiest crew in the scene with an iron fist and a bronze toilet!",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["don_doody"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["don_doody"],
-        "coin_cost": 50,
-        "available": True,
-        "series": 1,
-        "band": "Don",
+        "band": "Testyment",
         "card_type": "A"
     },
     {
-        "id": "card_tommy_spewart",
-        "name": "Tommy Spewart",
-        "description": "The vocal volcano! Tommy Spewart's legendary projectile performances are both feared and celebrated!",
+        "id": "card_chuck_roast",
+        "name": "Chuck Roast",
+        "description": "Chuck Roast eats mics for breakfast, burritos for lunch, and anything that looks remotely edible for dinner.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["tommy_spewart"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["tommy_spewart"],
+        "front_image_url": CARD_IMAGE_URLS["chuck_roast"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["chuck_roast"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Don",
+        "band": "Testyment",
         "card_type": "B"
     },
-    # Band 7: Beer Schmier / Philled Up
+    # Band 5: Metallikuh
     {
-        "id": "card_beer_schmier",
-        "name": "Beer Schmier",
-        "description": "The suds-soaked shredder! Beer Schmier plays faster with every pint, achieving legendary drunken speed metal!",
+        "id": "card_cliff_diver",
+        "name": "Cliff Diver",
+        "description": "Cliff Diver dives headfirst off amps and lands on unlucky fans, puking out beer, pizza, and whiskey often as he goes. His stage dives are as epic as his hangovers.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["beer_schmier"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["beer_schmier"],
+        "front_image_url": CARD_IMAGE_URLS["cliff_diver"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Beer",
+        "band": "Metallikuh",
         "card_type": "A"
     },
     {
-        "id": "card_philled_up",
-        "name": "Philled Up",
-        "description": "Completely philled to the brim! This bloated basher brings the heavy low-end that shakes venues to their foundations!",
+        "id": "card_cliff_burpin",
+        "name": "Cliff Burpin",
+        "description": "Cliff burps so hard it rattles the amps. Smells like beer, bass strings, and bad decisions.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["philled_up"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["philled_up"],
+        "front_image_url": CARD_IMAGE_URLS["cliff_burpin"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_burpin"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Beer",
+        "band": "Metallikuh",
         "card_type": "B"
     },
-    # Band 8: Piggy in a Blanket / Billy Mylanta
+    # Band 6: Anthrash
     {
-        "id": "card_piggy_in_a_blanket",
-        "name": "Piggy in a Blanket",
-        "description": "The snuggliest shredder! Wrapped in his cozy blanket, Piggy brings warmth to the coldest mosh pits!",
+        "id": "card_scotch_ian",
+        "name": "Scotch Ian",
+        "description": "Scotch Ian likes his whiskey, his kilt, and his guitar loud enough to strip the flesh right off yer ger bones. His solos are so strong they come with a hangover.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["piggy_in_a_blanket"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["piggy_in_a_blanket"],
+        "front_image_url": CARD_IMAGE_URLS["scotch_ian"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scotch_ian"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Piggy",
+        "band": "Anthrash",
         "card_type": "A"
     },
     {
-        "id": "card_billy_mylanta",
-        "name": "Billy Mylanta",
-        "description": "The antacid avenger! Billy Mylanta soothes the burn of his brutal performances with legendary digestive relief!",
+        "id": "card_scott_eaten",
+        "name": "Scott Eaten",
+        "description": "Scott Eaten uses his guitar to chomp anything in his way. Better lock up your food and your fingers when he's around.",
         "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["billy_mylanta"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["billy_mylanta"],
+        "front_image_url": CARD_IMAGE_URLS["scott_eaten"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scott_eaten"],
         "coin_cost": 50,
         "available": True,
         "series": 1,
-        "band": "Piggy",
+        "band": "Anthrash",
+        "card_type": "B"
+    },
+    # Band 7: Kreaturd
+    {
+        "id": "card_silly_mille",
+        "name": "Silly Mille",
+        "description": "Kreaturd shreds noses as much as they shred riffs. Their shredding solos will turn your stomach and they're always ready to start a snotpocalypse.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["silly_mille"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["silly_mille"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Kreaturd",
+        "card_type": "A"
+    },
+    {
+        "id": "card_mille_gorezza",
+        "name": "Mille Gorezza",
+        "description": "Mille Gorezza shreds bodies as much as he shreds guitar. His killer solos turn your stomach and he's always ready to start a moshpocalypse.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["mille_gorezza"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["mille_gorezza"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Kreaturd",
+        "card_type": "B"
+    },
+    # Band 8: Eggsodus
+    {
+        "id": "card_paul_bawl_off",
+        "name": "Paul Bawl Off",
+        "description": "Paul Bawl Off cries like a spoiled toddler at the first sign of trouble. From tears to snot bubbles, he floods the stage until everyone looks like they just went for a swim.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["paul_bawl_off"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["paul_bawl_off"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Eggsodus",
+        "card_type": "A"
+    },
+    {
+        "id": "card_blood_bonder",
+        "name": "Blood Bonder",
+        "description": "With all the blood he spews, you'll swear Blood Bonder has thrash flowing through his veins. He showers the crowd with plasma and laughs as he bathes in the gore.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["blood_bonder"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Eggsodus",
         "card_type": "B"
     },
     # =====================
@@ -595,67 +571,6 @@ INITIAL_CARDS = [
         "achievement_required": 64,  # Unlocks after completing Series 4
         "series_reward": 4
     },
-    # =====================
-    # EPIC CARDS - Streak rewards (not in spin pool)
-    # =====================
-    {
-        "id": "card_tom_angeltipper",
-        "name": "Tom Angeltipper",
-        "description": "The angelic shredder who fell from heaven! His divine riffs tip the scales between metal and mayhem!",
-        "rarity": "epic",
-        "front_image_url": CARD_IMAGE_URLS["tom_angeltipper"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["tom_angeltipper"],
-        "coin_cost": 100,
-        "available": False,
-        "streak_required": 7
-    },
-    {
-        "id": "card_tom_angelflipper",
-        "name": "Tom Angelflipper",
-        "description": "Tom's evil twin! Tom Angelflipper flips between dimensions, bringing interdimensional chaos to the pit!",
-        "rarity": "epic",
-        "front_image_url": CARD_IMAGE_URLS["tom_angelflipper"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["tom_angelflipper"],
-        "coin_cost": 100,
-        "available": False,
-        "streak_required": 14
-    },
-    # =====================
-    # ENGAGEMENT MILESTONE CARDS (not in spin pool)
-    # =====================
-    {
-        "id": "card_maxi_pad",
-        "name": "Maxi Pad",
-        "description": "The ultimate pad slapper! Maxi Pad crashes every show with absorption levels off the charts!",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["maxi_pad"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["maxi_pad"],
-        "coin_cost": 50,
-        "available": False,
-        "engagement_milestone": "dedicated_fan"
-    },
-    {
-        "id": "card_musty_dave",
-        "name": "Musty Dave",
-        "description": "The stinkiest shredder! Musty Dave's aroma clears mosh pits and melts faces!",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["musty_dave"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["musty_dave"],
-        "coin_cost": 50,
-        "available": False,
-        "engagement_milestone": "big_spender"
-    },
-    {
-        "id": "card_chum_araya",
-        "name": "Chum Araya",
-        "description": "From the depths of Sleigher! Chum Araya baits the crowd with bloody riffs!",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["chum_araya"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya"],
-        "coin_cost": 50,
-        "available": False,
-        "engagement_milestone": "monthly_master"
-    }
 ]
 
 INITIAL_GOALS = [
@@ -1291,7 +1206,7 @@ async def get_spin_config():
     """Get spin wheel configuration"""
     return {
         "spin_cost": SPIN_COST,
-        "odds": SPIN_ODDS
+        "odds": {"common": 100}  # All cards in spin pool are common for Series 1
     }
 
 @api_router.post("/users/{user_id}/spin")
