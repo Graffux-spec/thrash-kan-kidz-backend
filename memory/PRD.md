@@ -3,31 +3,37 @@
 ## Original Problem Statement
 Build a mobile card collecting app for "Thrash Kan Kidz" cards where users:
 - Log in to receive coins
-- Purchase cards from a shop
+- **Spin a roulette wheel** to get random cards (gacha system)
 - View their collection (showing owned vs missing cards)
+- Trade duplicate cards with other users
 - Unlock special cards through achievements and milestones
 - Buy coins with real money (Stripe integration)
 
 ## Core Features
 
-### Card Tiers & Unlocks
-1. **Common Cards** - Purchasable from shop (50 coins each)
-2. **Rare Cards** - Unlock after collecting certain number of cards:
-   - Martin Van Druid: 10 cards
-   - Tardy Donald: 20 cards
-   - Kerry The King: 30 cards
-   - Jeff Possess Ya: 40 cards
-3. **Epic Cards** - Unlock after consecutive login streaks:
-   - Tom Angeltipper: 7-day streak
-   - Tom Angelflipper: 14-day streak
-4. **Milestone Cards** - Free random common card every 10 cards collected
-5. **Coming Soon Cards** - Visible but unavailable for purchase
+### Card Spinner (Gacha System) - NEW
+Users spin a roulette wheel to randomly win cards:
+- **Spin Cost**: 50 coins per spin
+- **Drop Rates**:
+  - Common: 80%
+  - Rare: 20% (only unlocked rare cards appear in pool)
+- **Duplicates**: Added to collection for trading
+- **Visual**: Animated wheel with card previews, result modal with card reveal
 
-### Engagement Milestones (Implemented Feb 20, 2026)
-Special "Coming Soon" cards unlocked by meeting engagement criteria:
-- **Dedicated Fan** (30-day login streak) → Unlocks "Maxi Pad"
-- **Big Spender** (750 total coins spent) → Unlocks "Musty Dave"
-- **Monthly Master** (20 days login in single month) → Unlocks "Chum Araya"
+### Card Tiers & Unlocks
+1. **Common Cards** - Available in spin pool (80% chance)
+2. **Rare Cards** - Appear in spin pool after unlocking via milestones (20% chance):
+   - Martin Van Druid: Unlock at 10 cards collected
+   - Tardy Donald: Unlock at 20 cards
+   - Kerry The King: Unlock at 30 cards
+   - Jeff Possess Ya: Unlock at 40 cards
+3. **Epic Cards** - Goal rewards only (not in spin pool):
+   - Tom Angeltipper: 7-day login streak
+   - Tom Angelflipper: 14-day login streak
+4. **Engagement Milestone Cards** - Goal rewards only:
+   - Maxi Pad: 30-day streak (Dedicated Fan)
+   - Musty Dave: 750 coins spent (Big Spender)
+   - Chum Araya: 20 days/month login (Monthly Master)
 
 ### Coin Purchase System (Implemented Feb 27, 2026)
 Users can purchase coins with real money via Stripe:

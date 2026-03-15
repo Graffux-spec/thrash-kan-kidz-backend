@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,683 +6,366 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Alert,
-  ActivityIndicator,
-  Dimensions,
+  Animated,
+  Easing,
   Modal,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../src/context/AppContext';
-import { BlurView } from 'expo-blur';
 import BuyCoinsModal from './components/BuyCoinsModal';
 
-const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - 48) / 2;
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const WHEEL_SIZE = Math.min(SCREEN_WIDTH - 80, 300);
 
-interface RareCardStatus {
-  card: any;
-  owned: boolean;
-  unlocked: boolean;
-  can_purchase: boolean;
-  required_cards: number;
-  progress: number;
-}
-
-interface EpicCardStatus {
-  card: any;
-  owned: boolean;
-  unlocked: boolean;
-  can_purchase: boolean;
-  required_streak: number;
-  progress: number;
-}
-
-interface EngagementMilestoneStatus {
-  card: any;
-  owned: boolean;
-  unlocked: boolean;
-  can_purchase: boolean;
-  milestone_type: string;
-  requirement: number;
-  progress: number;
-  description: string;
+interface SpinResult {
+  won_card: any;
+  rarity: string;
+  is_duplicate: boolean;
+  remaining_coins: number;
 }
 
 export default function ShopScreen() {
-  const { user, allCards, userCards, purchaseCard, apiUrl } = useApp();
-  const [purchasing, setPurchasing] = useState<string | null>(null);
-  const [rareCardsStatus, setRareCardsStatus] = useState<RareCardStatus[]>([]);
-  const [epicCardsStatus, setEpicCardsStatus] = useState<EpicCardStatus[]>([]);
-  const [engagementStatus, setEngagementStatus] = useState<EngagementMilestoneStatus[]>([]);
-  const [totalCards, setTotalCards] = useState(0);
-  const [currentStreak, setCurrentStreak] = useState(0);
-  const [totalSpent, setTotalSpent] = useState(0);
-  const [currentMonthLogins, setCurrentMonthLogins] = useState(0);
-  const [showCelebration, setShowCelebration] = useState(false);
-  const [unlockedCard, setUnlockedCard] = useState<any>(null);
-  const [celebrationType, setCelebrationType] = useState<'rare' | 'milestone' | 'epic' | 'engagement'>('rare');
-  const [milestoneInfo, setMilestoneInfo] = useState<any>(null);
-  const [loadingRare, setLoadingRare] = useState(false);
+  const { user, allCards, userCards, apiUrl, refreshData } = useApp();
+  const [spinning, setSpinning] = useState(false);
+  const [spinResult, setSpinResult] = useState<SpinResult | null>(null);
+  const [showResult, setShowResult] = useState(false);
   const [showBuyCoins, setShowBuyCoins] = useState(false);
+  const [spinPool, setSpinPool] = useState<any[]>([]);
+  const [spinConfig, setSpinConfig] = useState({ spin_cost: 50, odds: { common: 80, rare: 20 } });
+  
+  const spinAnim = useRef(new Animated.Value(0)).current;
+  const cardScaleAnim = useRef(new Animated.Value(0)).current;
+  const glowAnim = useRef(new Animated.Value(0)).current;
 
   const BACKGROUND_IMAGE = 'https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgy2com2_enhanced-1771247671181.jpg';
 
-  // Fetch rare, epic, and engagement card status
-  const fetchCardStatus = async () => {
+  useEffect(() => {
+    fetchSpinData();
+  }, [user]);
+
+  const fetchSpinData = async () => {
     if (!user) return;
-    
     try {
-      setLoadingRare(true);
-      console.log('[Shop] Fetching card status for user:', user.id);
-      
-      // Fetch rare cards status
-      const rareResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-rare-cards`);
-      const rareData = await rareResponse.json();
-      console.log('[Shop] Rare cards data:', rareData);
-      
-      setRareCardsStatus(rareData.rare_cards || []);
-      setTotalCards(rareData.total_cards || 0);
-      setMilestoneInfo(rareData.milestone_info || null);
-      
-      // Check if any rare card was newly unlocked
-      if (rareData.newly_unlocked) {
-        setUnlockedCard(rareData.newly_unlocked);
-        setCelebrationType('rare');
-        setShowCelebration(true);
-      }
-      
-      // Fetch epic cards status
-      const epicResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-epic-cards`);
-      const epicData = await epicResponse.json();
-      console.log('[Shop] Epic cards data:', epicData);
-      
-      setEpicCardsStatus(epicData.epic_cards || []);
-      setCurrentStreak(epicData.current_streak || 0);
-      
-      // Fetch engagement milestones status
-      console.log('[Shop] Fetching engagement milestones...');
-      const engagementResponse = await fetch(`${apiUrl}/api/users/${user.id}/check-engagement-milestones`);
-      const engagementData = await engagementResponse.json();
-      console.log('[Shop] Engagement milestones data:', engagementData);
-      console.log('[Shop] Setting engagement status with', engagementData.engagement_milestones?.length || 0, 'milestones');
-      
-      setEngagementStatus(engagementData.engagement_milestones || []);
-      setTotalSpent(engagementData.total_spent_coins || 0);
-      setCurrentMonthLogins(engagementData.current_month_logins || 0);
-      
-      // Check if any engagement card was newly unlocked
-      if (engagementData.newly_unlocked) {
-        setUnlockedCard(engagementData.newly_unlocked);
-        setCelebrationType('engagement');
-        setShowCelebration(true);
-      }
-      
+      const [configRes, poolRes] = await Promise.all([
+        fetch(`${apiUrl}/api/spin/config`),
+        fetch(`${apiUrl}/api/users/${user.id}/spin-pool`)
+      ]);
+      const config = await configRes.json();
+      const pool = await poolRes.json();
+      setSpinConfig(config);
+      setSpinPool([...pool.common_cards, ...pool.rare_cards]);
     } catch (error) {
-      console.error('Error fetching card status:', error);
-    } finally {
-      setLoadingRare(false);
+      console.error('Error fetching spin data:', error);
     }
   };
 
-  useEffect(() => {
-    fetchCardStatus();
-  }, [user, userCards]);
+  const handleSpin = async () => {
+    if (!user || spinning) return;
+    
+    if (user.coins < spinConfig.spin_cost) {
+      setShowBuyCoins(true);
+      return;
+    }
+
+    setSpinning(true);
+    setSpinResult(null);
+    
+    // Reset animations
+    spinAnim.setValue(0);
+    cardScaleAnim.setValue(0);
+    glowAnim.setValue(0);
+
+    try {
+      // Start spinning animation (multiple rotations)
+      const spinDuration = 3000;
+      const rotations = 5 + Math.random() * 3; // 5-8 rotations
+      
+      Animated.timing(spinAnim, {
+        toValue: rotations,
+        duration: spinDuration,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }).start();
+
+      // Call API
+      const response = await fetch(`${apiUrl}/api/users/${user.id}/spin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Wait for spin to finish then show result
+        setTimeout(() => {
+          setSpinResult(result);
+          setShowResult(true);
+          
+          // Animate card reveal
+          Animated.sequence([
+            Animated.timing(cardScaleAnim, {
+              toValue: 1.2,
+              duration: 300,
+              easing: Easing.out(Easing.back(2)),
+              useNativeDriver: true,
+            }),
+            Animated.timing(cardScaleAnim, {
+              toValue: 1,
+              duration: 200,
+              useNativeDriver: true,
+            }),
+          ]).start();
+          
+          // Glow animation for rare cards
+          if (result.rarity === 'rare') {
+            Animated.loop(
+              Animated.sequence([
+                Animated.timing(glowAnim, {
+                  toValue: 1,
+                  duration: 500,
+                  useNativeDriver: true,
+                }),
+                Animated.timing(glowAnim, {
+                  toValue: 0.5,
+                  duration: 500,
+                  useNativeDriver: true,
+                }),
+              ])
+            ).start();
+          }
+          
+          setSpinning(false);
+          refreshData();
+        }, spinDuration);
+      } else {
+        setSpinning(false);
+        alert(result.detail || 'Spin failed');
+      }
+    } catch (error) {
+      console.error('Spin error:', error);
+      setSpinning(false);
+      alert('Failed to spin. Please try again.');
+    }
+  };
+
+  const closeResult = () => {
+    setShowResult(false);
+    setSpinResult(null);
+    glowAnim.setValue(0);
+  };
+
+  const spinRotation = spinAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
         <Image source={{ uri: BACKGROUND_IMAGE }} style={styles.backgroundImage} resizeMode="cover" />
-        <View style={styles.backgroundOverlay} />
-        <View style={styles.centerContainer}>
-          <Text style={styles.lockIcon}>🔒</Text>
-          <Text style={styles.lockedText}>Please login to visit the shop</Text>
+        <View style={styles.overlay} />
+        <View style={styles.loginPrompt}>
+          <Text style={styles.loginText}>Please login to visit the shop</Text>
         </View>
       </SafeAreaView>
     );
   }
 
-  const handlePurchase = async (cardId: string, cost: number, cardName: string, available: boolean) => {
-    if (!available) {
-      Alert.alert('Coming Soon!', `${cardName} is not yet available. Check back later!`);
-      return;
-    }
-
-    if (user.coins < cost) {
-      Alert.alert('Not Enough Coins', `You need ${cost} coins to purchase ${cardName}. Keep completing goals to earn more!`);
-      return;
-    }
-
-    Alert.alert(
-      'Confirm Purchase',
-      `Buy ${cardName} for ${cost} coins?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Buy',
-          onPress: async () => {
-            setPurchasing(cardId);
-            try {
-              const result = await purchaseCard(cardId);
-              
-              // Check if a milestone bonus was awarded
-              if (result?.milestone_reward) {
-                setUnlockedCard(result.milestone_reward.card);
-                setCelebrationType('milestone');
-                setShowCelebration(true);
-              }
-              // Check if a rare card was unlocked with this purchase
-              else if (result?.newly_unlocked_rare_card) {
-                setUnlockedCard(result.newly_unlocked_rare_card);
-                setCelebrationType('rare');
-                setShowCelebration(true);
-              } else {
-                Alert.alert('Success!', `You got ${cardName}!`);
-              }
-              
-              // Refresh card status
-              await fetchCardStatus();
-            } catch (error: any) {
-              Alert.alert('Error', error.response?.data?.detail || 'Failed to purchase card');
-            } finally {
-              setPurchasing(null);
-            }
-          },
-        },
-      ]
-    );
-  };
-
-  const getOwnedQuantity = (cardId: string) => {
-    const uc = userCards.find(uc => uc.card.id === cardId);
-    return uc?.quantity || 0;
-  };
-
-  // Separate available, unavailable, and special cards
-  // Common cards that are available for purchase
-  const availableCards = allCards.filter(card => 
-    card.available === true && 
-    card.rarity?.toLowerCase() === 'common'
-  );
-  // Coming soon cards (common cards not yet available)
-  const unavailableCards = allCards.filter(card => 
-    card.available === false && 
-    card.rarity?.toLowerCase() === 'common'
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <Image source={{ uri: BACKGROUND_IMAGE }} style={styles.backgroundImage} resizeMode="cover" />
-      <View style={styles.backgroundOverlay} />
-      
-      {/* Celebration Modal for Card Unlock */}
-      <Modal
-        visible={showCelebration}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setShowCelebration(false)}
-      >
-        <View style={styles.celebrationOverlay}>
+      <View style={styles.overlay} />
+
+      {/* Buy Coins Modal */}
+      <BuyCoinsModal visible={showBuyCoins} onClose={() => setShowBuyCoins(false)} />
+
+      {/* Result Modal */}
+      <Modal visible={showResult} transparent animationType="fade" onRequestClose={closeResult}>
+        <View style={styles.resultOverlay}>
           <View style={[
-            styles.celebrationModal,
-            celebrationType === 'epic' && styles.celebrationModalEpic
+            styles.resultContainer,
+            spinResult?.rarity === 'rare' && styles.resultContainerRare
           ]}>
-            <Text style={styles.celebrationEmoji}>
-              {celebrationType === 'epic' ? '🔥👑💎👑🔥' : celebrationType === 'rare' ? '🎉✨🏆✨🎉' : '🎁✨🃏✨🎁'}
+            <Text style={styles.resultTitle}>
+              {spinResult?.rarity === 'rare' ? '🌟 RARE CARD! 🌟' : '🎉 You Won!'}
             </Text>
-            <Text style={[
-              styles.celebrationTitle,
-              celebrationType === 'epic' && styles.celebrationTitleEpic
-            ]}>
-              {celebrationType === 'epic' ? 'EPIC CARD UNLOCKED!' : 
-               celebrationType === 'rare' ? 'RARE CARD UNLOCKED!' : 
-               celebrationType === 'engagement' ? 'MILESTONE ACHIEVED!' :
-               'MILESTONE BONUS!'}
-            </Text>
-            {unlockedCard && (
-              <>
+            
+            {spinResult && (
+              <Animated.View style={[
+                styles.resultCardContainer,
+                { transform: [{ scale: cardScaleAnim }] }
+              ]}>
+                {spinResult.rarity === 'rare' && (
+                  <Animated.View style={[
+                    styles.rareGlow,
+                    { opacity: glowAnim }
+                  ]} />
+                )}
                 <Image
-                  source={{ uri: unlockedCard.front_image_url }}
-                  style={styles.celebrationCardImage}
+                  source={{ uri: spinResult.won_card.front_image_url }}
+                  style={styles.resultCardImage}
                   resizeMode="contain"
                 />
-                <Text style={styles.celebrationCardName}>{unlockedCard.name}</Text>
-                <Text style={styles.celebrationDescription}>
-                  {celebrationType === 'epic' 
-                    ? "Legendary reward for your dedication! Keep that streak going!"
-                    : celebrationType === 'rare' 
-                    ? "You've earned this legendary card by collecting cards!"
-                    : celebrationType === 'engagement'
-                    ? "You've unlocked a special card! Go to the shop to purchase it!"
-                    : "Free card for reaching a 10-card milestone!"}
-                </Text>
-              </>
+              </Animated.View>
             )}
-            <TouchableOpacity
-              style={[
-                styles.celebrationButton,
-                celebrationType === 'epic' && styles.celebrationButtonEpic
-              ]}
-              onPress={() => {
-                setShowCelebration(false);
-                setUnlockedCard(null);
-              }}
-            >
-              <Text style={styles.celebrationButtonText}>AWESOME!</Text>
+            
+            <Text style={styles.resultCardName}>{spinResult?.won_card?.name}</Text>
+            <Text style={[
+              styles.resultRarity,
+              spinResult?.rarity === 'rare' && styles.resultRarityRare
+            ]}>
+              {spinResult?.rarity?.toUpperCase()}
+            </Text>
+            
+            {spinResult?.is_duplicate && (
+              <View style={styles.duplicateBadge}>
+                <Text style={styles.duplicateText}>DUPLICATE - Added to collection for trading!</Text>
+              </View>
+            )}
+            
+            <TouchableOpacity style={styles.closeResultButton} onPress={closeResult}>
+              <Text style={styles.closeResultText}>Awesome!</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-      {/* Buy Coins Modal */}
-      <BuyCoinsModal 
-        visible={showBuyCoins} 
-        onClose={() => setShowBuyCoins(false)} 
-      />
-
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.title}>Card Shop</Text>
-          <Text style={styles.subtitle}>Buy cards with your coins</Text>
-        </View>
-        <View style={styles.coinSection}>
-          <View style={styles.coinDisplay}>
-            <Text style={styles.coinIcon}>💰</Text>
-            <Text style={styles.coinText}>{user.coins}</Text>
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.title}>Card Spinner</Text>
+            <Text style={styles.subtitle}>Spin to win random cards!</Text>
           </View>
-          <TouchableOpacity 
-            style={styles.buyCoinsButton}
-            onPress={() => setShowBuyCoins(true)}
-            data-testid="buy-coins-button"
-          >
-            <Ionicons name="add-circle" size={16} color="#000" />
-            <Text style={styles.buyCoinsText}>Buy</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Milestone Progress Section */}
-        {milestoneInfo && (
-          <View style={styles.milestoneBanner}>
-            <Text style={styles.milestoneTitle}>🎁 Milestone Bonus 🎁</Text>
-            <Text style={styles.milestoneSubtitle}>
-              Get a FREE card every 10 cards collected!
-            </Text>
-            <View style={styles.milestoneProgressContainer}>
-              <View style={styles.milestoneProgressBar}>
-                <View 
-                  style={[
-                    styles.milestoneProgressFill,
-                    { width: `${(milestoneInfo.progress_to_next / 5) * 100}%` }
-                  ]} 
-                />
-              </View>
-              <Text style={styles.milestoneProgressText}>
-                {milestoneInfo.progress_to_next}/10 to next free card
-              </Text>
+          <View style={styles.coinSection}>
+            <View style={styles.coinDisplay}>
+              <Text style={styles.coinIcon}>💰</Text>
+              <Text style={styles.coinText}>{user.coins}</Text>
             </View>
-          </View>
-        )}
-
-        {/* Rare Cards Section */}
-        <View style={styles.rareSectionHeader}>
-          <Text style={styles.rareSectionTitle}>⭐ Rare Achievement Cards ⭐</Text>
-          <Text style={styles.rareSectionSubtitle}>Collect cards to unlock these for purchase!</Text>
-          <Text style={styles.progressText}>Your Collection: {totalCards} cards</Text>
-        </View>
-        
-        <View style={styles.rareCardsGrid}>
-          {rareCardsStatus.map((rareStatus) => (
-            <View 
-              key={rareStatus.card.id} 
-              style={[
-                styles.rareCard,
-                rareStatus.owned && styles.rareCardOwned,
-                rareStatus.unlocked && !rareStatus.owned && styles.rareCardUnlocked
-              ]}
+            <TouchableOpacity 
+              style={styles.buyCoinsButton}
+              onPress={() => setShowBuyCoins(true)}
             >
-              {rareStatus.owned ? (
-                // Show the card if owned
-                <Image
-                  source={{ uri: rareStatus.card.front_image_url }}
-                  style={styles.rareCardImage}
-                  resizeMode="cover"
-                />
-              ) : rareStatus.unlocked ? (
-                // Unlocked but not owned - show card with purchase option
-                <Image
-                  source={{ uri: rareStatus.card.front_image_url }}
-                  style={styles.rareCardImage}
-                  resizeMode="cover"
-                />
-              ) : (
-                // Show blurred/locked version if not unlocked
-                <View style={styles.rareBlurContainer}>
-                  <Image
-                    source={{ uri: rareStatus.card.front_image_url }}
-                    style={[styles.rareCardImage, styles.blurredImage]}
-                    resizeMode="cover"
-                    blurRadius={20}
-                  />
-                  <View style={styles.rareLockedOverlay}>
-                    <Text style={styles.rareLockedIcon}>🔒</Text>
-                    <Text style={styles.rareRequirement}>
-                      Collect {rareStatus.required_cards} cards
-                    </Text>
-                    <View style={styles.progressBarContainer}>
-                      <View 
-                        style={[
-                          styles.progressBar,
-                          { width: `${(rareStatus.progress / rareStatus.required_cards) * 100}%` }
-                        ]} 
-                      />
-                    </View>
-                    <Text style={styles.progressNumbers}>
-                      {rareStatus.progress}/{rareStatus.required_cards}
-                    </Text>
-                  </View>
-                </View>
-              )}
-              <View style={styles.rareCardInfo}>
-                <Text style={styles.rareCardName}>{rareStatus.card.name}</Text>
-                {rareStatus.owned ? (
-                  <Text style={styles.rareOwnedBadge}>✅ OWNED</Text>
-                ) : rareStatus.unlocked ? (
-                  <TouchableOpacity
-                    style={[
-                      styles.rarePurchaseButton,
-                      (user?.coins || 0) < rareStatus.card.coin_cost && styles.rarePurchaseButtonDisabled
-                    ]}
-                    onPress={() => handlePurchase(rareStatus.card.id, rareStatus.card.coin_cost, rareStatus.card.name, true)}
-                    disabled={purchasing === rareStatus.card.id || (user?.coins || 0) < rareStatus.card.coin_cost}
-                  >
-                    {purchasing === rareStatus.card.id ? (
-                      <ActivityIndicator size="small" color="#000" />
-                    ) : (
-                      <Text style={styles.rarePurchaseButtonText}>
-                        BUY {rareStatus.card.coin_cost} 💰
-                      </Text>
-                    )}
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-            </View>
-          ))}
+              <Ionicons name="add-circle" size={16} color="#000" />
+              <Text style={styles.buyCoinsText}>Buy</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        {/* Epic Streak Cards Section */}
-        {epicCardsStatus.length > 0 && (
-          <>
-            <View style={styles.epicSectionHeader}>
-              <Text style={styles.epicSectionTitle}>🔥 Epic Streak Cards 🔥</Text>
-              <Text style={styles.epicSectionSubtitle}>Login daily to unlock these for purchase!</Text>
-              <Text style={styles.epicStreakText}>Current Streak: {currentStreak} days</Text>
+        {/* Spin Wheel Section */}
+        <View style={styles.wheelSection}>
+          <View style={styles.wheelContainer}>
+            {/* Wheel pointer */}
+            <View style={styles.wheelPointer}>
+              <Ionicons name="caret-down" size={40} color="#FFD700" />
             </View>
             
-            <View style={styles.rareCardsGrid}>
-              {epicCardsStatus.map((epicStatus) => (
-                <View 
-                  key={epicStatus.card.id} 
-                  style={[
-                    styles.epicCard,
-                    epicStatus.owned && styles.epicCardOwned,
-                    epicStatus.unlocked && !epicStatus.owned && styles.epicCardUnlocked
-                  ]}
-                >
-                  {epicStatus.owned ? (
-                    <Image
-                      source={{ uri: epicStatus.card.front_image_url }}
-                      style={styles.rareCardImage}
-                      resizeMode="cover"
-                    />
-                  ) : epicStatus.unlocked ? (
-                    // Unlocked but not owned - show card with purchase option
-                    <Image
-                      source={{ uri: epicStatus.card.front_image_url }}
-                      style={styles.rareCardImage}
-                      resizeMode="cover"
-                    />
-                  ) : (
-                    <View style={styles.rareBlurContainer}>
-                      <Image
-                        source={{ uri: epicStatus.card.front_image_url }}
-                        style={[styles.rareCardImage, styles.blurredImage]}
-                        resizeMode="cover"
-                        blurRadius={25}
-                      />
-                      <View style={styles.epicLockedOverlay}>
-                        <Text style={styles.epicLockedIcon}>🔒</Text>
-                        <Text style={styles.epicRequirement}>
-                          {epicStatus.required_streak} day streak
-                        </Text>
-                        <View style={styles.progressBarContainer}>
-                          <View 
-                            style={[
-                              styles.epicProgressBar,
-                              { width: `${Math.min((epicStatus.progress / epicStatus.required_streak) * 100, 100)}%` }
-                            ]} 
-                          />
-                        </View>
-                        <Text style={styles.progressNumbers}>
-                          {epicStatus.progress}/{epicStatus.required_streak} days
-                        </Text>
-                      </View>
-                    </View>
-                  )}
-                  <View style={styles.epicCardInfo}>
-                    <Text style={styles.epicCardName}>{epicStatus.card.name}</Text>
-                    {epicStatus.owned ? (
-                      <Text style={styles.epicOwnedBadge}>🔥 OWNED</Text>
-                    ) : epicStatus.unlocked ? (
-                      <TouchableOpacity
-                        style={[
-                          styles.epicPurchaseButton,
-                          (user?.coins || 0) < epicStatus.card.coin_cost && styles.epicPurchaseButtonDisabled
-                        ]}
-                        onPress={() => handlePurchase(epicStatus.card.id, epicStatus.card.coin_cost, epicStatus.card.name, true)}
-                        disabled={purchasing === epicStatus.card.id || (user?.coins || 0) < epicStatus.card.coin_cost}
-                      >
-                        {purchasing === epicStatus.card.id ? (
-                          <ActivityIndicator size="small" color="#000" />
-                        ) : (
-                          <Text style={styles.epicPurchaseButtonText}>
-                            BUY {epicStatus.card.coin_cost} 💰
-                          </Text>
-                        )}
-                      </TouchableOpacity>
-                    ) : null}
-                  </View>
-                </View>
-              ))}
-            </View>
-          </>
-        )}
-
-        {/* Engagement Milestones Section */}
-        {engagementStatus.length > 0 && (
-          <>
-            <View style={styles.engagementSectionHeader} data-testid="engagement-milestones-header">
-              <Text style={styles.engagementSectionTitle}>🏆 Engagement Milestones 🏆</Text>
-              <Text style={styles.engagementSectionSubtitle}>Special achievements unlock exclusive cards!</Text>
-            </View>
-            
-            <View style={styles.rareCardsGrid} data-testid="engagement-milestones-grid">
-              {engagementStatus.map((engStatus) => {
-                // Get icon based on milestone type
-                const getMilestoneIcon = (type: string) => {
-                  switch(type) {
-                    case 'dedicated_fan': return '📅';
-                    case 'big_spender': return '💰';
-                    case 'monthly_master': return '🗓️';
-                    default: return '🏆';
-                  }
-                };
-                
-                const getMilestoneLabel = (type: string) => {
-                  switch(type) {
-                    case 'dedicated_fan': return 'Dedicated Fan';
-                    case 'big_spender': return 'Big Spender';
-                    case 'monthly_master': return 'Monthly Master';
-                    default: return 'Milestone';
-                  }
-                };
-
+            {/* Spinning wheel */}
+            <Animated.View style={[
+              styles.wheel,
+              { transform: [{ rotate: spinRotation }] }
+            ]}>
+              {/* Wheel segments with card previews */}
+              {spinPool.slice(0, 8).map((card, index) => {
+                const angle = (index * 45) - 90;
                 return (
-                  <View 
-                    key={engStatus.card.id} 
+                  <View
+                    key={card.id}
                     style={[
-                      styles.engagementCard,
-                      engStatus.owned && styles.engagementCardOwned,
-                      engStatus.unlocked && !engStatus.owned && styles.engagementCardUnlocked
+                      styles.wheelSegment,
+                      {
+                        transform: [
+                          { rotate: `${angle}deg` },
+                          { translateX: WHEEL_SIZE / 3 },
+                        ],
+                      },
                     ]}
                   >
-                    {engStatus.owned ? (
-                      <Image
-                        source={{ uri: engStatus.card.front_image_url }}
-                        style={styles.rareCardImage}
-                        resizeMode="cover"
-                      />
-                    ) : engStatus.unlocked ? (
-                      <Image
-                        source={{ uri: engStatus.card.front_image_url }}
-                        style={styles.rareCardImage}
-                        resizeMode="cover"
-                      />
-                    ) : (
-                      <View style={styles.rareBlurContainer}>
-                        <Image
-                          source={{ uri: engStatus.card.front_image_url }}
-                          style={[styles.rareCardImage, styles.blurredImage]}
-                          resizeMode="cover"
-                          blurRadius={20}
-                        />
-                        <View style={styles.engagementLockedOverlay}>
-                          <Text style={styles.engagementLockedIcon}>{getMilestoneIcon(engStatus.milestone_type)}</Text>
-                          <Text style={styles.engagementMilestoneLabel}>{getMilestoneLabel(engStatus.milestone_type)}</Text>
-                          <Text style={styles.engagementRequirement}>
-                            {engStatus.description}
-                          </Text>
-                          <View style={styles.progressBarContainer}>
-                            <View 
-                              style={[
-                                styles.engagementProgressBar,
-                                { width: `${Math.min((engStatus.progress / engStatus.requirement) * 100, 100)}%` }
-                              ]} 
-                            />
-                          </View>
-                          <Text style={styles.progressNumbers}>
-                            {engStatus.progress}/{engStatus.requirement}
-                          </Text>
-                        </View>
-                      </View>
-                    )}
-                    <View style={styles.engagementCardInfo}>
-                      <Text style={styles.engagementCardName}>{engStatus.card.name}</Text>
-                      {engStatus.owned ? (
-                        <Text style={styles.engagementOwnedBadge}>🏆 OWNED</Text>
-                      ) : engStatus.unlocked ? (
-                        <TouchableOpacity
-                          style={[
-                            styles.engagementPurchaseButton,
-                            (user?.coins || 0) < engStatus.card.coin_cost && styles.engagementPurchaseButtonDisabled
-                          ]}
-                          onPress={() => handlePurchase(engStatus.card.id, engStatus.card.coin_cost, engStatus.card.name, true)}
-                          disabled={purchasing === engStatus.card.id || (user?.coins || 0) < engStatus.card.coin_cost}
-                        >
-                          {purchasing === engStatus.card.id ? (
-                            <ActivityIndicator size="small" color="#000" />
-                          ) : (
-                            <Text style={styles.engagementPurchaseButtonText}>
-                              BUY {engStatus.card.coin_cost} 💰
-                            </Text>
-                          )}
-                        </TouchableOpacity>
-                      ) : null}
-                    </View>
+                    <Image
+                      source={{ uri: card.front_image_url }}
+                      style={styles.wheelCardImage}
+                      resizeMode="cover"
+                    />
                   </View>
                 );
               })}
-            </View>
-          </>
-        )}
-
-        {/* Available Cards */}
-        <Text style={styles.sectionTitle}>Thrash Kan Kidz Cards</Text>
-        <View style={styles.cardsGrid}>
-          {availableCards.map(card => (
-            <View key={card.id} style={styles.shopCard}>
-              <Image
-                source={{ uri: card.front_image_url }}
-                style={styles.cardImage}
-                resizeMode="cover"
-              />
-              <View style={styles.cardInfo}>
-                <Text style={styles.cardName}>{card.name}</Text>
-                {getOwnedQuantity(card.id) > 0 && (
-                  <Text style={styles.ownedText}>Owned: x{getOwnedQuantity(card.id)}</Text>
-                )}
+              
+              {/* Center circle */}
+              <View style={styles.wheelCenter}>
+                <Text style={styles.wheelCenterText}>🎰</Text>
               </View>
-              <TouchableOpacity
-                style={[
-                  styles.buyButton,
-                  user.coins < card.coin_cost && styles.buyButtonDisabled,
-                ]}
-                onPress={() => handlePurchase(card.id, card.coin_cost, card.name, true)}
-                disabled={purchasing === card.id || user.coins < card.coin_cost}
-              >
-                {purchasing === card.id ? (
-                  <ActivityIndicator size="small" color="#000" />
-                ) : (
-                  <Text style={[
-                    styles.buyButtonText,
-                    user.coins < card.coin_cost && styles.buyButtonTextDisabled
-                  ]}>
-                    {card.coin_cost} COINS
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          ))}
+            </Animated.View>
+          </View>
+
+          {/* Spin Button */}
+          <TouchableOpacity
+            style={[
+              styles.spinButton,
+              spinning && styles.spinButtonDisabled,
+              user.coins < spinConfig.spin_cost && styles.spinButtonDisabled
+            ]}
+            onPress={handleSpin}
+            disabled={spinning || user.coins < spinConfig.spin_cost}
+          >
+            {spinning ? (
+              <Text style={styles.spinButtonText}>Spinning...</Text>
+            ) : (
+              <>
+                <Text style={styles.spinButtonText}>SPIN!</Text>
+                <Text style={styles.spinCostText}>{spinConfig.spin_cost} 💰</Text>
+              </>
+            )}
+          </TouchableOpacity>
+
+          {user.coins < spinConfig.spin_cost && (
+            <Text style={styles.notEnoughCoins}>
+              Not enough coins! Tap "Buy" to get more.
+            </Text>
+          )}
         </View>
 
-        {/* Coming Soon Cards */}
-        {unavailableCards.length > 0 && (
-          <>
-            <Text style={styles.sectionTitle}>Coming Soon</Text>
-            <View style={styles.cardsGrid}>
-              {unavailableCards.map(card => (
-                <View key={card.id} style={styles.shopCard}>
-                  <View style={styles.blurContainer}>
-                    <Image
-                      source={{ uri: card.front_image_url }}
-                      style={[styles.cardImage, styles.blurredImage]}
-                      resizeMode="cover"
-                      blurRadius={15}
-                    />
-                    <View style={styles.comingSoonOverlay}>
-                      <Ionicons name="time-outline" size={32} color="#FFD700" />
-                      <Text style={styles.comingSoonText}>COMING</Text>
-                      <Text style={styles.comingSoonText}>SOON</Text>
-                    </View>
-                  </View>
-                  <View style={styles.cardInfo}>
-                    <Text style={styles.cardName}>{card.name}</Text>
-                  </View>
-                  <TouchableOpacity
-                    style={[styles.buyButton, styles.buyButtonUnavailable]}
-                    onPress={() => handlePurchase(card.id, card.coin_cost, card.name, false)}
-                  >
-                    <Ionicons name="lock-closed" size={16} color="#666" />
-                    <Text style={styles.buyButtonTextDisabled}>LOCKED</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
+        {/* Odds Info */}
+        <View style={styles.oddsSection}>
+          <Text style={styles.oddsSectionTitle}>Drop Rates</Text>
+          <View style={styles.oddsContainer}>
+            <View style={styles.oddsItem}>
+              <View style={[styles.oddsIndicator, { backgroundColor: '#4CAF50' }]} />
+              <Text style={styles.oddsText}>Common: {spinConfig.odds.common}%</Text>
             </View>
-          </>
-        )}
+            <View style={styles.oddsItem}>
+              <View style={[styles.oddsIndicator, { backgroundColor: '#2196F3' }]} />
+              <Text style={styles.oddsText}>Rare: {spinConfig.odds.rare}%</Text>
+            </View>
+          </View>
+          <Text style={styles.oddsNote}>
+            Rare cards appear after unlocking them through collection milestones!
+          </Text>
+        </View>
 
-        <View style={styles.spacer} />
+        {/* Cards in Pool */}
+        <View style={styles.poolSection}>
+          <Text style={styles.poolSectionTitle}>Cards in the Pool ({spinPool.length})</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.poolScroll}>
+            {spinPool.map((card) => (
+              <View key={card.id} style={styles.poolCard}>
+                <Image
+                  source={{ uri: card.front_image_url }}
+                  style={styles.poolCardImage}
+                  resizeMode="cover"
+                />
+                <Text style={styles.poolCardName} numberOfLines={1}>{card.name}</Text>
+                <Text style={[
+                  styles.poolCardRarity,
+                  card.rarity === 'rare' && styles.poolCardRarityRare
+                ]}>
+                  {card.rarity}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -702,46 +385,50 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  backgroundOverlay: {
+  overlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
   },
-  centerContainer: {
+  loginPrompt: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 32,
   },
-  lockIcon: {
-    fontSize: 64,
-    marginBottom: 16,
+  loginText: {
+    color: '#888',
+    fontSize: 18,
   },
-  lockedText: {
-    color: '#aaa',
-    fontSize: 16,
-    marginTop: 16,
-    textAlign: 'center',
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 100,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 20,
+    marginBottom: 24,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#FFD700',
   },
   subtitle: {
     fontSize: 14,
-    color: '#ccc',
+    color: '#888',
     marginTop: 4,
+  },
+  coinSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   coinDisplay: {
     flexDirection: 'row',
@@ -751,10 +438,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
   },
-  coinSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  coinIcon: {
+    fontSize: 18,
+    marginRight: 6,
+  },
+  coinText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFD700',
   },
   buyCoinsButton: {
     flexDirection: 'row',
@@ -770,573 +461,249 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
-  coinText: {
-    color: '#FFD700',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  coinIcon: {
-    fontSize: 18,
-  },
-  scrollView: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 16,
-    marginTop: 8,
-  },
-  // Milestone Banner
-  milestoneBanner: {
-    backgroundColor: 'rgba(76, 175, 80, 0.2)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 2,
-    borderColor: '#4CAF50',
-  },
-  milestoneTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#4CAF50',
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  milestoneSubtitle: {
-    fontSize: 14,
-    color: '#ccc',
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  milestoneProgressContainer: {
+  // Wheel Section
+  wheelSection: {
     alignItems: 'center',
+    marginBottom: 32,
   },
-  milestoneProgressBar: {
-    width: '100%',
-    height: 12,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    borderRadius: 6,
-    overflow: 'hidden',
-    marginBottom: 8,
-  },
-  milestoneProgressFill: {
-    height: '100%',
-    backgroundColor: '#4CAF50',
-    borderRadius: 6,
-  },
-  milestoneProgressText: {
-    color: '#4CAF50',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  // Rare Cards Section
-  rareSectionHeader: {
-    backgroundColor: 'rgba(42, 26, 0, 0.9)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 2,
-    borderColor: '#FFD700',
-  },
-  rareSectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#FFD700',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  rareSectionSubtitle: {
-    fontSize: 14,
-    color: '#ccc',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  progressText: {
-    fontSize: 16,
-    color: '#FFD700',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  rareCardsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+  wheelContainer: {
+    width: WHEEL_SIZE + 40,
+    height: WHEEL_SIZE + 40,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 24,
   },
-  rareCard: {
-    width: '48%',
-    backgroundColor: '#1a1a2e',
-    borderRadius: 16,
-    overflow: 'hidden',
-    borderWidth: 3,
-    borderColor: '#444',
-    marginBottom: 16,
-  },
-  rareCardOwned: {
-    borderColor: '#FFD700',
-    shadowColor: '#FFD700',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-  },
-  rareCardImage: {
-    width: '100%',
-    height: 200,
-  },
-  rareBlurContainer: {
-    width: '100%',
-    height: 200,
-    position: 'relative',
-  },
-  rareLockedOverlay: {
+  wheelPointer: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 12,
+    top: -5,
+    zIndex: 10,
   },
-  rareLockedIcon: {
-    fontSize: 36,
-    marginBottom: 8,
-  },
-  rareRequirement: {
-    color: '#FFD700',
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  progressBarContainer: {
-    width: '80%',
-    height: 8,
-    backgroundColor: '#333',
-    borderRadius: 4,
-    overflow: 'hidden',
-    marginBottom: 4,
-  },
-  progressBar: {
-    height: '100%',
-    backgroundColor: '#FFD700',
-    borderRadius: 4,
-  },
-  progressNumbers: {
-    color: '#888',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  rareCardInfo: {
-    padding: 12,
-    alignItems: 'center',
-    backgroundColor: '#0f0f1a',
-  },
-  rareCardName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FFD700',
-    textAlign: 'center',
-  },
-  rareOwnedBadge: {
-    color: '#4CAF50',
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginTop: 4,
-  },
-  rareCardUnlocked: {
+  wheel: {
+    width: WHEEL_SIZE,
+    height: WHEEL_SIZE,
+    borderRadius: WHEEL_SIZE / 2,
+    backgroundColor: '#1a1a2e',
+    borderWidth: 4,
     borderColor: '#FFD700',
-    borderWidth: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
-  rarePurchaseButton: {
-    backgroundColor: '#FFD700',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginTop: 8,
-  },
-  rarePurchaseButtonDisabled: {
-    backgroundColor: '#555',
-  },
-  rarePurchaseButtonText: {
-    color: '#000',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  // Epic Cards Section
-  epicSectionHeader: {
-    backgroundColor: 'rgba(139, 0, 0, 0.3)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
+  wheelSegment: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    borderRadius: 8,
+    overflow: 'hidden',
     borderWidth: 2,
-    borderColor: '#FF4500',
+    borderColor: '#333',
   },
-  epicSectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#FF4500',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  epicSectionSubtitle: {
-    fontSize: 14,
-    color: '#ccc',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  epicStreakText: {
-    fontSize: 16,
-    color: '#FF4500',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  epicCard: {
-    width: '48%',
-    backgroundColor: '#1a1a2e',
-    borderRadius: 16,
-    overflow: 'hidden',
-    borderWidth: 3,
-    borderColor: '#444',
-    marginBottom: 16,
-  },
-  epicCardOwned: {
-    borderColor: '#FF4500',
-    shadowColor: '#FF4500',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-  },
-  epicLockedOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 12,
-  },
-  epicLockedIcon: {
-    fontSize: 36,
-    marginBottom: 8,
-  },
-  epicRequirement: {
-    color: '#FF4500',
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  epicProgressBar: {
+  wheelCardImage: {
+    width: '100%',
     height: '100%',
-    backgroundColor: '#FF4500',
-    borderRadius: 4,
   },
-  epicCardInfo: {
-    padding: 12,
+  wheelCenter: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#FFD700',
     alignItems: 'center',
-    backgroundColor: '#0f0f1a',
-  },
-  epicCardName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FF4500',
-    textAlign: 'center',
-  },
-  epicOwnedBadge: {
-    color: '#FF4500',
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginTop: 4,
-  },
-  epicCardUnlocked: {
-    borderColor: '#FF4500',
-    borderWidth: 3,
-  },
-  epicPurchaseButton: {
-    backgroundColor: '#FF4500',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginTop: 8,
-  },
-  epicPurchaseButtonDisabled: {
-    backgroundColor: '#555',
-  },
-  epicPurchaseButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  // Engagement Milestones Section
-  engagementSectionHeader: {
-    backgroundColor: 'rgba(0, 100, 0, 0.3)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 2,
-    borderColor: '#00FF7F',
-  },
-  engagementSectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#00FF7F',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  engagementSectionSubtitle: {
-    fontSize: 14,
-    color: '#ccc',
-    textAlign: 'center',
-  },
-  engagementCard: {
-    width: '48%',
-    backgroundColor: '#1a1a2e',
-    borderRadius: 16,
-    overflow: 'hidden',
-    borderWidth: 3,
-    borderColor: '#444',
-    marginBottom: 16,
-  },
-  engagementCardOwned: {
-    borderColor: '#00FF7F',
-    shadowColor: '#00FF7F',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-  },
-  engagementCardUnlocked: {
-    borderColor: '#00FF7F',
-    borderWidth: 3,
-  },
-  engagementLockedOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
     justifyContent: 'center',
-    alignItems: 'center',
-    padding: 12,
-  },
-  engagementLockedIcon: {
-    fontSize: 36,
-    marginBottom: 4,
-  },
-  engagementMilestoneLabel: {
-    color: '#00FF7F',
-    fontSize: 12,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  engagementRequirement: {
-    color: '#aaa',
-    fontSize: 11,
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  engagementProgressBar: {
-    height: '100%',
-    backgroundColor: '#00FF7F',
-    borderRadius: 4,
-  },
-  engagementCardInfo: {
-    padding: 12,
-    alignItems: 'center',
-    backgroundColor: '#0f0f1a',
-  },
-  engagementCardName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#00FF7F',
-    textAlign: 'center',
-  },
-  engagementOwnedBadge: {
-    color: '#00FF7F',
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginTop: 4,
-  },
-  engagementPurchaseButton: {
-    backgroundColor: '#00FF7F',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginTop: 8,
-  },
-  engagementPurchaseButtonDisabled: {
-    backgroundColor: '#555',
-  },
-  engagementPurchaseButtonText: {
-    color: '#000',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  // Celebration Modal
-  celebrationOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  celebrationModal: {
-    backgroundColor: '#1a1a2e',
-    borderRadius: 24,
-    padding: 24,
-    alignItems: 'center',
-    marginHorizontal: 24,
     borderWidth: 3,
-    borderColor: '#FFD700',
+    borderColor: '#fff',
   },
-  celebrationModalEpic: {
-    borderColor: '#FF4500',
-    backgroundColor: '#2a1010',
-  },
-  celebrationEmoji: {
-    fontSize: 32,
-    marginBottom: 16,
-  },
-  celebrationTitle: {
+  wheelCenterText: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFD700',
-    textAlign: 'center',
-    marginBottom: 20,
   },
-  celebrationTitleEpic: {
-    color: '#FF4500',
-  },
-  celebrationCardImage: {
-    width: 200,
-    height: 280,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  celebrationCardName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  celebrationDescription: {
-    fontSize: 14,
-    color: '#888',
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  celebrationButton: {
+  spinButton: {
     backgroundColor: '#FFD700',
     paddingHorizontal: 48,
     paddingVertical: 16,
     borderRadius: 30,
-  },
-  celebrationButtonEpic: {
-    backgroundColor: '#FF4500',
-  },
-  celebrationButtonText: {
-    color: '#000',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  // Regular Cards
-  cardsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  shopCard: {
-    width: '48%',
-    backgroundColor: '#1a1a2e',
-    borderRadius: 16,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: 'rgba(128, 128, 128, 0.3)',
-    marginBottom: 16,
-  },
-  cardImage: {
-    width: '100%',
-    height: 180,
-  },
-  blurContainer: {
-    width: '100%',
-    height: 180,
-    position: 'relative',
-  },
-  blurredImage: {
-    opacity: 0.5,
-  },
-  comingSoonOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'center',
     alignItems: 'center',
+    minWidth: 200,
   },
-  comingSoonText: {
-    color: '#FFD700',
-    fontSize: 18,
+  spinButtonDisabled: {
+    backgroundColor: '#555',
+  },
+  spinButtonText: {
+    color: '#000',
+    fontSize: 24,
     fontWeight: 'bold',
+  },
+  spinCostText: {
+    color: '#333',
+    fontSize: 14,
+    marginTop: 4,
+  },
+  notEnoughCoins: {
+    color: '#ff6b6b',
+    fontSize: 14,
+    marginTop: 12,
     textAlign: 'center',
   },
-  cardInfo: {
-    padding: 12,
+  // Odds Section
+  oddsSection: {
+    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 24,
+  },
+  oddsSectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 12,
+  },
+  oddsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 12,
+  },
+  oddsItem: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  cardName: {
+  oddsIndicator: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  oddsText: {
+    color: '#ccc',
     fontSize: 14,
+  },
+  oddsNote: {
+    color: '#888',
+    fontSize: 12,
+    textAlign: 'center',
+    fontStyle: 'italic',
+  },
+  // Pool Section
+  poolSection: {
+    marginBottom: 24,
+  },
+  poolSectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 12,
+  },
+  poolScroll: {
+    flexDirection: 'row',
+  },
+  poolCard: {
+    width: 80,
+    marginRight: 12,
+    alignItems: 'center',
+  },
+  poolCardImage: {
+    width: 70,
+    height: 90,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#333',
+  },
+  poolCardName: {
+    color: '#fff',
+    fontSize: 10,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  poolCardRarity: {
+    color: '#4CAF50',
+    fontSize: 9,
+    textTransform: 'uppercase',
+  },
+  poolCardRarityRare: {
+    color: '#2196F3',
+  },
+  // Result Modal
+  resultOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  resultContainer: {
+    backgroundColor: '#1a1a2e',
+    borderRadius: 24,
+    padding: 24,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 320,
+    borderWidth: 3,
+    borderColor: '#4CAF50',
+  },
+  resultContainerRare: {
+    borderColor: '#2196F3',
+    backgroundColor: '#1a2a3e',
+  },
+  resultTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    marginBottom: 16,
+  },
+  resultCardContainer: {
+    position: 'relative',
+    marginBottom: 16,
+  },
+  rareGlow: {
+    position: 'absolute',
+    top: -10,
+    left: -10,
+    right: -10,
+    bottom: -10,
+    backgroundColor: '#2196F3',
+    borderRadius: 20,
+    opacity: 0.3,
+  },
+  resultCardImage: {
+    width: 150,
+    height: 200,
+    borderRadius: 12,
+    borderWidth: 3,
+    borderColor: '#FFD700',
+  },
+  resultCardName: {
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 4,
-    textAlign: 'center',
   },
-  cardNameHidden: {
+  resultRarity: {
     fontSize: 14,
+    color: '#4CAF50',
     fontWeight: 'bold',
-    color: '#666',
-    marginBottom: 4,
+    marginBottom: 12,
+  },
+  resultRarityRare: {
+    color: '#2196F3',
+  },
+  duplicateBadge: {
+    backgroundColor: 'rgba(255, 152, 0, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  duplicateText: {
+    color: '#FF9800',
+    fontSize: 12,
     textAlign: 'center',
   },
-  ownedText: {
-    color: '#4CAF50',
-    fontSize: 12,
-  },
-  buyButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+  closeResultButton: {
     backgroundColor: '#FFD700',
-    padding: 12,
+    paddingHorizontal: 32,
+    paddingVertical: 12,
+    borderRadius: 24,
   },
-  buyButtonDisabled: {
-    backgroundColor: '#333',
-  },
-  buyButtonUnavailable: {
-    backgroundColor: '#1a1a2e',
-    borderTopWidth: 1,
-    borderTopColor: '#333',
-  },
-  buyButtonText: {
+  closeResultText: {
     color: '#000',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  buyButtonTextDisabled: {
-    color: '#666',
-  },
-  spacer: {
-    height: 24,
   },
 });

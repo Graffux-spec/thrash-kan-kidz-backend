@@ -10,6 +10,7 @@ from typing import List, Optional, Dict
 import uuid
 from datetime import datetime, timedelta
 import base64
+import random
 from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
 
 ROOT_DIR = Path(__file__).parent
@@ -118,6 +119,18 @@ class TradeActionRequest(BaseModel):
     trade_id: str
     user_id: str
     action: str  # accept, reject, cancel
+
+class SpinWheelRequest(BaseModel):
+    user_id: str
+
+# =====================
+# Spin Wheel Configuration
+# =====================
+SPIN_COST = 50  # Coins per spin
+SPIN_ODDS = {
+    "common": 80,  # 80% chance
+    "rare": 20,    # 20% chance (only unlocked rare cards)
+}
 
 class CoinPurchaseRequest(BaseModel):
     user_id: str
@@ -1130,6 +1143,158 @@ async def purchase_card(user_id: str, request: PurchaseCardRequest):
         "newly_unlocked_rare_card": newly_unlocked_rare,
         "milestone_reward": milestone_reward,
         "engagement_unlock": engagement_unlock
+    }
+
+# =====================
+# Spin Wheel System
+# =====================
+
+@api_router.get("/spin/config")
+async def get_spin_config():
+    """Get spin wheel configuration"""
+    return {
+        "spin_cost": SPIN_COST,
+        "odds": SPIN_ODDS
+    }
+
+@api_router.post("/users/{user_id}/spin")
+async def spin_wheel(user_id: str):
+    """Spin the wheel to get a random card"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if user has enough coins
+    if user.get("coins", 0) < SPIN_COST:
+        raise HTTPException(status_code=400, detail=f"Not enough coins. Need {SPIN_COST} coins to spin.")
+    
+    # Get user's unlocked rare cards
+    unlocked_rares = user.get("unlocked_rare_cards", [])
+    
+    # Get available cards for the spin
+    common_cards = await db.cards.find({
+        "rarity": "common",
+        "available": True,
+        "engagement_milestone": None  # Exclude engagement milestone cards
+    }).to_list(100)
+    
+    # Only include rare cards that the user has unlocked
+    rare_cards = []
+    if unlocked_rares:
+        rare_cards = await db.cards.find({
+            "rarity": "rare",
+            "id": {"$in": unlocked_rares}
+        }).to_list(100)
+    
+    # Build the weighted pool
+    card_pool = []
+    
+    # Add common cards with their weight
+    for card in common_cards:
+        card_pool.append({"card": card, "rarity": "common"})
+    
+    # Add rare cards with their weight
+    for card in rare_cards:
+        card_pool.append({"card": card, "rarity": "rare"})
+    
+    if not card_pool:
+        raise HTTPException(status_code=400, detail="No cards available to spin")
+    
+    # Determine rarity based on odds
+    roll = random.randint(1, 100)
+    
+    if roll <= SPIN_ODDS["rare"] and rare_cards:
+        # Won a rare card
+        selected_rarity = "rare"
+        available_cards = rare_cards
+    else:
+        # Won a common card
+        selected_rarity = "common"
+        available_cards = common_cards
+    
+    if not available_cards:
+        # Fallback to any available card
+        available_cards = common_cards if common_cards else rare_cards
+        selected_rarity = "common" if common_cards else "rare"
+    
+    # Pick a random card from the selected rarity
+    won_card = random.choice(available_cards)
+    
+    # Deduct coins and track spending
+    new_coins = user.get("coins", 0) - SPIN_COST
+    new_total_spent = user.get("total_spent_coins", 0) + SPIN_COST
+    
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"coins": new_coins, "total_spent_coins": new_total_spent}}
+    )
+    
+    # Add card to collection (or increase quantity if duplicate)
+    existing_user_card = await db.user_cards.find_one({
+        "user_id": user_id,
+        "card_id": won_card["id"]
+    })
+    
+    is_duplicate = existing_user_card is not None
+    
+    if existing_user_card:
+        await db.user_cards.update_one(
+            {"id": existing_user_card["id"]},
+            {"$inc": {"quantity": 1}}
+        )
+    else:
+        user_card = UserCard(user_id=user_id, card_id=won_card["id"])
+        await db.user_cards.insert_one(user_card.dict())
+    
+    # Check for achievements after spin
+    unique_cards = await db.user_cards.count_documents({"user_id": user_id})
+    await check_and_update_goals(user_id, "collect_cards", unique_cards)
+    await check_all_rarities_goal(user_id)
+    newly_unlocked_rare = await check_rare_card_achievements(user_id)
+    milestone_reward = await check_milestone_reward(user_id)
+    engagement_unlock = await check_engagement_milestones(user_id)
+    
+    return {
+        "success": True,
+        "won_card": Card(**won_card),
+        "rarity": selected_rarity,
+        "is_duplicate": is_duplicate,
+        "remaining_coins": new_coins,
+        "spin_cost": SPIN_COST,
+        "newly_unlocked_rare_card": newly_unlocked_rare,
+        "milestone_reward": milestone_reward,
+        "engagement_unlock": engagement_unlock
+    }
+
+@api_router.get("/users/{user_id}/spin-pool")
+async def get_spin_pool(user_id: str):
+    """Get the cards available in the spin pool for this user"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    unlocked_rares = user.get("unlocked_rare_cards", [])
+    
+    # Get common cards (excluding engagement milestone cards)
+    common_cards = await db.cards.find({
+        "rarity": "common",
+        "available": True,
+        "engagement_milestone": None
+    }, {"_id": 0}).to_list(100)
+    
+    # Get unlocked rare cards
+    rare_cards = []
+    if unlocked_rares:
+        rare_cards = await db.cards.find({
+            "rarity": "rare",
+            "id": {"$in": unlocked_rares}
+        }, {"_id": 0}).to_list(100)
+    
+    return {
+        "common_cards": common_cards,
+        "rare_cards": rare_cards,
+        "spin_cost": SPIN_COST,
+        "odds": SPIN_ODDS
     }
 
 # =====================
