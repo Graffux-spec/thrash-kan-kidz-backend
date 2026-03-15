@@ -43,6 +43,9 @@ class Card(BaseModel):
     achievement_required: Optional[int] = None  # Number of cards needed to unlock (for rare cards)
     streak_required: Optional[int] = None  # Number of consecutive login days needed to unlock (for epic cards)
     engagement_milestone: Optional[str] = None  # Type of engagement milestone required (dedicated_fan, big_spender, monthly_master)
+    series: Optional[int] = None  # Series number (1, 2, 3, etc.)
+    band: Optional[str] = None  # Band name for grouping A/B cards
+    card_type: Optional[str] = None  # "A" or "B" for band card variants
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class User(BaseModel):
@@ -56,6 +59,8 @@ class User(BaseModel):
     avatar_url: str = ""
     total_spent_coins: int = 0  # Track total coins spent for Big Spender milestone
     monthly_logins: dict = Field(default_factory=dict)  # Track logins per month {"YYYY-MM": [day1, day2...]}
+    unlocked_series: List[int] = Field(default_factory=lambda: [1])  # Series user has access to (starts with series 1)
+    completed_series: List[int] = Field(default_factory=list)  # Series user has fully completed
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class UserCard(BaseModel):
@@ -127,9 +132,37 @@ class SpinWheelRequest(BaseModel):
 # Spin Wheel Configuration
 # =====================
 SPIN_COST = 50  # Coins per spin
-SPIN_ODDS = {
-    "common": 80,  # 80% chance
-    "rare": 20,    # 20% chance (only unlocked rare cards)
+
+# =====================
+# Series Configuration
+# =====================
+# Each series has 16 cards (8 bands × 2 cards: A & B)
+# Completing a series unlocks a rare card reward + next series
+SERIES_CONFIG = {
+    1: {
+        "name": "Series 1",
+        "cards_required": 16,
+        "rare_reward": "card_martin_van_druid",  # Rare card unlocked after completing series
+        "description": "The Original Thrash Kan Kidz"
+    },
+    2: {
+        "name": "Series 2", 
+        "cards_required": 16,
+        "rare_reward": "card_tardy_donald",
+        "description": "More Mayhem"
+    },
+    3: {
+        "name": "Series 3",
+        "cards_required": 16, 
+        "rare_reward": "card_kerry_the_king",
+        "description": "Legends Rise"
+    },
+    4: {
+        "name": "Series 4",
+        "cards_required": 16,
+        "rare_reward": "card_jeff_possess_ya", 
+        "description": "The Final Chapter"
+    }
 }
 
 class CoinPurchaseRequest(BaseModel):
@@ -292,6 +325,10 @@ ENGAGEMENT_MILESTONES = {
 }
 
 INITIAL_CARDS = [
+    # =====================
+    # SERIES 1 - 8 bands, 16 cards (A & B for each band)
+    # =====================
+    # Band 1: Silly Mille / Mille Gorezza
     {
         "id": "card_silly_mille",
         "name": "Silly Mille",
@@ -300,8 +337,25 @@ INITIAL_CARDS = [
         "front_image_url": CARD_IMAGE_URLS["silly_mille"],
         "back_image_url": CARD_BACK_IMAGE_URLS["silly_mille"],
         "coin_cost": 50,
-        "available": True
+        "available": True,
+        "series": 1,
+        "band": "Mille",
+        "card_type": "A"
     },
+    {
+        "id": "card_mille_gorezza",
+        "name": "Mille Gorezza",
+        "description": "The legendary shredder returns! Mille Gorezza brings even more chaos with his signature style and unstoppable riffs.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS.get("mille_gorezza", CARD_IMAGE_URLS["silly_mille"]),
+        "back_image_url": CARD_BACK_IMAGE_URLS.get("mille_gorezza", CARD_BACK_IMAGE_URLS["silly_mille"]),
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Mille",
+        "card_type": "B"
+    },
+    # Band 2: Cliff Burpin / Cliff Diver
     {
         "id": "card_cliff_burpin",
         "name": "Cliff Burpin",
@@ -310,8 +364,25 @@ INITIAL_CARDS = [
         "front_image_url": CARD_IMAGE_URLS["cliff_burpin"],
         "back_image_url": CARD_BACK_IMAGE_URLS["cliff_burpin"],
         "coin_cost": 50,
-        "available": True
+        "available": True,
+        "series": 1,
+        "band": "Cliff",
+        "card_type": "A"
     },
+    {
+        "id": "card_cliff_diver",
+        "name": "Cliff Diver",
+        "description": "Taking the plunge! Cliff Diver launches from the highest amps into the wildest crowd surfs ever witnessed!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["cliff_diver"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Cliff",
+        "card_type": "B"
+    },
+    # Band 3: Scotch Ian / Scott Eaten
     {
         "id": "card_scotch_ian",
         "name": "Scotch Ian",
@@ -320,8 +391,25 @@ INITIAL_CARDS = [
         "front_image_url": CARD_IMAGE_URLS["scotch_ian"],
         "back_image_url": CARD_BACK_IMAGE_URLS["scotch_ian"],
         "coin_cost": 50,
-        "available": True
+        "available": True,
+        "series": 1,
+        "band": "Scott",
+        "card_type": "A"
     },
+    {
+        "id": "card_scott_eaten",
+        "name": "Scott Eaten",
+        "description": "The zombie frontman of Antichrax! He's been eaten alive by fans but keeps coming back for more brutal shows!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["scott_eaten"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scott_eaten"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Scott",
+        "card_type": "B"
+    },
+    # Band 4: Chuck Roast / Blood Bonder  
     {
         "id": "card_chuck_roast",
         "name": "Chuck Roast",
@@ -330,200 +418,242 @@ INITIAL_CARDS = [
         "front_image_url": CARD_IMAGE_URLS["chuck_roast"],
         "back_image_url": CARD_BACK_IMAGE_URLS["chuck_roast"],
         "coin_cost": 50,
-        "available": True
-    },
-    {
-        "id": "card_scott_eaten",
-        "name": "Scott Eaten",
-        "description": "The unluckiest metalhead in the zombie apocalypse! Even undead creatures can't resist his legendary rhythm section.",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["scott_eaten"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["scott_eaten"],
-        "coin_cost": 50,
-        "available": True
-    },
-    {
-        "id": "card_tom_da_playa",
-        "name": "Tom da Playa",
-        "description": "The flashiest bassist in the game! With his leopard coat, gold chains, and skull-topped pimp cane, he brings the bling to every gig.",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["tom_da_playa"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["tom_da_playa"],
-        "coin_cost": 50,
-        "available": True
-    },
-    {
-        "id": "card_billy_chuck",
-        "name": "Billy Chuck",
-        "description": "The moonshine-chugging hillbilly rocker! Armed with his shotgun and XXX jug, he brings country chaos to the metal scene.",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["billy_chuck"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["billy_chuck"],
-        "coin_cost": 50,
-        "available": True
-    },
-    {
-        "id": "card_cliff_diver",
-        "name": "Cliff Diver",
-        "description": "Cliff Diver dives headfirst off amps and lands on unlucky fans, puking out beer, pizza, and whiskey often as he goes. His stage dives are as epic as his hangovers.",
-        "rarity": "common",
-        "front_image_url": CARD_IMAGE_URLS["cliff_diver"],
-        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver"],
-        "coin_cost": 50,
-        "available": True
+        "available": True,
+        "series": 1,
+        "band": "Chuck",
+        "card_type": "A"
     },
     {
         "id": "card_blood_bonder",
         "name": "Blood Bonder",
-        "description": "With all the blood he spews, you'll swear Blood Bonder has thrash flowing through his veins. He showers the crowd with plasma and laughs as he bathes in the gore.",
+        "description": "The bonding agent of chaos! Blood Bonder glues the band together with his dark rituals and heavier-than-hell riffs.",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["blood_bonder"],
         "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder"],
         "coin_cost": 50,
-        "available": True
+        "available": True,
+        "series": 1,
+        "band": "Chuck",
+        "card_type": "B"
     },
-    # WAVE 2 CARDS (Now Available!)
+    # Band 5: Tom da Playa / Billy Chuck
+    {
+        "id": "card_tom_da_playa",
+        "name": "Tom da Playa",
+        "description": "The smooth operator of thrash! Tom da Playa brings the beach vibes to the pit with his surf-metal fusion madness!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tom_da_playa"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tom_da_playa"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Tom",
+        "card_type": "A"
+    },
+    {
+        "id": "card_billy_chuck",
+        "name": "Billy Chuck",
+        "description": "The dynamic duo rolled into one! Billy Chuck throws punches and riffs with equal ferocity!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["billy_chuck"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["billy_chuck"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Tom",
+        "card_type": "B"
+    },
+    # Band 6: Don Doody / Tommy Spewart
     {
         "id": "card_don_doody",
         "name": "Don Doody",
-        "description": "From Shit Slayer! Don Doody brings the brown note to every show. His bass drops are legendary, and so is the smell. You've been warned!",
+        "description": "The godfather of gross! Don Doody runs the filthiest crew in the scene with an iron fist and a bronze toilet!",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["don_doody"],
         "back_image_url": CARD_BACK_IMAGE_URLS["don_doody"],
         "coin_cost": 50,
-        "available": True
+        "available": True,
+        "series": 1,
+        "band": "Don",
+        "card_type": "A"
     },
     {
         "id": "card_tommy_spewart",
         "name": "Tommy Spewart",
-        "description": "The legendary vomit virtuoso! Tommy Spewart hurls with precision and rhythm. His rainbow projections have become his signature move!",
+        "description": "The vocal volcano! Tommy Spewart's legendary projectile performances are both feared and celebrated!",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["tommy_spewart"],
         "back_image_url": CARD_BACK_IMAGE_URLS["tommy_spewart"],
         "coin_cost": 50,
-        "available": True
+        "available": True,
+        "series": 1,
+        "band": "Don",
+        "card_type": "B"
     },
+    # Band 7: Beer Schmier / Philled Up
     {
         "id": "card_beer_schmier",
         "name": "Beer Schmier",
-        "description": "The foam-spewing legend! Beer Schmier drowns crowds in golden showers of brew. His performances are 50% music, 50% alcohol poisoning!",
+        "description": "The suds-soaked shredder! Beer Schmier plays faster with every pint, achieving legendary drunken speed metal!",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["beer_schmier"],
         "back_image_url": CARD_BACK_IMAGE_URLS["beer_schmier"],
         "coin_cost": 50,
-        "available": True
+        "available": True,
+        "series": 1,
+        "band": "Beer",
+        "card_type": "A"
     },
-    # COMING SOON WAVE 3
     {
         "id": "card_philled_up",
         "name": "Philled Up",
-        "description": "From Sacrud Ryche! Phil never met a cheese pizza he didn't love, or finish. If a dinner is all-you-can-eat, he treats it like an Olympic sport. No matter who he opens for, he always closes down the buffet!",
+        "description": "Completely philled to the brim! This bloated basher brings the heavy low-end that shakes venues to their foundations!",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["philled_up"],
         "back_image_url": CARD_BACK_IMAGE_URLS["philled_up"],
         "coin_cost": 50,
-        "available": False
+        "available": True,
+        "series": 1,
+        "band": "Beer",
+        "card_type": "B"
     },
-    # RARE ACHIEVEMENT CARDS - Not purchasable, earned by collecting cards
+    # Band 8: Piggy in a Blanket / Billy Mylanta
+    {
+        "id": "card_piggy_in_a_blanket",
+        "name": "Piggy in a Blanket",
+        "description": "The snuggliest shredder! Wrapped in his cozy blanket, Piggy brings warmth to the coldest mosh pits!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["piggy_in_a_blanket"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["piggy_in_a_blanket"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Piggy",
+        "card_type": "A"
+    },
+    {
+        "id": "card_billy_mylanta",
+        "name": "Billy Mylanta",
+        "description": "The antacid avenger! Billy Mylanta soothes the burn of his brutal performances with legendary digestive relief!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["billy_mylanta"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["billy_mylanta"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 1,
+        "band": "Piggy",
+        "card_type": "B"
+    },
+    # =====================
+    # RARE CARDS - Series completion rewards
+    # =====================
     {
         "id": "card_martin_van_druid",
         "name": "Martin Van Druid",
-        "description": "The dark sorcerer of Assfux! Martin Van Druid conjures foul flatulent forces with his eerie cauldron. He casts gaseous spells and trumpets doom from his rear.",
+        "description": "The mystical metal mage! With ancient runes and arcane riffs, Martin Van Druid conjures the heaviest spells known to thrash!",
         "rarity": "rare",
         "front_image_url": CARD_IMAGE_URLS["martin_van_druid"],
         "back_image_url": CARD_BACK_IMAGE_URLS["martin_van_druid"],
-        "coin_cost": 75,  # Value: 75 coins
-        "available": False,  # Achievement only
-        "achievement_required": 10  # Unlocked at 10 cards
+        "coin_cost": 100,
+        "available": False,
+        "achievement_required": 16,  # Unlocks after completing Series 1
+        "series_reward": 1
     },
     {
         "id": "card_tardy_donald",
         "name": "Tardy Donald",
-        "description": "The drummer of Ohbitchuary who's never on time! Known for sweating beer, smelling like the night before, and delaying entire festivals by running to the taco truck.",
+        "description": "Always late, never early! Tardy Donald shows up after the show's over but still shreds harder than anyone else there!",
         "rarity": "rare",
         "front_image_url": CARD_IMAGE_URLS["tardy_donald"],
         "back_image_url": CARD_BACK_IMAGE_URLS["tardy_donald"],
-        "coin_cost": 75,  # Value: 75 coins
-        "available": False,  # Achievement only
-        "achievement_required": 20  # Unlocked at 20 cards
+        "coin_cost": 100,
+        "available": False,
+        "achievement_required": 32,  # Unlocks after completing Series 2
+        "series_reward": 2
     },
     {
         "id": "card_kerry_the_king",
         "name": "Kerry The King",
-        "description": "Kerry the King rules the stage with a monstrous ego and an even more monstrous scowl. He makes Slash look like Fred Rogers when he thrashes out blistering solos while glaring daggers into the crowd.",
+        "description": "Royalty of the riff! Kerry The King rules the kingdom of thrash with an iron fist and golden guitar!",
         "rarity": "rare",
         "front_image_url": CARD_IMAGE_URLS["kerry_the_king"],
         "back_image_url": CARD_BACK_IMAGE_URLS["kerry_the_king"],
-        "coin_cost": 75,  # Value: 75 coins
-        "available": False,  # Achievement only
-        "achievement_required": 30  # Unlocked at 30 cards
+        "coin_cost": 100,
+        "available": False,
+        "achievement_required": 48,  # Unlocks after completing Series 3
+        "series_reward": 3
     },
     {
         "id": "card_jeff_possess_ya",
         "name": "Jeff Possess Ya",
-        "description": "Jeff Becerra's brand of possession is a full-body experience. Your head grows horns and your soul is doomed. From the band Pussessed!",
+        "description": "The demon guitarist! Jeff Possess Ya channels dark spirits through his strings, possessing audiences with unholy shreds!",
         "rarity": "rare",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya"],
         "back_image_url": CARD_BACK_IMAGE_URLS["jeff_possess_ya"],
-        "coin_cost": 75,  # Value: 75 coins
-        "available": False,  # Achievement only
-        "achievement_required": 40  # Unlocked at 40 cards
+        "coin_cost": 100,
+        "available": False,
+        "achievement_required": 64,  # Unlocks after completing Series 4
+        "series_reward": 4
     },
-    # EPIC STREAK CARDS - Unlocked by consecutive login days
+    # =====================
+    # EPIC CARDS - Streak rewards (not in spin pool)
+    # =====================
     {
         "id": "card_tom_angeltipper",
         "name": "Tom Angeltipper",
-        "description": "From the band Sodum! Once a month, Tom Angeltipper drinks ten shots of Schnapps and tosses ten angels off clouds. Why do angels fall? Because they're easily led!...OFF LEDGES!",
+        "description": "The angelic shredder who fell from heaven! His divine riffs tip the scales between metal and mayhem!",
         "rarity": "epic",
         "front_image_url": CARD_IMAGE_URLS["tom_angeltipper"],
         "back_image_url": CARD_BACK_IMAGE_URLS["tom_angeltipper"],
-        "coin_cost": 100,  # Value: 100 coins
-        "available": False,  # Streak reward only
-        "streak_required": 7  # Unlocked at 7 day streak
+        "coin_cost": 100,
+        "available": False,
+        "streak_required": 7
     },
     {
         "id": "card_tom_angelflipper",
         "name": "Tom Angelflipper",
-        "description": "From the band Sodumb! He's the reason angels had to sign a health waiver. Once a month he flips angels upside down while chugging beer. The ultimate thrash legend!",
+        "description": "Tom's evil twin! Tom Angelflipper flips between dimensions, bringing interdimensional chaos to the pit!",
         "rarity": "epic",
         "front_image_url": CARD_IMAGE_URLS["tom_angelflipper"],
         "back_image_url": CARD_BACK_IMAGE_URLS["tom_angelflipper"],
-        "coin_cost": 100,  # Value: 100 coins
-        "available": False,  # Streak reward only
-        "streak_required": 14  # Unlocked at 14 day streak
+        "coin_cost": 100,
+        "available": False,
+        "streak_required": 14
     },
-    # ENGAGEMENT MILESTONE CARDS - Unlocked by special achievements
+    # =====================
+    # ENGAGEMENT MILESTONE CARDS (not in spin pool)
+    # =====================
     {
         "id": "card_maxi_pad",
         "name": "Maxi Pad",
-        "description": "The ultimate pad slapper! Maxi Pad crashes every show with absorption levels off the charts. A legendary collector's item for the most dedicated fans!",
+        "description": "The ultimate pad slapper! Maxi Pad crashes every show with absorption levels off the charts!",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["maxi_pad"],
         "back_image_url": CARD_BACK_IMAGE_URLS["maxi_pad"],
         "coin_cost": 50,
-        "available": False,  # Unlocked by 30-day login streak (Dedicated Fan)
+        "available": False,
         "engagement_milestone": "dedicated_fan"
     },
     {
         "id": "card_musty_dave",
         "name": "Musty Dave",
-        "description": "The stinkiest shredder in all the land! Musty Dave's aroma clears mosh pits and melts faces. Only the biggest spenders can unlock this funky legend!",
+        "description": "The stinkiest shredder! Musty Dave's aroma clears mosh pits and melts faces!",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["musty_dave"],
         "back_image_url": CARD_BACK_IMAGE_URLS["musty_dave"],
         "coin_cost": 50,
-        "available": False,  # Unlocked by spending 750 coins (Big Spender)
+        "available": False,
         "engagement_milestone": "big_spender"
     },
     {
         "id": "card_chum_araya",
         "name": "Chum Araya",
-        "description": "From the depths of Sleigher! Chum Araya baits the crowd with bloody riffs. Only monthly masters who show true dedication can unlock this fishy legend!",
+        "description": "From the depths of Sleigher! Chum Araya baits the crowd with bloody riffs!",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["chum_araya"],
         "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya"],
         "coin_cost": 50,
-        "available": False,  # Unlocked by logging in 20 days in a month (Monthly Master)
+        "available": False,
         "engagement_milestone": "monthly_master"
     }
 ]
@@ -616,6 +746,13 @@ async def seed_database():
             # Update engagement_milestone if set
             if card_data.get("engagement_milestone") is not None:
                 update_fields["engagement_milestone"] = card_data["engagement_milestone"]
+            # Update series info if set
+            if card_data.get("series") is not None:
+                update_fields["series"] = card_data["series"]
+            if card_data.get("band") is not None:
+                update_fields["band"] = card_data["band"]
+            if card_data.get("card_type") is not None:
+                update_fields["card_type"] = card_data["card_type"]
             if update_fields:
                 await db.cards.update_one({"id": card_data["id"]}, {"$set": update_fields})
                 logger.info(f"Updated card: {card_data['name']} with {update_fields}")
@@ -1159,7 +1296,7 @@ async def get_spin_config():
 
 @api_router.post("/users/{user_id}/spin")
 async def spin_wheel(user_id: str):
-    """Spin the wheel to get a random card"""
+    """Spin the wheel to get a random card from the user's current unlocked series"""
     user = await db.users.find_one({"id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -1168,57 +1305,29 @@ async def spin_wheel(user_id: str):
     if user.get("coins", 0) < SPIN_COST:
         raise HTTPException(status_code=400, detail=f"Not enough coins. Need {SPIN_COST} coins to spin.")
     
-    # Get user's unlocked rare cards
-    unlocked_rares = user.get("unlocked_rare_cards", [])
+    # Get user's unlocked series (default to series 1)
+    unlocked_series = user.get("unlocked_series", [1])
+    if not unlocked_series:
+        unlocked_series = [1]
+        await db.users.update_one({"id": user_id}, {"$set": {"unlocked_series": [1]}})
     
-    # Get available cards for the spin
-    common_cards = await db.cards.find({
+    # Get current series (the highest unlocked series that's not completed)
+    completed_series = user.get("completed_series", [])
+    current_series = max(s for s in unlocked_series if s not in completed_series) if unlocked_series else 1
+    
+    # Get available cards for the spin (only from current series)
+    series_cards = await db.cards.find({
+        "series": current_series,
         "rarity": "common",
         "available": True,
         "engagement_milestone": None  # Exclude engagement milestone cards
     }).to_list(100)
     
-    # Only include rare cards that the user has unlocked
-    rare_cards = []
-    if unlocked_rares:
-        rare_cards = await db.cards.find({
-            "rarity": "rare",
-            "id": {"$in": unlocked_rares}
-        }).to_list(100)
+    if not series_cards:
+        raise HTTPException(status_code=400, detail="No cards available to spin in current series")
     
-    # Build the weighted pool
-    card_pool = []
-    
-    # Add common cards with their weight
-    for card in common_cards:
-        card_pool.append({"card": card, "rarity": "common"})
-    
-    # Add rare cards with their weight
-    for card in rare_cards:
-        card_pool.append({"card": card, "rarity": "rare"})
-    
-    if not card_pool:
-        raise HTTPException(status_code=400, detail="No cards available to spin")
-    
-    # Determine rarity based on odds
-    roll = random.randint(1, 100)
-    
-    if roll <= SPIN_ODDS["rare"] and rare_cards:
-        # Won a rare card
-        selected_rarity = "rare"
-        available_cards = rare_cards
-    else:
-        # Won a common card
-        selected_rarity = "common"
-        available_cards = common_cards
-    
-    if not available_cards:
-        # Fallback to any available card
-        available_cards = common_cards if common_cards else rare_cards
-        selected_rarity = "common" if common_cards else "rare"
-    
-    # Pick a random card from the selected rarity
-    won_card = random.choice(available_cards)
+    # Pick a random card
+    won_card = random.choice(series_cards)
     
     # Deduct coins and track spending
     new_coins = user.get("coins", 0) - SPIN_COST
@@ -1246,55 +1355,217 @@ async def spin_wheel(user_id: str):
         user_card = UserCard(user_id=user_id, card_id=won_card["id"])
         await db.user_cards.insert_one(user_card.dict())
     
+    # Check for series completion
+    series_completion = await check_series_completion(user_id, current_series)
+    
     # Check for achievements after spin
     unique_cards = await db.user_cards.count_documents({"user_id": user_id})
     await check_and_update_goals(user_id, "collect_cards", unique_cards)
     await check_all_rarities_goal(user_id)
-    newly_unlocked_rare = await check_rare_card_achievements(user_id)
-    milestone_reward = await check_milestone_reward(user_id)
     engagement_unlock = await check_engagement_milestones(user_id)
     
     return {
         "success": True,
         "won_card": Card(**won_card),
-        "rarity": selected_rarity,
+        "rarity": "common",
         "is_duplicate": is_duplicate,
         "remaining_coins": new_coins,
         "spin_cost": SPIN_COST,
-        "newly_unlocked_rare_card": newly_unlocked_rare,
-        "milestone_reward": milestone_reward,
+        "current_series": current_series,
+        "series_completion": series_completion,
         "engagement_unlock": engagement_unlock
+    }
+
+async def check_series_completion(user_id: str, series_num: int):
+    """Check if user has completed a series and unlock next series + rare reward"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        return None
+    
+    # Get all cards in this series
+    series_cards = await db.cards.find({
+        "series": series_num,
+        "rarity": "common"
+    }).to_list(100)
+    
+    series_card_ids = [c["id"] for c in series_cards]
+    
+    # Get user's owned cards from this series
+    user_cards = await db.user_cards.find({
+        "user_id": user_id,
+        "card_id": {"$in": series_card_ids}
+    }).to_list(100)
+    
+    owned_ids = set(uc["card_id"] for uc in user_cards)
+    owned_count = len(owned_ids)
+    required_count = len(series_card_ids)
+    
+    # Check if series is complete
+    completed_series = user.get("completed_series", [])
+    
+    if owned_count >= required_count and series_num not in completed_series:
+        # Series completed! Mark as complete
+        completed_series.append(series_num)
+        
+        # Unlock next series
+        unlocked_series = user.get("unlocked_series", [1])
+        next_series = series_num + 1
+        if next_series not in unlocked_series and next_series <= 4:
+            unlocked_series.append(next_series)
+        
+        # Get rare reward card for this series
+        series_config = SERIES_CONFIG.get(series_num, {})
+        rare_reward_id = series_config.get("rare_reward")
+        rare_reward_card = None
+        
+        if rare_reward_id:
+            # Add rare reward to user's collection
+            rare_card = await db.cards.find_one({"id": rare_reward_id})
+            if rare_card:
+                # Check if user already owns it
+                existing = await db.user_cards.find_one({
+                    "user_id": user_id,
+                    "card_id": rare_reward_id
+                })
+                if not existing:
+                    user_card = UserCard(user_id=user_id, card_id=rare_reward_id)
+                    await db.user_cards.insert_one(user_card.dict())
+                    rare_reward_card = Card(**rare_card)
+                
+                # Also add to unlocked_rare_cards
+                unlocked_rares = user.get("unlocked_rare_cards", [])
+                if rare_reward_id not in unlocked_rares:
+                    unlocked_rares.append(rare_reward_id)
+                    await db.users.update_one(
+                        {"id": user_id},
+                        {"$set": {"unlocked_rare_cards": unlocked_rares}}
+                    )
+        
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {
+                "completed_series": completed_series,
+                "unlocked_series": unlocked_series
+            }}
+        )
+        
+        return {
+            "series_completed": series_num,
+            "series_name": series_config.get("name", f"Series {series_num}"),
+            "rare_reward": rare_reward_card,
+            "next_series_unlocked": next_series if next_series <= 4 else None
+        }
+    
+    return {
+        "series_completed": None,
+        "progress": owned_count,
+        "required": required_count
     }
 
 @api_router.get("/users/{user_id}/spin-pool")
 async def get_spin_pool(user_id: str):
-    """Get the cards available in the spin pool for this user"""
+    """Get the cards available in the spin pool for this user's current series"""
     user = await db.users.find_one({"id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    unlocked_rares = user.get("unlocked_rare_cards", [])
+    # Get user's unlocked series (default to series 1)
+    unlocked_series = user.get("unlocked_series", [1])
+    if not unlocked_series:
+        unlocked_series = [1]
     
-    # Get common cards (excluding engagement milestone cards)
-    common_cards = await db.cards.find({
+    # Get current series (the highest unlocked series that's not completed)
+    completed_series = user.get("completed_series", [])
+    current_series = max(s for s in unlocked_series if s not in completed_series) if [s for s in unlocked_series if s not in completed_series] else max(unlocked_series)
+    
+    # Get series config
+    series_config = SERIES_CONFIG.get(current_series, {})
+    
+    # Get cards from current series only
+    series_cards = await db.cards.find({
+        "series": current_series,
         "rarity": "common",
         "available": True,
         "engagement_milestone": None
     }, {"_id": 0}).to_list(100)
     
-    # Get unlocked rare cards
-    rare_cards = []
-    if unlocked_rares:
-        rare_cards = await db.cards.find({
-            "rarity": "rare",
-            "id": {"$in": unlocked_rares}
-        }, {"_id": 0}).to_list(100)
+    # Get user's owned cards from this series
+    user_cards = await db.user_cards.find({"user_id": user_id}).to_list(1000)
+    owned_card_ids = set(uc["card_id"] for uc in user_cards)
+    
+    # Mark which cards are owned
+    for card in series_cards:
+        card["owned"] = card["id"] in owned_card_ids
+    
+    # Get rare reward info for this series
+    rare_reward = None
+    if series_config.get("rare_reward"):
+        rare_card = await db.cards.find_one({"id": series_config["rare_reward"]}, {"_id": 0})
+        if rare_card:
+            rare_reward = rare_card
+    
+    owned_count = sum(1 for c in series_cards if c["owned"])
     
     return {
-        "common_cards": common_cards,
-        "rare_cards": rare_cards,
+        "current_series": current_series,
+        "series_name": series_config.get("name", f"Series {current_series}"),
+        "series_description": series_config.get("description", ""),
+        "series_cards": series_cards,
+        "owned_count": owned_count,
+        "total_count": len(series_cards),
+        "rare_reward": rare_reward,
         "spin_cost": SPIN_COST,
-        "odds": SPIN_ODDS
+        "is_complete": current_series in completed_series,
+        "completed_series": completed_series,
+        "unlocked_series": unlocked_series
+    }
+
+@api_router.get("/users/{user_id}/series-progress")
+async def get_series_progress(user_id: str):
+    """Get detailed series progress for a user"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    unlocked_series = user.get("unlocked_series", [1])
+    completed_series = user.get("completed_series", [])
+    user_cards = await db.user_cards.find({"user_id": user_id}).to_list(1000)
+    owned_card_ids = set(uc["card_id"] for uc in user_cards)
+    
+    all_series = []
+    for series_num in range(1, 5):
+        series_config = SERIES_CONFIG.get(series_num, {})
+        
+        # Get cards in this series
+        series_cards = await db.cards.find({
+            "series": series_num,
+            "rarity": "common"
+        }, {"_id": 0}).to_list(100)
+        
+        owned_in_series = sum(1 for c in series_cards if c["id"] in owned_card_ids)
+        
+        # Get rare reward
+        rare_reward = None
+        if series_config.get("rare_reward"):
+            rare_card = await db.cards.find_one({"id": series_config["rare_reward"]}, {"_id": 0})
+            if rare_card:
+                rare_reward = rare_card
+                rare_reward["owned"] = rare_card["id"] in owned_card_ids
+        
+        all_series.append({
+            "series_num": series_num,
+            "name": series_config.get("name", f"Series {series_num}"),
+            "description": series_config.get("description", ""),
+            "unlocked": series_num in unlocked_series,
+            "completed": series_num in completed_series,
+            "owned_count": owned_in_series,
+            "total_count": len(series_cards),
+            "rare_reward": rare_reward
+        })
+    
+    return {
+        "series": all_series,
+        "current_series": max(s for s in unlocked_series if s not in completed_series) if [s for s in unlocked_series if s not in completed_series] else max(unlocked_series)
     }
 
 # =====================

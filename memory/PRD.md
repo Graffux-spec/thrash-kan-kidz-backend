@@ -11,29 +11,41 @@ Build a mobile card collecting app for "Thrash Kan Kidz" cards where users:
 
 ## Core Features
 
-### Card Spinner (Gacha System) - NEW
-Users spin a roulette wheel to randomly win cards:
-- **Spin Cost**: 50 coins per spin
-- **Drop Rates**:
-  - Common: 80%
-  - Rare: 20% (only unlocked rare cards appear in pool)
-- **Duplicates**: Added to collection for trading
-- **Visual**: Animated wheel with card previews, result modal with card reveal
+### Series System (NEW - March 2026)
+Cards are organized into series. Users must complete one series before accessing the next:
+- **Series 1**: 16 cards (8 bands × 2 cards each: A & B)
+- **Series 2-4**: Future series (same structure)
+- Completing a series unlocks:
+  - A **Rare card reward**
+  - Access to the **next series**
 
-### Card Tiers & Unlocks
-1. **Common Cards** - Available in spin pool (80% chance)
-2. **Rare Cards** - Appear in spin pool after unlocking via milestones (20% chance):
-   - Martin Van Druid: Unlock at 10 cards collected
-   - Tardy Donald: Unlock at 20 cards
-   - Kerry The King: Unlock at 30 cards
-   - Jeff Possess Ya: Unlock at 40 cards
-3. **Epic Cards** - Goal rewards only (not in spin pool):
-   - Tom Angeltipper: 7-day login streak
-   - Tom Angelflipper: 14-day login streak
-4. **Engagement Milestone Cards** - Goal rewards only:
-   - Maxi Pad: 30-day streak (Dedicated Fan)
-   - Musty Dave: 750 coins spent (Big Spender)
-   - Chum Araya: 20 days/month login (Monthly Master)
+**Series 1 Bands:**
+| Band | Card A | Card B |
+|------|--------|--------|
+| Mille | Silly Mille | Mille Gorezza |
+| Cliff | Cliff Burpin | Cliff Diver |
+| Scott | Scotch Ian | Scott Eaten |
+| Chuck | Chuck Roast | Blood Bonder |
+| Tom | Tom da Playa | Billy Chuck |
+| Don | Don Doody | Tommy Spewart |
+| Beer | Beer Schmier | Philled Up |
+| Piggy | Piggy in a Blanket | Billy Mylanta |
+
+**Series Rewards:**
+- Series 1 → Martin Van Druid (Rare)
+- Series 2 → Tardy Donald (Rare)
+- Series 3 → Kerry The King (Rare)
+- Series 4 → Jeff Possess Ya (Rare)
+
+### Card Spinner (Gacha System)
+Users spin a roulette wheel to randomly win cards from their current series:
+- **Spin Cost**: 50 coins per spin
+- **Duplicates**: Added to collection for trading
+- **Visual**: Animated wheel with card previews, progress bar, series info
+
+### Other Card Types (Goal Rewards)
+- **Epic Cards**: 7-day streak (Tom Angeltipper), 14-day streak (Tom Angelflipper)
+- **Engagement Cards**: 30-day streak (Maxi Pad), 750 coins spent (Musty Dave), 20 days/month (Chum Araya)
 
 ### Coin Purchase System (Implemented Feb 27, 2026)
 Users can purchase coins with real money via Stripe:

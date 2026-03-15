@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Backend URL configuration
-BACKEND_URL = "https://engage-unlock.preview.emergentagent.com/api"
+BACKEND_URL = "https://kidz-collect.preview.emergentagent.com/api"
 
 def run_comprehensive_test():
     """Run comprehensive milestone and rare card tests"""

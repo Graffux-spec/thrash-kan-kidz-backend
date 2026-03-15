@@ -17,23 +17,36 @@ import { useApp } from '../src/context/AppContext';
 import BuyCoinsModal from './components/BuyCoinsModal';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const WHEEL_SIZE = Math.min(SCREEN_WIDTH - 80, 300);
+const WHEEL_SIZE = Math.min(SCREEN_WIDTH - 80, 280);
 
 interface SpinResult {
   won_card: any;
   rarity: string;
   is_duplicate: boolean;
   remaining_coins: number;
+  series_completion?: any;
+}
+
+interface SpinPoolData {
+  current_series: number;
+  series_name: string;
+  series_description: string;
+  series_cards: any[];
+  owned_count: number;
+  total_count: number;
+  rare_reward: any;
+  spin_cost: number;
 }
 
 export default function ShopScreen() {
-  const { user, allCards, userCards, apiUrl, refreshData } = useApp();
+  const { user, apiUrl, refreshData } = useApp();
   const [spinning, setSpinning] = useState(false);
   const [spinResult, setSpinResult] = useState<SpinResult | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [showSeriesComplete, setShowSeriesComplete] = useState(false);
   const [showBuyCoins, setShowBuyCoins] = useState(false);
-  const [spinPool, setSpinPool] = useState<any[]>([]);
-  const [spinConfig, setSpinConfig] = useState({ spin_cost: 50, odds: { common: 80, rare: 20 } });
+  const [spinPool, setSpinPool] = useState<SpinPoolData | null>(null);
+  const [spinConfig, setSpinConfig] = useState({ spin_cost: 50 });
   
   const spinAnim = useRef(new Animated.Value(0)).current;
   const cardScaleAnim = useRef(new Animated.Value(0)).current;
@@ -55,14 +68,14 @@ export default function ShopScreen() {
       const config = await configRes.json();
       const pool = await poolRes.json();
       setSpinConfig(config);
-      setSpinPool([...pool.common_cards, ...pool.rare_cards]);
+      setSpinPool(pool);
     } catch (error) {
       console.error('Error fetching spin data:', error);
     }
   };
 
   const handleSpin = async () => {
-    if (!user || spinning) return;
+    if (!user || spinning || !spinPool) return;
     
     if (user.coins < spinConfig.spin_cost) {
       setShowBuyCoins(true);
@@ -78,9 +91,9 @@ export default function ShopScreen() {
     glowAnim.setValue(0);
 
     try {
-      // Start spinning animation (multiple rotations)
+      // Start spinning animation
       const spinDuration = 3000;
-      const rotations = 5 + Math.random() * 3; // 5-8 rotations
+      const rotations = 5 + Math.random() * 3;
       
       Animated.timing(spinAnim, {
         toValue: rotations,
@@ -98,7 +111,6 @@ export default function ShopScreen() {
       const result = await response.json();
       
       if (result.success) {
-        // Wait for spin to finish then show result
         setTimeout(() => {
           setSpinResult(result);
           setShowResult(true);
@@ -118,26 +130,9 @@ export default function ShopScreen() {
             }),
           ]).start();
           
-          // Glow animation for rare cards
-          if (result.rarity === 'rare') {
-            Animated.loop(
-              Animated.sequence([
-                Animated.timing(glowAnim, {
-                  toValue: 1,
-                  duration: 500,
-                  useNativeDriver: true,
-                }),
-                Animated.timing(glowAnim, {
-                  toValue: 0.5,
-                  duration: 500,
-                  useNativeDriver: true,
-                }),
-              ])
-            ).start();
-          }
-          
           setSpinning(false);
           refreshData();
+          fetchSpinData();
         }, spinDuration);
       } else {
         setSpinning(false);
@@ -151,9 +146,19 @@ export default function ShopScreen() {
   };
 
   const closeResult = () => {
-    setShowResult(false);
+    // Check if series was completed
+    if (spinResult?.series_completion?.series_completed) {
+      setShowResult(false);
+      setShowSeriesComplete(true);
+    } else {
+      setShowResult(false);
+      setSpinResult(null);
+    }
+  };
+
+  const closeSeriesComplete = () => {
+    setShowSeriesComplete(false);
     setSpinResult(null);
-    glowAnim.setValue(0);
   };
 
   const spinRotation = spinAnim.interpolate({
@@ -173,6 +178,8 @@ export default function ShopScreen() {
     );
   }
 
+  const progress = spinPool ? (spinPool.owned_count / spinPool.total_count) * 100 : 0;
+
   return (
     <SafeAreaView style={styles.container}>
       <Image source={{ uri: BACKGROUND_IMAGE }} style={styles.backgroundImage} resizeMode="cover" />
@@ -184,25 +191,14 @@ export default function ShopScreen() {
       {/* Result Modal */}
       <Modal visible={showResult} transparent animationType="fade" onRequestClose={closeResult}>
         <View style={styles.resultOverlay}>
-          <View style={[
-            styles.resultContainer,
-            spinResult?.rarity === 'rare' && styles.resultContainerRare
-          ]}>
-            <Text style={styles.resultTitle}>
-              {spinResult?.rarity === 'rare' ? '🌟 RARE CARD! 🌟' : '🎉 You Won!'}
-            </Text>
+          <View style={styles.resultContainer}>
+            <Text style={styles.resultTitle}>🎉 You Won!</Text>
             
             {spinResult && (
               <Animated.View style={[
                 styles.resultCardContainer,
                 { transform: [{ scale: cardScaleAnim }] }
               ]}>
-                {spinResult.rarity === 'rare' && (
-                  <Animated.View style={[
-                    styles.rareGlow,
-                    { opacity: glowAnim }
-                  ]} />
-                )}
                 <Image
                   source={{ uri: spinResult.won_card.front_image_url }}
                   style={styles.resultCardImage}
@@ -212,21 +208,56 @@ export default function ShopScreen() {
             )}
             
             <Text style={styles.resultCardName}>{spinResult?.won_card?.name}</Text>
-            <Text style={[
-              styles.resultRarity,
-              spinResult?.rarity === 'rare' && styles.resultRarityRare
-            ]}>
-              {spinResult?.rarity?.toUpperCase()}
+            <Text style={styles.resultBand}>
+              {spinResult?.won_card?.band} - Card {spinResult?.won_card?.card_type}
             </Text>
             
             {spinResult?.is_duplicate && (
               <View style={styles.duplicateBadge}>
-                <Text style={styles.duplicateText}>DUPLICATE - Added to collection for trading!</Text>
+                <Text style={styles.duplicateText}>DUPLICATE - Added for trading!</Text>
               </View>
             )}
             
             <TouchableOpacity style={styles.closeResultButton} onPress={closeResult}>
-              <Text style={styles.closeResultText}>Awesome!</Text>
+              <Text style={styles.closeResultText}>
+                {spinResult?.series_completion?.series_completed ? 'Continue...' : 'Awesome!'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Series Complete Modal */}
+      <Modal visible={showSeriesComplete} transparent animationType="fade" onRequestClose={closeSeriesComplete}>
+        <View style={styles.resultOverlay}>
+          <View style={[styles.resultContainer, styles.seriesCompleteContainer]}>
+            <Text style={styles.seriesCompleteTitle}>🏆 SERIES COMPLETE! 🏆</Text>
+            <Text style={styles.seriesCompleteName}>
+              {spinResult?.series_completion?.series_name}
+            </Text>
+            
+            {spinResult?.series_completion?.rare_reward && (
+              <>
+                <Text style={styles.rareRewardTitle}>Rare Card Unlocked!</Text>
+                <Image
+                  source={{ uri: spinResult.series_completion.rare_reward.front_image_url }}
+                  style={styles.rareRewardImage}
+                  resizeMode="contain"
+                />
+                <Text style={styles.rareRewardName}>
+                  {spinResult.series_completion.rare_reward.name}
+                </Text>
+              </>
+            )}
+            
+            {spinResult?.series_completion?.next_series_unlocked && (
+              <Text style={styles.nextSeriesText}>
+                Series {spinResult.series_completion.next_series_unlocked} Unlocked!
+              </Text>
+            )}
+            
+            <TouchableOpacity style={styles.closeResultButton} onPress={closeSeriesComplete}>
+              <Text style={styles.closeResultText}>Amazing!</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -237,7 +268,7 @@ export default function ShopScreen() {
         <View style={styles.header}>
           <View>
             <Text style={styles.title}>Card Spinner</Text>
-            <Text style={styles.subtitle}>Spin to win random cards!</Text>
+            <Text style={styles.subtitle}>{spinPool?.series_name || 'Loading...'}</Text>
           </View>
           <View style={styles.coinSection}>
             <View style={styles.coinDisplay}>
@@ -254,21 +285,42 @@ export default function ShopScreen() {
           </View>
         </View>
 
+        {/* Series Progress */}
+        {spinPool && (
+          <View style={styles.seriesProgress}>
+            <View style={styles.progressHeader}>
+              <Text style={styles.progressTitle}>{spinPool.series_name}</Text>
+              <Text style={styles.progressCount}>{spinPool.owned_count}/{spinPool.total_count}</Text>
+            </View>
+            <View style={styles.progressBarBg}>
+              <View style={[styles.progressBarFill, { width: `${progress}%` }]} />
+            </View>
+            {spinPool.rare_reward && (
+              <View style={styles.rewardPreview}>
+                <Text style={styles.rewardLabel}>Complete to unlock:</Text>
+                <Image 
+                  source={{ uri: spinPool.rare_reward.front_image_url }}
+                  style={styles.rewardThumb}
+                  resizeMode="cover"
+                />
+                <Text style={styles.rewardName}>{spinPool.rare_reward.name}</Text>
+              </View>
+            )}
+          </View>
+        )}
+
         {/* Spin Wheel Section */}
         <View style={styles.wheelSection}>
           <View style={styles.wheelContainer}>
-            {/* Wheel pointer */}
             <View style={styles.wheelPointer}>
               <Ionicons name="caret-down" size={40} color="#FFD700" />
             </View>
             
-            {/* Spinning wheel */}
             <Animated.View style={[
               styles.wheel,
               { transform: [{ rotate: spinRotation }] }
             ]}>
-              {/* Wheel segments with card previews */}
-              {spinPool.slice(0, 8).map((card, index) => {
+              {spinPool?.series_cards.slice(0, 8).map((card, index) => {
                 const angle = (index * 45) - 90;
                 return (
                   <View
@@ -281,6 +333,7 @@ export default function ShopScreen() {
                           { translateX: WHEEL_SIZE / 3 },
                         ],
                       },
+                      card.owned && styles.wheelSegmentOwned
                     ]}
                   >
                     <Image
@@ -292,14 +345,12 @@ export default function ShopScreen() {
                 );
               })}
               
-              {/* Center circle */}
               <View style={styles.wheelCenter}>
                 <Text style={styles.wheelCenterText}>🎰</Text>
               </View>
             </Animated.View>
           </View>
 
-          {/* Spin Button */}
           <TouchableOpacity
             style={[
               styles.spinButton,
@@ -326,46 +377,42 @@ export default function ShopScreen() {
           )}
         </View>
 
-        {/* Odds Info */}
-        <View style={styles.oddsSection}>
-          <Text style={styles.oddsSectionTitle}>Drop Rates</Text>
-          <View style={styles.oddsContainer}>
-            <View style={styles.oddsItem}>
-              <View style={[styles.oddsIndicator, { backgroundColor: '#4CAF50' }]} />
-              <Text style={styles.oddsText}>Common: {spinConfig.odds.common}%</Text>
-            </View>
-            <View style={styles.oddsItem}>
-              <View style={[styles.oddsIndicator, { backgroundColor: '#2196F3' }]} />
-              <Text style={styles.oddsText}>Rare: {spinConfig.odds.rare}%</Text>
+        {/* Cards Grid - Show all series cards */}
+        {spinPool && (
+          <View style={styles.cardsSection}>
+            <Text style={styles.cardsSectionTitle}>
+              {spinPool.series_name} Cards ({spinPool.owned_count}/{spinPool.total_count})
+            </Text>
+            <View style={styles.cardsGrid}>
+              {spinPool.series_cards.map((card) => (
+                <View 
+                  key={card.id} 
+                  style={[
+                    styles.cardItem,
+                    card.owned && styles.cardItemOwned
+                  ]}
+                >
+                  <Image
+                    source={{ uri: card.front_image_url }}
+                    style={[
+                      styles.cardImage,
+                      !card.owned && styles.cardImageLocked
+                    ]}
+                    resizeMode="cover"
+                    blurRadius={card.owned ? 0 : 10}
+                  />
+                  {!card.owned && (
+                    <View style={styles.cardLockOverlay}>
+                      <Ionicons name="help" size={24} color="#FFD700" />
+                    </View>
+                  )}
+                  <Text style={styles.cardName} numberOfLines={1}>{card.name}</Text>
+                  <Text style={styles.cardBand}>{card.band}-{card.card_type}</Text>
+                </View>
+              ))}
             </View>
           </View>
-          <Text style={styles.oddsNote}>
-            Rare cards appear after unlocking them through collection milestones!
-          </Text>
-        </View>
-
-        {/* Cards in Pool */}
-        <View style={styles.poolSection}>
-          <Text style={styles.poolSectionTitle}>Cards in the Pool ({spinPool.length})</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.poolScroll}>
-            {spinPool.map((card) => (
-              <View key={card.id} style={styles.poolCard}>
-                <Image
-                  source={{ uri: card.front_image_url }}
-                  style={styles.poolCardImage}
-                  resizeMode="cover"
-                />
-                <Text style={styles.poolCardName} numberOfLines={1}>{card.name}</Text>
-                <Text style={[
-                  styles.poolCardRarity,
-                  card.rarity === 'rare' && styles.poolCardRarityRare
-                ]}>
-                  {card.rarity}
-                </Text>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -406,24 +453,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 20,
+    padding: 16,
     paddingBottom: 100,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#FFD700',
   },
   subtitle: {
     fontSize: 14,
     color: '#888',
-    marginTop: 4,
+    marginTop: 2,
   },
   coinSection: {
     flexDirection: 'row',
@@ -434,16 +481,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(26, 26, 46, 0.9)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
   },
   coinIcon: {
-    fontSize: 18,
-    marginRight: 6,
+    fontSize: 16,
+    marginRight: 4,
   },
   coinText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#FFD700',
   },
@@ -451,27 +498,88 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFD700',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
+    gap: 2,
   },
   buyCoinsText: {
     color: '#000',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  // Series Progress
+  seriesProgress: {
+    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#FFD700',
+  },
+  progressHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  progressTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFD700',
+  },
+  progressCount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  progressBarBg: {
+    height: 12,
+    backgroundColor: '#333',
+    borderRadius: 6,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#FFD700',
+    borderRadius: 6,
+  },
+  rewardPreview: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#333',
+  },
+  rewardLabel: {
+    color: '#888',
+    fontSize: 12,
+    marginRight: 8,
+  },
+  rewardThumb: {
+    width: 40,
+    height: 50,
+    borderRadius: 4,
+    marginRight: 8,
+  },
+  rewardName: {
+    color: '#2196F3',
     fontSize: 14,
     fontWeight: 'bold',
+    flex: 1,
   },
   // Wheel Section
   wheelSection: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 24,
   },
   wheelContainer: {
     width: WHEEL_SIZE + 40,
     height: WHEEL_SIZE + 40,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   wheelPointer: {
     position: 'absolute',
@@ -491,133 +599,113 @@ const styles = StyleSheet.create({
   },
   wheelSegment: {
     position: 'absolute',
-    width: 50,
-    height: 50,
-    borderRadius: 8,
+    width: 45,
+    height: 55,
+    borderRadius: 6,
     overflow: 'hidden',
     borderWidth: 2,
     borderColor: '#333',
+  },
+  wheelSegmentOwned: {
+    borderColor: '#4CAF50',
   },
   wheelCardImage: {
     width: '100%',
     height: '100%',
   },
   wheelCenter: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     backgroundColor: '#FFD700',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 3,
+    borderWidth: 2,
     borderColor: '#fff',
   },
   wheelCenterText: {
-    fontSize: 28,
+    fontSize: 24,
   },
   spinButton: {
     backgroundColor: '#FFD700',
-    paddingHorizontal: 48,
-    paddingVertical: 16,
-    borderRadius: 30,
+    paddingHorizontal: 40,
+    paddingVertical: 14,
+    borderRadius: 25,
     alignItems: 'center',
-    minWidth: 200,
+    minWidth: 180,
   },
   spinButtonDisabled: {
     backgroundColor: '#555',
   },
   spinButtonText: {
     color: '#000',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   spinCostText: {
     color: '#333',
-    fontSize: 14,
-    marginTop: 4,
+    fontSize: 12,
+    marginTop: 2,
   },
   notEnoughCoins: {
     color: '#ff6b6b',
-    fontSize: 14,
-    marginTop: 12,
+    fontSize: 13,
+    marginTop: 10,
     textAlign: 'center',
   },
-  // Odds Section
-  oddsSection: {
-    backgroundColor: 'rgba(26, 26, 46, 0.9)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 24,
+  // Cards Section
+  cardsSection: {
+    marginTop: 8,
   },
-  oddsSectionTitle: {
+  cardsSectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 12,
   },
-  oddsContainer: {
+  cardsGrid: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 12,
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
-  oddsItem: {
-    flexDirection: 'row',
+  cardItem: {
+    width: '23%',
+    marginBottom: 12,
     alignItems: 'center',
   },
-  oddsIndicator: {
-    width: 12,
-    height: 12,
+  cardItemOwned: {
+    opacity: 1,
+  },
+  cardImage: {
+    width: '100%',
+    aspectRatio: 0.7,
     borderRadius: 6,
-    marginRight: 8,
-  },
-  oddsText: {
-    color: '#ccc',
-    fontSize: 14,
-  },
-  oddsNote: {
-    color: '#888',
-    fontSize: 12,
-    textAlign: 'center',
-    fontStyle: 'italic',
-  },
-  // Pool Section
-  poolSection: {
-    marginBottom: 24,
-  },
-  poolSectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 12,
-  },
-  poolScroll: {
-    flexDirection: 'row',
-  },
-  poolCard: {
-    width: 80,
-    marginRight: 12,
-    alignItems: 'center',
-  },
-  poolCardImage: {
-    width: 70,
-    height: 90,
-    borderRadius: 8,
     borderWidth: 2,
     borderColor: '#333',
   },
-  poolCardName: {
+  cardImageLocked: {
+    borderColor: '#222',
+  },
+  cardLockOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 6,
+  },
+  cardName: {
     color: '#fff',
-    fontSize: 10,
+    fontSize: 9,
     marginTop: 4,
     textAlign: 'center',
   },
-  poolCardRarity: {
-    color: '#4CAF50',
-    fontSize: 9,
-    textTransform: 'uppercase',
-  },
-  poolCardRarityRare: {
-    color: '#2196F3',
+  cardBand: {
+    color: '#888',
+    fontSize: 8,
   },
   // Result Modal
   resultOverlay: {
@@ -629,81 +717,104 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     backgroundColor: '#1a1a2e',
-    borderRadius: 24,
+    borderRadius: 20,
     padding: 24,
     alignItems: 'center',
     width: '100%',
-    maxWidth: 320,
+    maxWidth: 300,
     borderWidth: 3,
     borderColor: '#4CAF50',
   },
-  resultContainerRare: {
-    borderColor: '#2196F3',
-    backgroundColor: '#1a2a3e',
-  },
   resultTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#FFD700',
     marginBottom: 16,
   },
   resultCardContainer: {
-    position: 'relative',
-    marginBottom: 16,
-  },
-  rareGlow: {
-    position: 'absolute',
-    top: -10,
-    left: -10,
-    right: -10,
-    bottom: -10,
-    backgroundColor: '#2196F3',
-    borderRadius: 20,
-    opacity: 0.3,
+    marginBottom: 12,
   },
   resultCardImage: {
-    width: 150,
-    height: 200,
-    borderRadius: 12,
-    borderWidth: 3,
+    width: 140,
+    height: 180,
+    borderRadius: 10,
+    borderWidth: 2,
     borderColor: '#FFD700',
   },
   resultCardName: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 4,
   },
-  resultRarity: {
-    fontSize: 14,
-    color: '#4CAF50',
-    fontWeight: 'bold',
+  resultBand: {
+    fontSize: 12,
+    color: '#888',
     marginBottom: 12,
-  },
-  resultRarityRare: {
-    color: '#2196F3',
   },
   duplicateBadge: {
     backgroundColor: 'rgba(255, 152, 0, 0.2)',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 12,
-    marginBottom: 16,
+    borderRadius: 10,
+    marginBottom: 12,
   },
   duplicateText: {
     color: '#FF9800',
-    fontSize: 12,
+    fontSize: 11,
     textAlign: 'center',
   },
   closeResultButton: {
     backgroundColor: '#FFD700',
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderRadius: 24,
+    paddingHorizontal: 28,
+    paddingVertical: 10,
+    borderRadius: 20,
   },
   closeResultText: {
     color: '#000',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  // Series Complete Modal
+  seriesCompleteContainer: {
+    borderColor: '#FFD700',
+    backgroundColor: '#1a2a1a',
+  },
+  seriesCompleteTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  seriesCompleteName: {
+    fontSize: 16,
+    color: '#888',
+    marginBottom: 16,
+  },
+  rareRewardTitle: {
+    fontSize: 16,
+    color: '#2196F3',
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  rareRewardImage: {
+    width: 120,
+    height: 160,
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: '#2196F3',
+    marginBottom: 8,
+  },
+  rareRewardName: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#2196F3',
+    marginBottom: 12,
+  },
+  nextSeriesText: {
+    fontSize: 14,
+    color: '#4CAF50',
+    marginBottom: 12,
   },
 });

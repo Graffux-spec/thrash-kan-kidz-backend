@@ -10,7 +10,7 @@ import sys
 from datetime import datetime, timedelta
 
 # Backend URL configuration
-BACKEND_URL = "https://engage-unlock.preview.emergentagent.com/api"
+BACKEND_URL = "https://kidz-collect.preview.emergentagent.com/api"
 
 def test_milestone_reward_complete():
     """Test complete milestone reward system"""
