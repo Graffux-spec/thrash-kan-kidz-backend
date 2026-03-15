@@ -74,6 +74,21 @@ export default function TabLayout() {
             ),
           }}
         />
+        {/* Hidden screens - not shown in tab bar */}
+        <Tabs.Screen
+          name="privacy"
+          options={{
+            title: 'Privacy Policy',
+            tabBarButton: () => null, // Hide from tab bar
+          }}
+        />
+        <Tabs.Screen
+          name="payment-success"
+          options={{
+            title: 'Payment Success',
+            tabBarButton: () => null, // Hide from tab bar
+          }}
+        />
       </Tabs>
     </AppProvider>
   );
