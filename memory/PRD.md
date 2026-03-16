@@ -31,6 +31,18 @@ Cards are organized into series. Users must complete one series before accessing
 | Kreaturd | Silly Mille | Mille Gorezza |
 | Eggsodus | Paul Bawl Off | Blood Bonder |
 
+**Series 2 Bands (ADDED March 16, 2026):**
+| Band | Card A | Card B |
+|------|--------|--------|
+| Construction | Smeared Schmier | Beer Schmier |
+| Voivodka | Piggy in a Blanket | Rotting Away |
+| Hallows Heave | Tommy SteWART | Tommy SPEWart |
+| Pussessed | Jeff Possess Ya | Chef Becerra |
+| S.T.D. | Bully Milano | Billy Mylanta |
+| Sodumb | Tom Angeltipper | Tom Angelflipper |
+| Sacrud Ryche | Philled Up | Phil Grind |
+| Dork Angel | Don Doody | Don Rotty |
+
 **Series Rewards:**
 - Series 1 → **Kerry The King** (Rare) - "Kerry the King rules the stage with a monstrous ego and an even more monstrous scowl."
 - Series 2 → Tardy Donald (Rare)

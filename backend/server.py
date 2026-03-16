@@ -258,6 +258,33 @@ CARD_IMAGE_URLS = {
     "tardy_donald": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/4jtbdfkr_file_00000000bef871fdb4e76de0e490ad1a.png",
     "martin_van_druid": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/1qvok3an_file_00000000b1bc71fda2cfbe35b2441dbe.png",
     "jeff_possess_ya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/s0jimvhs_file_000000006fcc71fd80e12f47bd0524f3.png",
+    # =====================
+    # SERIES 2 CARDS - Front Images
+    # =====================
+    # Band 1: Construction
+    "smeared_schmier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jshleumx_enhanced-1771278042580.jpg",
+    "beer_schmier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lutlvn34_enhanced-1771279297015.jpg",
+    # Band 2: Voivodka
+    "piggy_in_a_blanket": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/dpfv01yo_enhanced-1771278142034.jpg",
+    "rotting_away": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/0bqomm5i_enhanced-1771278196496.jpg",
+    # Band 3: Hallows Heave
+    "tommy_stewart": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/k4dqnji8_enhanced-1771278246182.jpg",
+    "tommy_spewart": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/f61hd5kz_enhanced-1771278293743.jpg",
+    # Band 4: Pussessed
+    "jeff_possess_ya_s2": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jzgfyc6y_enhanced-1771278343087.jpg",
+    "chef_becerra": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/iz6crfrh_enhanced-1771278405486.jpg",
+    # Band 5: S.T.D.
+    "bully_milano": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/rrqcmuzv_enhanced-1771278534417.jpg",
+    "billy_mylanta": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/5mr9wy38_enhanced-1771278589241.jpg",
+    # Band 6: Sodumb
+    "tom_angeltipper": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/kopt4n28_enhanced-1771278644576.jpg",
+    "tom_angelflipper": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/pli2mcqj_enhanced-1771278822551.jpg",
+    # Band 7: Sacrud Ryche
+    "philled_up": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/a4luonk7_enhanced-1771278919638.jpg",
+    "phil_grind": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/535v6r16_enhanced-1771278999569.jpg",
+    # Band 8: Dork Angel
+    "don_doody": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/zb0sa00g_enhanced-1771279108828.jpg",
+    "don_rotty": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/im3hu6sw_enhanced-1771279057803.jpg",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -290,6 +317,33 @@ CARD_BACK_IMAGE_URLS = {
     "tardy_donald": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/aiui1nef_file_000000009e4871f8b270fdb6a2aa38de.png",
     "martin_van_druid": "https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/wzu9cgqo_file_00000000581c71fd9f6943c516c13338.png",
     "jeff_possess_ya": "https://customer-assets.emergentagent.com/job_0530a193-d676-41a8-b42a-392a1e7e6662/artifacts/hzkwnsri_file_00000000564871fd915c1ecfbac3aacc.png",
+    # =====================
+    # SERIES 2 CARDS - Back Images
+    # =====================
+    # Band 1: Construction
+    "smeared_schmier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/yg8itc9l_enhanced-1771279344907.jpg",
+    "beer_schmier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/4lnsur9c_enhanced-1771278098766.jpg",
+    # Band 2: Voivodka
+    "piggy_in_a_blanket": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/fsqnoadq_enhanced-1771279398630.jpg",
+    "rotting_away": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/1degzzdp_enhanced-1771280167989.jpg",
+    # Band 3: Hallows Heave
+    "tommy_stewart": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/yg9odtro_enhanced-1771279654471.jpg",
+    "tommy_spewart": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/gujcwvzv_enhanced-1771279709991.jpg",
+    # Band 4: Pussessed
+    "jeff_possess_ya_s2": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/2l91fiuc_enhanced-1771279762052.jpg",
+    "chef_becerra": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/qzejza95_enhanced-1771279833088.jpg",
+    # Band 5: S.T.D.
+    "bully_milano": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lbi2bhyy_enhanced-1771279972254.jpg",
+    "billy_mylanta": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/kyb5n9e1_enhanced-1771279912493.jpg",
+    # Band 6: Sodumb
+    "tom_angeltipper": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/mp5t3bry_enhanced-1771280220248.jpg",
+    "tom_angelflipper": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/1m6d57zq_enhanced-1771280277113.jpg",
+    # Band 7: Sacrud Ryche
+    "philled_up": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/v26i4x7g_enhanced-1771280383938.jpg",
+    "phil_grind": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/ds8y9a3p_enhanced-1771280329984.jpg",
+    # Band 8: Dork Angel
+    "don_doody": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/nsh58hp1_enhanced-1771280036887.jpg",
+    "don_rotty": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/8xmjtls4_enhanced-1771280085627.jpg",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -518,6 +572,225 @@ INITIAL_CARDS = [
         "available": True,
         "series": 1,
         "band": "Eggsodus",
+        "card_type": "B"
+    },
+    # =====================
+    # SERIES 2 - 8 bands, 16 cards (A & B for each band)
+    # =====================
+    # Band 1: Construction
+    {
+        "id": "card_smeared_schmier",
+        "name": "Smeared Schmier",
+        "description": "Schmier sweats buckets of vulgar vomit, and muds his pants twice a day. This germ-ridden dirtbag is always smeared in slime and filth as a result of his rank stage dives.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["smeared_schmier"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["smeared_schmier"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "A"
+    },
+    {
+        "id": "card_beer_schmier",
+        "name": "Beer Schmier",
+        "description": "After a dozen steins, Schmier spews foamy bile and drools thrash as he froths at the mouth. Just be prepared for a drunken shower when he drops from a beer-fueled bender into the front row.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["beer_schmier"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["beer_schmier"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "B"
+    },
+    # Band 2: Voivodka
+    {
+        "id": "card_piggy_in_a_blanket",
+        "name": "Piggy in a Blanket",
+        "description": "Piggy never bathes and sweats pure Canadian bacon grease from his pores. His pits smell of hardboiled rot, and his diet is nothing but moldy bahn mi.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["piggy_in_a_blanket"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["piggy_in_a_blanket"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Voivodka",
+        "card_type": "A"
+    },
+    {
+        "id": "card_rotting_away",
+        "name": "Rotting Away",
+        "description": "Away is the deadbeat drummer who sweats pure filth and decays as he plays the beats. The flies have to cover their ears during his maggot ridden solos.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["rotting_away"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["rotting_away"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Voivodka",
+        "card_type": "B"
+    },
+    # Band 3: Hallows Heave
+    {
+        "id": "card_tommy_stewart",
+        "name": "Tommy SteWART",
+        "description": "Tommy's body is 90% skin, 10% wart, and 100% screaming. Every riff grows a new growth. Dermatologists fear him.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tommy_stewart"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tommy_stewart"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Hallows Heave",
+        "card_type": "A"
+    },
+    {
+        "id": "card_tommy_spewart",
+        "name": "Tommy SPEWart",
+        "description": "Tommy's body is 90% skin, 10% wart, and 100% screaming. Every riff grows a new growth. Dermatologists fear him.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tommy_spewart"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tommy_spewart"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Hallows Heave",
+        "card_type": "B"
+    },
+    # Band 4: Pussessed
+    {
+        "id": "card_jeff_possess_ya_s2",
+        "name": "Jeff Possess Ya",
+        "description": "Jeff Becerra's brand of possessione is a full-body experience. Your head grows horns and your soul is doomed.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["jeff_possess_ya_s2"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Pussessed",
+        "card_type": "A"
+    },
+    {
+        "id": "card_chef_becerra",
+        "name": "Chef Becerra",
+        "description": "For his gourmet zombies, Chef Becerra puts the flesh in flesh-eating. This soup of the day is shredded limb-sine meat.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["chef_becerra"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["chef_becerra"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Pussessed",
+        "card_type": "B"
+    },
+    # Band 5: S.T.D.
+    {
+        "id": "card_bully_milano",
+        "name": "Bully Milano",
+        "description": "Infecting others is Bully's idea of a good time—and he's got the drippy, crusty, itchy, paining symptoms to prove it. Be careful who you casual contact!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["bully_milano"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["bully_milano"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "S.T.D.",
+        "card_type": "A"
+    },
+    {
+        "id": "card_billy_mylanta",
+        "name": "Billy Mylanta",
+        "description": "Back from the hospital and back on the throne. The only thing more explosive than Billy's on-stage aggression is his unpredictable digestive position!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["billy_mylanta"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["billy_mylanta"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "S.T.D.",
+        "card_type": "B"
+    },
+    # Band 6: Sodumb
+    {
+        "id": "card_tom_angeltipper",
+        "name": "Tom Angeltipper",
+        "description": "Once a month, Tom Angeltipper drinks ten shots of Schnapps and tosses ten angels off clouds. Why do angels fall? Because they're easily led!...OFF LEDGES!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tom_angeltipper"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tom_angeltipper"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "A"
+    },
+    {
+        "id": "card_tom_angelflipper",
+        "name": "Tom Angelflipper",
+        "description": "Once a month, Tom Angel Flipper drinks ten shots of Schnapps and tosses ten angels off clouds. He's the reason angels had to sign a health waiver.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tom_angelflipper"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tom_angelflipper"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "B"
+    },
+    # Band 7: Sacrud Ryche
+    {
+        "id": "card_philled_up",
+        "name": "Philled Up",
+        "description": "Phil never met a cheese pizza he didn't love, or finish. If a dinner is all-you-can-eat, he treats it like an Olympic sport.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["philled_up"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["philled_up"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Sacrud Ryche",
+        "card_type": "A"
+    },
+    {
+        "id": "card_phil_grind",
+        "name": "Phil Grind",
+        "description": "Phil is the mucky vokillist of Sacrud Ryche who clings to filth and grime like it was his first fan. He coughs up enough phlegm to check bags.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["phil_grind"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["phil_grind"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Sacrud Ryche",
+        "card_type": "B"
+    },
+    # Band 8: Dork Angel
+    {
+        "id": "card_don_doody",
+        "name": "Don Doody",
+        "description": "Don Doody brings an unflushable load of nerd stink. Rarely wipe their instruments clean. If the set goes over 20 minutes, consider letting the janitor open for them!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["don_doody"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["don_doody"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Dork Angel",
+        "card_type": "A"
+    },
+    {
+        "id": "card_don_rotty",
+        "name": "Don Rotty",
+        "description": "Don Rotty is the festering vokillist that never decomposes but throws giant festering fits. You can't stand the way he screams or the way he smells!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["don_rotty"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["don_rotty"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 2,
+        "band": "Dork Angel",
         "card_type": "B"
     },
     # =====================
