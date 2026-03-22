@@ -103,20 +103,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a2e',
     borderTopColor: '#333',
     borderTopWidth: 1,
-    paddingBottom: 8,
-    paddingTop: 8,
-    height: 70,
-    paddingHorizontal: 10,
+    paddingBottom: 12,
+    paddingTop: 10,
+    height: 75,
+    paddingHorizontal: 0,
+    justifyContent: 'space-around',
   },
   tabBarLabel: {
     fontSize: 10,
     fontWeight: '600',
-    marginTop: 2,
+    marginTop: 4,
   },
   tabIcon: {
-    fontSize: 26,
+    fontSize: 28,
   },
   tabIconFocused: {
-    transform: [{ scale: 1.15 }],
+    transform: [{ scale: 1.2 }],
   },
 });
