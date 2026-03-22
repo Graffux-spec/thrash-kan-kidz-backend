@@ -72,10 +72,8 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
     setError(null);
     
     try {
-      // Get the origin URL for redirects - use window.location.origin for all platforms
-      const originUrl = typeof window !== 'undefined' && window.location?.origin 
-        ? window.location.origin 
-        : apiUrl;
+      // Get the origin URL for redirects - use window.location.origin directly
+      const originUrl = window.location.origin;
       
       const response = await fetch(`${apiUrl}/api/users/${user.id}/purchase-coins`, {
         method: 'POST',
