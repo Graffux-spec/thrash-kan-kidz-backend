@@ -44,6 +44,7 @@ class Card(BaseModel):
     streak_required: Optional[int] = None  # Number of consecutive login days needed to unlock (for epic cards)
     engagement_milestone: Optional[str] = None  # Type of engagement milestone required (dedicated_fan, big_spender, monthly_master)
     series: Optional[int] = None  # Series number (1, 2, 3, etc.)
+    series_reward: Optional[int] = None  # Which series this card is a reward for
     band: Optional[str] = None  # Band name for grouping A/B cards
     card_type: Optional[str] = None  # "A" or "B" for band card variants
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -150,6 +151,12 @@ SERIES_CONFIG = {
         "cards_required": 16,
         "rare_reward": "card_strap_on_taylor",  # Strap-On Taylor is the Series 2 rare reward
         "description": "More Mayhem"
+    },
+    3: {
+        "name": "Series 3",
+        "cards_required": 16,
+        "rare_reward": "card_sean_kill_again",  # Sean Kill-Again is the Series 3 epic reward
+        "description": "The Thrash Continues"
     }
 }
 
@@ -271,6 +278,35 @@ CARD_IMAGE_URLS = {
     # Band 8: Dork Angel
     "don_doody": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/zb0sa00g_enhanced-1771279108828.jpg",
     "don_rotty": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/im3hu6sw_enhanced-1771279057803.jpg",
+    # =====================
+    # SERIES 3 CARDS - Front Images
+    # =====================
+    # Band 1: Underkill
+    "nobby_blitz": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/da8apu4g_file_000000002df871fd8b305fcf9ab03516.png",
+    "bobby_blitzed": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lu063bq0_enhanced-1773629964983.jpg",
+    # Band 2: Meadow Church
+    "david_whine": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/7ozsynle_enhanced-1771761544757.jpg",
+    "david_slayne": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lbqueqph_enhanced-1771761582312.jpg",
+    # Band 3: Sabutt
+    "martini_walkyier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/c2di7ijf_enhanced-1771761620137.jpg",
+    "martin_wankyier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/7q2a177y_enhanced-1771761655080.jpg",
+    # Band 4: Celtic Frosty
+    "tom_g_worrier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/nwq6liuo_enhanced-1772424120932.jpg",
+    "tom_g_wore_out": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/sicmrezn_enhanced-1772424264300.jpg",
+    # Band 5: Venum
+    "coronos": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/b6qbwv4h_enhanced-1772913854119.jpg",
+    "groanos": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/f227o83l_enhanced-1772914984744.jpg",
+    # Band 6: Sadust
+    "darren_travesty": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/mcvafkhx_enhanced-1772919382679.jpg",
+    "daring_travis": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/zs0t04mj_enhanced-1772919920441.jpg",
+    # Band 7: High Racks
+    "cretin_w_de_pena": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/bvbuwu6q_enhanced-1772996050805.jpg",
+    "katon_de_pain": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/g5w4jwav_enhanced-1772997297722.jpg",
+    # Band 8: Suckrifice
+    "rob_urinati": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/sir3iy8h_enhanced-1773074599887.jpg",
+    "slob_urbinati": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/at4glnr4_enhanced-1774075087938.jpg",
+    # Epic reward card (Series 3)
+    "sean_kill_again": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lxq89ltr_file_000000007a0471f5a1da1f0e20a9b30a.png",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -328,12 +364,42 @@ CARD_BACK_IMAGE_URLS = {
     # Band 8: Dork Angel
     "don_doody": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/nsh58hp1_enhanced-1771280036887.jpg",
     "don_rotty": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/8xmjtls4_enhanced-1771280085627.jpg",
+    # =====================
+    # SERIES 3 CARDS - Back Images (using front images as placeholders)
+    # =====================
+    # Band 1: Underkill
+    "nobby_blitz": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/da8apu4g_file_000000002df871fd8b305fcf9ab03516.png",
+    "bobby_blitzed": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lu063bq0_enhanced-1773629964983.jpg",
+    # Band 2: Meadow Church
+    "david_whine": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/7ozsynle_enhanced-1771761544757.jpg",
+    "david_slayne": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lbqueqph_enhanced-1771761582312.jpg",
+    # Band 3: Sabutt
+    "martini_walkyier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/c2di7ijf_enhanced-1771761620137.jpg",
+    "martin_wankyier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/7q2a177y_enhanced-1771761655080.jpg",
+    # Band 4: Celtic Frosty
+    "tom_g_worrier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/nwq6liuo_enhanced-1772424120932.jpg",
+    "tom_g_wore_out": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/sicmrezn_enhanced-1772424264300.jpg",
+    # Band 5: Venum
+    "coronos": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/b6qbwv4h_enhanced-1772913854119.jpg",
+    "groanos": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/f227o83l_enhanced-1772914984744.jpg",
+    # Band 6: Sadust
+    "darren_travesty": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/mcvafkhx_enhanced-1772919382679.jpg",
+    "daring_travis": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/zs0t04mj_enhanced-1772919920441.jpg",
+    # Band 7: High Racks
+    "cretin_w_de_pena": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/bvbuwu6q_enhanced-1772996050805.jpg",
+    "katon_de_pain": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/g5w4jwav_enhanced-1772997297722.jpg",
+    # Band 8: Suckrifice
+    "rob_urinati": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/sir3iy8h_enhanced-1773074599887.jpg",
+    "slob_urbinati": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/at4glnr4_enhanced-1774075087938.jpg",
+    # Epic reward card (Series 3)
+    "sean_kill_again": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lxq89ltr_file_000000007a0471f5a1da1f0e20a9b30a.png",
 }
 
 # Rare card achievement requirements (Series completion rewards)
 RARE_CARD_ACHIEVEMENTS = {
     "card_kerry_the_king": {"required_cards": 16, "name": "Kerry The King"},  # Complete Series 1
-    "card_strap_on_taylor": {"required_cards": 32, "name": "Strap-On Taylor"}  # Complete Series 2
+    "card_strap_on_taylor": {"required_cards": 32, "name": "Strap-On Taylor"},  # Complete Series 2
+    "card_sean_kill_again": {"required_cards": 48, "name": "Sean Kill-Again"}  # Complete Series 3
 }
 
 INITIAL_CARDS = [
@@ -804,6 +870,241 @@ INITIAL_CARDS = [
         "series_reward": 2,
         "band": "Sucrilege B.J."
     },
+    # =====================
+    # SERIES 3 - 8 bands, 16 cards (A & B for each band)
+    # =====================
+    # Band 1: Underkill
+    {
+        "id": "card_nobby_blitz",
+        "name": "Nobby Blitz",
+        "description": "Nobby Blitz headbangs so hard his brain rattles like a maraca. He's got more neck problems than a giraffe in a lightning storm.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["nobby_blitz"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["nobby_blitz"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Underkill",
+        "card_type": "A"
+    },
+    {
+        "id": "card_bobby_blitzed",
+        "name": "Bobby Blitzed",
+        "description": "Bobby Blitzed is perpetually three sheets to the wind. His solos are sloppy, his balance is worse, and his breath could melt steel.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["bobby_blitzed"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["bobby_blitzed"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Underkill",
+        "card_type": "B"
+    },
+    # Band 2: Meadow Church
+    {
+        "id": "card_david_whine",
+        "name": "David Whine",
+        "description": "David Whine complains about everything - the lighting, the sound, the catering. His vocals are 90% grievances set to music.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["david_whine"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["david_whine"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Meadow Church",
+        "card_type": "A"
+    },
+    {
+        "id": "card_david_slayne",
+        "name": "David Slayne",
+        "description": "David Slayne murders riffs with ruthless precision. His guitar skills are killer, literally - several amps have died mid-show.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["david_slayne"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["david_slayne"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Meadow Church",
+        "card_type": "B"
+    },
+    # Band 3: Sabutt
+    {
+        "id": "card_martini_walkyier",
+        "name": "Martini Walkyier",
+        "description": "Martini Walkyier is half mystical shaman, half cocktail enthusiast. He summons spirits from the bar as often as from beyond.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["martini_walkyier"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["martini_walkyier"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Sabutt",
+        "card_type": "A"
+    },
+    {
+        "id": "card_martin_wankyier",
+        "name": "Martin Wankyier",
+        "description": "Martin Wankyier's ego is bigger than his amp stack. He thinks he's a guitar god, but mostly he's just godawful loud.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["martin_wankyier"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["martin_wankyier"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Sabutt",
+        "card_type": "B"
+    },
+    # Band 4: Celtic Frosty
+    {
+        "id": "card_tom_g_worrier",
+        "name": "Tom G. Worrier",
+        "description": "Tom G. Worrier is perpetually anxious about everything - stage fright, string breaks, existential dread. His worried face is legendary.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tom_g_worrier"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tom_g_worrier"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Celtic Frosty",
+        "card_type": "A"
+    },
+    {
+        "id": "card_tom_g_wore_out",
+        "name": "Tom G. Wore Out",
+        "description": "Tom G. Wore Out has been touring since the ice age. He's exhausted, grumpy, and his back hurts. But he still shreds.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tom_g_wore_out"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tom_g_wore_out"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Celtic Frosty",
+        "card_type": "B"
+    },
+    # Band 5: Venum
+    {
+        "id": "card_coronos",
+        "name": "Coronos",
+        "description": "Coronos spreads chaos wherever he goes. His presence is infectious, his riffs are viral, and his stage presence is pandemic.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["coronos"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["coronos"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Venum",
+        "card_type": "A"
+    },
+    {
+        "id": "card_groanos",
+        "name": "Groanos",
+        "description": "Groanos makes sounds that shouldn't come from a human throat. His growls are so deep they register on seismographs.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["groanos"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["groanos"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Venum",
+        "card_type": "B"
+    },
+    # Band 6: Sadust
+    {
+        "id": "card_darren_travesty",
+        "name": "Darren Travesty",
+        "description": "Darren Travesty's performances are a disaster zone. Broken strings, failed pyrotechnics, wardrobe malfunctions - all in a day's work.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["darren_travesty"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["darren_travesty"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Sadust",
+        "card_type": "A"
+    },
+    {
+        "id": "card_daring_travis",
+        "name": "Daring Travis",
+        "description": "Daring Travis attempts stunts that would make Evil Knievel nervous. Stage diving from the lighting rig is just Tuesday for him.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["daring_travis"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["daring_travis"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Sadust",
+        "card_type": "B"
+    },
+    # Band 7: High Racks
+    {
+        "id": "card_cretin_w_de_pena",
+        "name": "Cretin W. De Pena",
+        "description": "Cretin W. De Pena has the IQ of a drumstick but the rhythm of a metronome. Don't ask him to count past four.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["cretin_w_de_pena"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cretin_w_de_pena"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "High Racks",
+        "card_type": "A"
+    },
+    {
+        "id": "card_katon_de_pain",
+        "name": "Katon De Pain",
+        "description": "Katon De Pain's vocals are so brutal they come with a health warning. Earplugs recommended, therapy optional.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["katon_de_pain"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["katon_de_pain"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "High Racks",
+        "card_type": "B"
+    },
+    # Band 8: Suckrifice
+    {
+        "id": "card_rob_urinati",
+        "name": "Rob Urinati",
+        "description": "Rob Urinati marks his territory like a feral cat. Backstage areas beware - he's claimed more green rooms than he can remember.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["rob_urinati"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["rob_urinati"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Suckrifice",
+        "card_type": "A"
+    },
+    {
+        "id": "card_slob_urbinati",
+        "name": "Slob Urbinati",
+        "description": "Slob Urbinati's personal hygiene is a biohazard. His crusty leather jacket has its own ecosystem and probably sentience.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["slob_urbinati"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["slob_urbinati"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 3,
+        "band": "Suckrifice",
+        "card_type": "B"
+    },
+    # =====================
+    # EPIC CARD - Series 3 completion reward
+    # =====================
+    {
+        "id": "card_sean_kill_again",
+        "name": "Sean Kill-Again",
+        "description": "Sean Kill-Again from Violents brings mayhem wherever he goes. His stage presence is so intense that security guards have resigned mid-show.",
+        "rarity": "epic",
+        "front_image_url": CARD_IMAGE_URLS["sean_kill_again"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["sean_kill_again"],
+        "coin_cost": 150,
+        "available": False,
+        "achievement_required": 48,  # Unlocks after completing Series 3
+        "series_reward": 3,
+        "band": "Violents"
+    },
 ]
 
 INITIAL_GOALS = [
@@ -897,6 +1198,8 @@ async def seed_database():
             # Update series info if set
             if card_data.get("series") is not None:
                 update_fields["series"] = card_data["series"]
+            if card_data.get("series_reward") is not None:
+                update_fields["series_reward"] = card_data["series_reward"]
             if card_data.get("band") is not None:
                 update_fields["band"] = card_data["band"]
             if card_data.get("card_type") is not None:

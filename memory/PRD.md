@@ -3,7 +3,7 @@
 ## Original Problem Statement
 Build a mobile card collecting app for "Thrash Kan Kidz" cards where users:
 - Log in to receive coins
-- **Spin a roulette wheel** to get random cards (gacha system)
+- **Open card packs** to get random cards (gacha system)
 - View their collection (showing owned vs missing cards)
 - Trade duplicate cards with other users
 - Unlock special cards through achievements and milestones
@@ -13,13 +13,12 @@ Build a mobile card collecting app for "Thrash Kan Kidz" cards where users:
 
 ### Series System (March 2026)
 Cards are organized into series. Users must complete one series before accessing the next:
-- **Series 1**: 16 cards (8 bands × 2 cards each: A & B)
-- **Series 2-4**: Future series (same structure)
-- Completing a series unlocks:
-  - A **Rare card reward**
-  - Access to the **next series**
+- **Series 1**: 16 cards (8 bands × 2 cards each: A & B) → Reward: Kerry The King (Rare)
+- **Series 2**: 16 cards (8 bands × 2 cards each: A & B) → Reward: Strap-On Taylor (Rare)
+- **Series 3**: 16 cards (8 bands × 2 cards each: A & B) → Reward: Sean Kill-Again (Epic)
+- **Series 4+**: Future series (same structure)
 
-**Series 1 Bands (UPDATED March 15, 2026):**
+**Series 1 Bands:**
 | Band | Card A | Card B |
 |------|--------|--------|
 | $LAYA | Slaya da Playa | Chum Araya |
@@ -31,7 +30,7 @@ Cards are organized into series. Users must complete one series before accessing
 | Kreaturd | Silly Mille | Mille Gorezza |
 | Eggsodus | Paul Bawl Off | Blood Bonder |
 
-**Series 2 Bands (ADDED March 16, 2026):**
+**Series 2 Bands:**
 | Band | Card A | Card B |
 |------|--------|--------|
 | Construction | Smeared Schmier | Beer Schmier |
@@ -43,19 +42,31 @@ Cards are organized into series. Users must complete one series before accessing
 | Sacrud Ryche | Philled Up | Phil Grind |
 | Dork Angel | Don Doody | Don Rotty |
 
+**Series 3 Bands (ADDED March 22, 2026):**
+| Band | Card A | Card B |
+|------|--------|--------|
+| Underkill | Nobby Blitz | Bobby Blitzed |
+| Meadow Church | David Whine | David Slayne |
+| Sabutt | Martini Walkyier | Martin Wankyier |
+| Celtic Frosty | Tom G. Worrier | Tom G. Wore Out |
+| Venum | Coronos | Groanos |
+| Sadust | Darren Travesty | Daring Travis |
+| High Racks | Cretin W. De Pena | Katon De Pain |
+| Suckrifice | Rob Urinati | Slob Urbinati |
+
 **Series Rewards:**
-- Series 1 → **Kerry The King** (Rare) - "Kerry the King rules the stage with a monstrous ego and an even more monstrous scowl."
-- Series 2 → Tardy Donald (Rare)
-- Series 3 → Martin Van Druid (Rare)
-- Series 4 → Jeff Possess Ya (Rare)
+- Series 1 → **Kerry The King** (Rare) - "$LAYA"
+- Series 2 → **Strap-On Taylor** (Rare) - "Sucrilege B.J."
+- Series 3 → **Sean Kill-Again** (Epic) - "Violents"
 
-### Card Spinner (Gacha System)
-Users spin a roulette wheel to randomly win cards from their current series:
-- **Spin Cost**: 50 coins per spin
+### Card Pack System (Updated March 22, 2026)
+Users open card packs to randomly win cards from their current series:
+- **Pack Cost**: 50 coins per pack
+- **Animation**: Pack shakes → Card slides out face-down → Tap to flip and reveal
 - **Duplicates**: Added to collection for trading
-- **Visual**: Animated wheel with card previews, progress bar, series info
+- **Visual**: Animated card pack with series branding
 
-### Coin Purchase System (Implemented Feb 27, 2026)
+### Coin Purchase System
 Users can purchase coins with real money via Stripe:
 | Package | Base Coins | Price | Coins/$ |
 |---------|-----------|-------|---------|
@@ -81,22 +92,24 @@ Users can purchase coins with real money via Stripe:
 
 ### Frontend (Expo/React Native)
 - `/app/frontend/app/` - Main app screens
-  - `screens/home/index.tsx` - Home/Login screen
-  - `screens/shop.tsx` - Card Spinner roulette wheel
-  - `screens/collection/index.tsx` - User's card collection
-  - `screens/goals/index.tsx` - Goals and achievements
-  - `screens/profile/index.tsx` - User profile
-  - `screens/trade.tsx` - Card trading (placeholder)
-  - `screens/privacy.tsx` - Privacy Policy
-  - `screens/payment-success.tsx` - Payment confirmation
-  - `components/BuyCoinsModal.tsx` - Coin purchase modal
+  - `index.tsx` - Home/Login screen
+  - `shop.tsx` - Card Pack opener (updated from roulette wheel)
+  - `collection.tsx` - User's card collection
+  - `goals.tsx` - Goals and achievements
+  - `profile.tsx` - User profile
+  - `trade.tsx` - Card trading (placeholder)
+  - `privacy.tsx` - Privacy Policy
+  - `payment-success.tsx` - Payment confirmation
+- `/app/frontend/src/components/` - Shared components
+  - `BuyCoinsModal.tsx` - Coin purchase modal
+  - `FlippableCard.tsx` - Card flip animation
 
 ### Key API Endpoints
 - `POST /api/users` - Create user
 - `GET /api/users/{user_id}` - Get user data
 - `POST /api/users/{user_id}/daily-login` - Claim daily bonus
-- `POST /api/users/{user_id}/spin` - Spin the wheel for a random card
-- `GET /api/users/{user_id}/spin-pool` - Get available cards in spin pool
+- `POST /api/users/{user_id}/spin` - Open card pack for a random card
+- `GET /api/users/{user_id}/spin-pool` - Get available cards in current series
 - `GET /api/cards` - Get all cards
 - `POST /api/create-checkout-session` - Create Stripe checkout
 - `GET /api/payment-success` - Handle successful payment
@@ -124,7 +137,7 @@ Users can purchase coins with real money via Stripe:
   "id": "card_xxx",
   "name": "string",
   "description": "string",
-  "rarity": "common|rare",
+  "rarity": "common|rare|epic",
   "front_image_url": "string",
   "back_image_url": "string",
   "coin_cost": "int",
@@ -139,26 +152,30 @@ Users can purchase coins with real money via Stripe:
 
 ## What's Been Implemented
 
-### March 15, 2026 - Series 1 Card Update & UI Changes
-- ✅ **Updated all 16 Series 1 cards with user-provided artwork**
-  - 8 bands with unique card images (front + back for each)
-  - New band names: $LAYA, Megadef, Sepulchura, Testyment, Metallikuh, Anthrash, Kreaturd, Eggsodus
-  - New card names and descriptions matching artwork
-  - All image URLs updated to user-provided assets
-- ✅ **Kerry The King is now Series 1 rare reward**
-  - Updated with new artwork (front + back)
-  - Martin Van Druid moved to Series 3 reward
-- ✅ **Hidden unowned cards in Collection view**
-  - Unowned cards now show as mystery boxes with "❓" and "???"
-  - Card images AND names are hidden until collected
-  - Creates mystery/excitement for undiscovered cards
-- ✅ **Cleaned up deprecated cards**
-  - Removed Epic streak cards (tom_angeltipper, tom_angelflipper)
-  - Removed old engagement milestone cards
-  - Kept 4 rare reward cards for series completion
+### March 22, 2026 - Series 3 & Card Pack UI
+- ✅ **Implemented all 16 Series 3 cards** (8 bands × 2 cards)
+  - Underkill, Meadow Church, Sabutt, Celtic Frosty, Venum, Sadust, High Racks, Suckrifice
+  - All with user-provided artwork
+- ✅ **Sean Kill-Again Epic reward card** for Series 3 completion
+- ✅ **Replaced roulette wheel with Card Pack opening mechanic**
+  - Card pack box with series branding
+  - Shake animation when opening
+  - Card slides out face-down
+  - "TAP TO REVEAL!" prompt with pulse animation
+  - Flip animation to reveal card
+- ✅ **Spread out tab bar icons** for better spacing
+- ✅ **Added `series_reward` field** to Card model
+
+### March 15-16, 2026 - Series 1 & 2 Updates
+- ✅ Updated all 16 Series 1 cards with user-provided artwork
+- ✅ Added all 16 Series 2 cards with user-provided artwork
+- ✅ Kerry The King is Series 1 rare reward
+- ✅ Strap-On Taylor is Series 2 rare reward
+- ✅ Hidden unowned cards in Collection view (mystery cards)
+- ✅ Cleaned up tab bar (hidden utility screens)
 
 ### Previous Sessions
-- Full card spinner roulette wheel
+- Full card spinner/pack system
 - Series progression system
 - Stripe integration for coin purchases
 - Collection view with card flip animation
@@ -175,9 +192,10 @@ Users can purchase coins with real money via Stripe:
 3. (P3) Web preview scrolling can be unreliable on long lists
 
 ## Upcoming Tasks
-1. Implement Series 2+ cards (need artwork)
+1. ✅ ~~Implement Series 3 cards~~ (DONE)
 2. Card trading feature
 3. App store submission process (binary build, App Store Connect setup)
+4. Add Series 4 cards (when artwork provided)
 
 ## Future/Backlog
 - Add In-App Purchases (IAP) for iOS/Android native checkout

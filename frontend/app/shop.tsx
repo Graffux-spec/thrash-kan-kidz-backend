@@ -17,7 +17,6 @@ import { useApp } from '../src/context/AppContext';
 import BuyCoinsModal from '../src/components/BuyCoinsModal';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const WHEEL_SIZE = Math.min(SCREEN_WIDTH - 80, 280);
 
 interface SpinResult {
   won_card: any;
@@ -47,12 +46,20 @@ export default function ShopScreen() {
   const [showBuyCoins, setShowBuyCoins] = useState(false);
   const [spinPool, setSpinPool] = useState<SpinPoolData | null>(null);
   const [spinConfig, setSpinConfig] = useState({ spin_cost: 50 });
+  const [packState, setPackState] = useState<'idle' | 'shaking' | 'opening' | 'revealed'>('idle');
+  const [cardFlipped, setCardFlipped] = useState(false);
   
-  const spinAnim = useRef(new Animated.Value(0)).current;
-  const cardScaleAnim = useRef(new Animated.Value(0)).current;
+  // Animation values
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+  const packScaleAnim = useRef(new Animated.Value(1)).current;
+  const packOpacityAnim = useRef(new Animated.Value(1)).current;
+  const cardSlideAnim = useRef(new Animated.Value(0)).current;
+  const cardScaleAnim = useRef(new Animated.Value(0.5)).current;
+  const cardFlipAnim = useRef(new Animated.Value(0)).current;
   const glowAnim = useRef(new Animated.Value(0)).current;
 
   const BACKGROUND_IMAGE = 'https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgy2com2_enhanced-1771247671181.jpg';
+  const CARD_BACK_IMAGE = 'https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jlg546ha_file_00000000369c71f580be8b548f7c5be7.png';
 
   useEffect(() => {
     fetchSpinData();
@@ -74,7 +81,19 @@ export default function ShopScreen() {
     }
   };
 
-  const handleSpin = async () => {
+  const resetAnimations = () => {
+    shakeAnim.setValue(0);
+    packScaleAnim.setValue(1);
+    packOpacityAnim.setValue(1);
+    cardSlideAnim.setValue(0);
+    cardScaleAnim.setValue(0.5);
+    cardFlipAnim.setValue(0);
+    glowAnim.setValue(0);
+    setPackState('idle');
+    setCardFlipped(false);
+  };
+
+  const handleOpenPack = async () => {
     if (!user || spinning || !spinPool) return;
     
     if (user.coins < spinConfig.spin_cost) {
@@ -84,25 +103,34 @@ export default function ShopScreen() {
 
     setSpinning(true);
     setSpinResult(null);
-    
-    // Reset animations
-    spinAnim.setValue(0);
-    cardScaleAnim.setValue(0);
-    glowAnim.setValue(0);
+    resetAnimations();
+    setPackState('shaking');
 
     try {
-      // Start spinning animation
-      const spinDuration = 3000;
-      const rotations = 5 + Math.random() * 3;
+      // Phase 1: Pack shaking animation (1.5 seconds)
+      const shakeAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(shakeAnim, {
+            toValue: 1,
+            duration: 50,
+            useNativeDriver: true,
+          }),
+          Animated.timing(shakeAnim, {
+            toValue: -1,
+            duration: 50,
+            useNativeDriver: true,
+          }),
+          Animated.timing(shakeAnim, {
+            toValue: 0,
+            duration: 50,
+            useNativeDriver: true,
+          }),
+        ])
+      );
       
-      Animated.timing(spinAnim, {
-        toValue: rotations,
-        duration: spinDuration,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }).start();
+      shakeAnimation.start();
 
-      // Call API
+      // Call API while shaking
       const response = await fetch(`${apiUrl}/api/users/${user.id}/spin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -110,60 +138,133 @@ export default function ShopScreen() {
       
       const result = await response.json();
       
+      // Wait for shake animation to complete
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      shakeAnimation.stop();
+      shakeAnim.setValue(0);
+
       if (result.success) {
-        setTimeout(() => {
-          setSpinResult(result);
-          setShowResult(true);
-          
-          // Animate card reveal
+        setSpinResult(result);
+        setPackState('opening');
+
+        // Phase 2: Pack opens and card slides out (face down)
+        Animated.parallel([
+          // Pack scales up slightly then fades out
           Animated.sequence([
-            Animated.timing(cardScaleAnim, {
+            Animated.timing(packScaleAnim, {
               toValue: 1.2,
-              duration: 300,
-              easing: Easing.out(Easing.back(2)),
-              useNativeDriver: true,
-            }),
-            Animated.timing(cardScaleAnim, {
-              toValue: 1,
               duration: 200,
               useNativeDriver: true,
             }),
-          ]).start();
-          
+            Animated.timing(packOpacityAnim, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+          ]),
+          // Card slides up from pack
+          Animated.timing(cardSlideAnim, {
+            toValue: 1,
+            duration: 600,
+            easing: Easing.out(Easing.back(1.5)),
+            useNativeDriver: true,
+          }),
+          // Card scales up
+          Animated.timing(cardScaleAnim, {
+            toValue: 1,
+            duration: 600,
+            easing: Easing.out(Easing.back(1.5)),
+            useNativeDriver: true,
+          }),
+        ]).start(() => {
+          setPackState('revealed');
           setSpinning(false);
-          refreshData();
-          fetchSpinData();
-        }, spinDuration);
+          
+          // Start glow animation for the reveal prompt
+          Animated.loop(
+            Animated.sequence([
+              Animated.timing(glowAnim, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+              Animated.timing(glowAnim, {
+                toValue: 0,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+            ])
+          ).start();
+        });
       } else {
         setSpinning(false);
-        alert(result.detail || 'Spin failed');
+        resetAnimations();
+        alert(result.detail || 'Failed to open pack');
       }
     } catch (error) {
-      console.error('Spin error:', error);
+      console.error('Pack opening error:', error);
       setSpinning(false);
-      alert('Failed to spin. Please try again.');
+      resetAnimations();
+      alert('Failed to open pack. Please try again.');
     }
   };
 
+  const handleRevealCard = () => {
+    if (packState !== 'revealed' || cardFlipped) return;
+    
+    setCardFlipped(true);
+    
+    // Flip animation
+    Animated.timing(cardFlipAnim, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true,
+    }).start(() => {
+      // After flip, show the result modal
+      setTimeout(() => {
+        setShowResult(true);
+        refreshData();
+        fetchSpinData();
+      }, 800);
+    });
+  };
+
   const closeResult = () => {
-    // Check if series was completed
     if (spinResult?.series_completion?.series_completed) {
       setShowResult(false);
       setShowSeriesComplete(true);
     } else {
       setShowResult(false);
       setSpinResult(null);
+      resetAnimations();
     }
   };
 
   const closeSeriesComplete = () => {
     setShowSeriesComplete(false);
     setSpinResult(null);
+    resetAnimations();
   };
 
-  const spinRotation = spinAnim.interpolate({
+  // Animation interpolations
+  const shakeTranslate = shakeAnim.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: [-8, 0, 8],
+  });
+
+  const cardSlideTranslate = cardSlideAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: [100, 0],
+  });
+
+  const cardFlipRotate = cardFlipAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: ['0deg', '90deg', '180deg'],
+  });
+
+  const glowOpacity = glowAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.5, 1],
   });
 
   if (!user) {
@@ -192,19 +293,18 @@ export default function ShopScreen() {
       <Modal visible={showResult} transparent animationType="fade" onRequestClose={closeResult}>
         <View style={styles.resultOverlay}>
           <View style={styles.resultContainer}>
-            <Text style={styles.resultTitle}>🎉 You Won!</Text>
+            <Text style={styles.resultTitle}>
+              {spinResult?.is_duplicate ? '📦 Duplicate!' : '🎉 New Card!'}
+            </Text>
             
             {spinResult && (
-              <Animated.View style={[
-                styles.resultCardContainer,
-                { transform: [{ scale: cardScaleAnim }] }
-              ]}>
+              <View style={styles.resultCardContainer}>
                 <Image
                   source={{ uri: spinResult.won_card.front_image_url }}
                   style={styles.resultCardImage}
                   resizeMode="contain"
                 />
-              </Animated.View>
+              </View>
             )}
             
             <Text style={styles.resultCardName}>{spinResult?.won_card?.name}</Text>
@@ -214,11 +314,11 @@ export default function ShopScreen() {
             
             {spinResult?.is_duplicate && (
               <View style={styles.duplicateBadge}>
-                <Text style={styles.duplicateText}>DUPLICATE - Added for trading!</Text>
+                <Text style={styles.duplicateText}>Added for trading!</Text>
               </View>
             )}
             
-            <TouchableOpacity style={styles.closeResultButton} onPress={closeResult}>
+            <TouchableOpacity style={styles.closeResultButton} onPress={closeResult} data-testid="close-result-btn">
               <Text style={styles.closeResultText}>
                 {spinResult?.series_completion?.series_completed ? 'Continue...' : 'Awesome!'}
               </Text>
@@ -238,7 +338,9 @@ export default function ShopScreen() {
             
             {spinResult?.series_completion?.rare_reward && (
               <>
-                <Text style={styles.rareRewardTitle}>Rare Card Unlocked!</Text>
+                <Text style={styles.rareRewardTitle}>
+                  {spinResult.series_completion.rare_reward.rarity === 'epic' ? 'Epic' : 'Rare'} Card Unlocked!
+                </Text>
                 <Image
                   source={{ uri: spinResult.series_completion.rare_reward.front_image_url }}
                   style={styles.rareRewardImage}
@@ -256,7 +358,7 @@ export default function ShopScreen() {
               </Text>
             )}
             
-            <TouchableOpacity style={styles.closeResultButton} onPress={closeSeriesComplete}>
+            <TouchableOpacity style={styles.closeResultButton} onPress={closeSeriesComplete} data-testid="close-series-btn">
               <Text style={styles.closeResultText}>Amazing!</Text>
             </TouchableOpacity>
           </View>
@@ -267,7 +369,7 @@ export default function ShopScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.title}>Card Spinner</Text>
+            <Text style={styles.title}>Card Pack</Text>
             <Text style={styles.subtitle}>{spinPool?.series_name || 'Loading...'}</Text>
           </View>
           <View style={styles.coinSection}>
@@ -278,6 +380,7 @@ export default function ShopScreen() {
             <TouchableOpacity 
               style={styles.buyCoinsButton}
               onPress={() => setShowBuyCoins(true)}
+              data-testid="buy-coins-btn"
             >
               <Ionicons name="add-circle" size={16} color="#000" />
               <Text style={styles.buyCoinsText}>Buy</Text>
@@ -309,68 +412,103 @@ export default function ShopScreen() {
           </View>
         )}
 
-        {/* Spin Wheel Section */}
-        <View style={styles.wheelSection}>
-          <View style={styles.wheelContainer}>
-            <View style={styles.wheelPointer}>
-              <Ionicons name="caret-down" size={40} color="#FFD700" />
-            </View>
-            
-            <Animated.View style={[
-              styles.wheel,
-              { transform: [{ rotate: spinRotation }] }
-            ]}>
-              {spinPool?.series_cards.slice(0, 8).map((card, index) => {
-                const angle = (index * 45) - 90;
-                return (
-                  <View
-                    key={card.id}
-                    style={[
-                      styles.wheelSegment,
-                      {
-                        transform: [
-                          { rotate: `${angle}deg` },
-                          { translateX: WHEEL_SIZE / 3 },
-                        ],
-                      },
-                      card.owned && styles.wheelSegmentOwned
-                    ]}
-                  >
-                    <Image
-                      source={{ uri: card.front_image_url }}
-                      style={styles.wheelCardImage}
-                      resizeMode="cover"
-                    />
+        {/* Card Pack Section */}
+        <View style={styles.packSection}>
+          <View style={styles.packContainer}>
+            {/* Card Pack Box */}
+            {packState !== 'revealed' && (
+              <Animated.View style={[
+                styles.cardPack,
+                {
+                  transform: [
+                    { translateX: shakeTranslate },
+                    { scale: packScaleAnim },
+                  ],
+                  opacity: packOpacityAnim,
+                }
+              ]}>
+                <View style={styles.packBox}>
+                  <View style={styles.packTop}>
+                    <Text style={styles.packLabel}>THRASH</Text>
+                    <Text style={styles.packLabelSub}>KAN KIDZ</Text>
                   </View>
-                );
-              })}
-              
-              <View style={styles.wheelCenter}>
-                <Text style={styles.wheelCenterText}>🎰</Text>
-              </View>
-            </Animated.View>
+                  <View style={styles.packMiddle}>
+                    <Text style={styles.packSeriesText}>{spinPool?.series_name || 'Card Pack'}</Text>
+                    <View style={styles.packDecoration}>
+                      <Text style={styles.packDecoEmoji}>🎸</Text>
+                      <Text style={styles.packDecoEmoji}>💀</Text>
+                      <Text style={styles.packDecoEmoji}>🔥</Text>
+                    </View>
+                  </View>
+                  <View style={styles.packBottom}>
+                    <Text style={styles.packBottomText}>1 Random Card</Text>
+                  </View>
+                </View>
+              </Animated.View>
+            )}
+
+            {/* Revealed Card (face down initially) */}
+            {(packState === 'opening' || packState === 'revealed') && (
+              <Animated.View style={[
+                styles.revealedCard,
+                {
+                  transform: [
+                    { translateY: cardSlideTranslate },
+                    { scale: cardScaleAnim },
+                    { rotateY: cardFlipRotate },
+                  ],
+                }
+              ]}>
+                <TouchableOpacity 
+                  onPress={handleRevealCard}
+                  disabled={cardFlipped}
+                  activeOpacity={0.9}
+                  style={styles.cardTouchable}
+                  data-testid="reveal-card-btn"
+                >
+                  <Image
+                    source={{ uri: cardFlipped && spinResult ? spinResult.won_card.front_image_url : CARD_BACK_IMAGE }}
+                    style={styles.revealedCardImage}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </Animated.View>
+            )}
+
+            {/* Tap to Reveal Prompt */}
+            {packState === 'revealed' && !cardFlipped && (
+              <Animated.View style={[styles.tapPrompt, { opacity: glowOpacity }]}>
+                <Text style={styles.tapPromptText}>TAP TO REVEAL!</Text>
+              </Animated.View>
+            )}
           </View>
 
+          {/* Open Pack Button */}
           <TouchableOpacity
             style={[
-              styles.spinButton,
-              spinning && styles.spinButtonDisabled,
-              user.coins < spinConfig.spin_cost && styles.spinButtonDisabled
+              styles.openPackButton,
+              (spinning || packState !== 'idle') && styles.openPackButtonDisabled,
+              user.coins < spinConfig.spin_cost && styles.openPackButtonDisabled
             ]}
-            onPress={handleSpin}
-            disabled={spinning || user.coins < spinConfig.spin_cost}
+            onPress={handleOpenPack}
+            disabled={spinning || packState !== 'idle' || user.coins < spinConfig.spin_cost}
+            data-testid="open-pack-btn"
           >
             {spinning ? (
-              <Text style={styles.spinButtonText}>Spinning...</Text>
+              <Text style={styles.openPackButtonText}>Opening...</Text>
+            ) : packState !== 'idle' ? (
+              <Text style={styles.openPackButtonText}>
+                {cardFlipped ? 'Nice!' : 'Tap Card!'}
+              </Text>
             ) : (
               <>
-                <Text style={styles.spinButtonText}>SPIN!</Text>
-                <Text style={styles.spinCostText}>{spinConfig.spin_cost} 💰</Text>
+                <Text style={styles.openPackButtonText}>OPEN PACK!</Text>
+                <Text style={styles.packCostText}>{spinConfig.spin_cost} 💰</Text>
               </>
             )}
           </TouchableOpacity>
 
-          {user.coins < spinConfig.spin_cost && (
+          {user.coins < spinConfig.spin_cost && packState === 'idle' && (
             <Text style={styles.notEnoughCoins}>
               Not enough coins! Tap "Buy" to get more.
             </Text>
@@ -569,64 +707,106 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 1,
   },
-  // Wheel Section
-  wheelSection: {
+  // Pack Section
+  packSection: {
     alignItems: 'center',
     marginBottom: 24,
   },
-  wheelContainer: {
-    width: WHEEL_SIZE + 40,
-    height: WHEEL_SIZE + 40,
+  packContainer: {
+    width: 200,
+    height: 280,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
   },
-  wheelPointer: {
-    position: 'absolute',
-    top: -5,
-    zIndex: 10,
+  cardPack: {
+    width: 160,
+    height: 220,
   },
-  wheel: {
-    width: WHEEL_SIZE,
-    height: WHEEL_SIZE,
-    borderRadius: WHEEL_SIZE / 2,
+  packBox: {
+    flex: 1,
     backgroundColor: '#1a1a2e',
-    borderWidth: 4,
+    borderRadius: 12,
+    borderWidth: 3,
     borderColor: '#FFD700',
+    overflow: 'hidden',
+  },
+  packTop: {
+    backgroundColor: '#FFD700',
+    paddingVertical: 8,
     alignItems: 'center',
+  },
+  packLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+    letterSpacing: 2,
+  },
+  packLabelSub: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#333',
+    letterSpacing: 1,
+  },
+  packMiddle: {
+    flex: 1,
     justifyContent: 'center',
-    overflow: 'hidden',
+    alignItems: 'center',
+    padding: 12,
   },
-  wheelSegment: {
+  packSeriesText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  packDecoration: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  packDecoEmoji: {
+    fontSize: 28,
+  },
+  packBottom: {
+    backgroundColor: 'rgba(255, 215, 0, 0.2)',
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  packBottomText: {
+    fontSize: 11,
+    color: '#FFD700',
+    fontWeight: '600',
+  },
+  revealedCard: {
     position: 'absolute',
-    width: 45,
-    height: 55,
-    borderRadius: 6,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: '#333',
+    width: 150,
+    height: 200,
   },
-  wheelSegmentOwned: {
-    borderColor: '#4CAF50',
+  cardTouchable: {
+    flex: 1,
   },
-  wheelCardImage: {
+  revealedCardImage: {
     width: '100%',
     height: '100%',
-  },
-  wheelCenter: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#FFD700',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: '#FFD700',
   },
-  wheelCenterText: {
-    fontSize: 24,
+  tapPrompt: {
+    position: 'absolute',
+    bottom: -10,
+    backgroundColor: '#FFD700',
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 20,
   },
-  spinButton: {
+  tapPromptText: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  openPackButton: {
     backgroundColor: '#FFD700',
     paddingHorizontal: 40,
     paddingVertical: 14,
@@ -634,15 +814,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minWidth: 180,
   },
-  spinButtonDisabled: {
+  openPackButtonDisabled: {
     backgroundColor: '#555',
   },
-  spinButtonText: {
+  openPackButtonText: {
     color: '#000',
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
   },
-  spinCostText: {
+  packCostText: {
     color: '#333',
     fontSize: 12,
     marginTop: 2,

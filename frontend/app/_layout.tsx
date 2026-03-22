@@ -18,6 +18,10 @@ export default function TabLayout() {
           tabBarActiveTintColor: '#FFD700',
           tabBarInactiveTintColor: '#888',
           tabBarLabelStyle: styles.tabBarLabel,
+          tabBarItemStyle: {
+            flex: 1,
+            paddingVertical: 4,
+          },
         }}
       >
         <Tabs.Screen
@@ -99,18 +103,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a2e',
     borderTopColor: '#333',
     borderTopWidth: 1,
-    paddingBottom: 5,
-    paddingTop: 5,
-    height: 60,
+    paddingBottom: 8,
+    paddingTop: 8,
+    height: 70,
+    paddingHorizontal: 10,
   },
   tabBarLabel: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '600',
+    marginTop: 2,
   },
   tabIcon: {
-    fontSize: 24,
+    fontSize: 26,
   },
   tabIconFocused: {
-    transform: [{ scale: 1.1 }],
+    transform: [{ scale: 1.15 }],
   },
 });
