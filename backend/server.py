@@ -377,6 +377,11 @@ CARD_IMAGE_URLS = {
     "tom_angelflipper_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/t64siqy9_file_00000000ebe071f5812f8e6817887525.png",
     # Band 7: Sacrud Ryche
     "philled_up": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/a4luonk7_enhanced-1771278919638.jpg",
+    # Philled Up Variants
+    "philled_up_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/x0yr166c_file_00000000ce2471fda82439cc818dd6b5.png",
+    "philled_up_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/15r3ssr0_file_000000002bb8722fa57b9562422f87b7.png",
+    "philled_up_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/89gx29li_file_000000001ec471f5908b351ce1209fad.png",
+    "philled_up_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xhmhc77w_file_0000000037d0722fac383d7ad8ea4d3a.png",
     "phil_grind": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/535v6r16_enhanced-1771278999569.jpg",
     # Phil Grind Variants
     "phil_grind_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/z5cuo22s_file_00000000ac88722fa1b156df4828028d.png",
@@ -2298,6 +2303,71 @@ INITIAL_CARDS = [
         "series": 2,
         "band": "Sacrud Ryche",
         "card_type": "A"
+    },
+    # Philled Up Variants
+    {
+        "id": "card_philled_up_bloodbath",
+        "name": "Philled Up (Bloodbath)",
+        "description": "The Bloodbath variant of Philled Up. His all-you-can-eat buffet now serves gore galore. The ketchup isn't ketchup anymore.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["philled_up_bloodbath"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sacrud Ryche",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_philled_up",
+        "variant_name": "Bloodbath"
+    },
+    {
+        "id": "card_philled_up_ice",
+        "name": "Philled Up (Ice)",
+        "description": "The Ice variant of Philled Up. He feasts on frozen treats in sub-zero temperatures. Brain freeze is his permanent state.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["philled_up_ice"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sacrud Ryche",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_philled_up",
+        "variant_name": "Ice"
+    },
+    {
+        "id": "card_philled_up_psychedelic",
+        "name": "Philled Up (Psychedelic)",
+        "description": "The Psychedelic variant of Philled Up. His food now glows in rainbow colors. Every bite is a trip to flavor dimensions unknown.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["philled_up_psychedelic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sacrud Ryche",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_philled_up",
+        "variant_name": "Psychedelic"
+    },
+    {
+        "id": "card_philled_up_biomechanical",
+        "name": "Philled Up (Biomechanical)",
+        "description": "The Biomechanical variant of Philled Up. His cybernetic stomach has infinite capacity. He's the eating machine they always said he was.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["philled_up_biomechanical"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sacrud Ryche",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_philled_up",
+        "variant_name": "Biomechanical"
     },
     {
         "id": "card_phil_grind",
