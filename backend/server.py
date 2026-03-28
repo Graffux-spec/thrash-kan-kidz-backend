@@ -282,6 +282,11 @@ CARD_IMAGE_URLS = {
     # Band 5: Metallikuh
     "cliff_diver": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/3253t70u_file_00000000da2c71f8a3882344e443bca5.png",
     "cliff_burpin": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/vj8zbqec_file_00000000efb871f8aff2dad98e7da9e0.png",
+    # Cliff Diver Variants
+    "cliff_diver_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/mc5ce0am_file_00000000b28471f59ee4f09204ae8b4c.png",
+    "cliff_diver_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/gvht2fcl_file_00000000e45871f58bb0cd737a148e65.png",
+    "cliff_diver_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/cbcqxk2v_file_00000000be2871f89046161bc2021442.png",
+    "cliff_diver_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/pkla48mo_file_000000007b9071fd99ae61a5d7af6f09.png",
     # Band 6: Anthrash
     "scotch_ian": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/wfx5afyp_file_0000000067c071fd8fbea79ea1359879.png",
     "scott_eaten": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/g7kyk9s9_file_00000000d70c71fdb7b87b53d2b770cd.png",
@@ -413,6 +418,11 @@ CARD_BACK_IMAGE_URLS = {
     # Band 5: Metallikuh
     "cliff_diver": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/qpm4wvvq_file_0000000079d471f88a22462a2aded95c.png",
     "cliff_burpin": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/4yuf3wp5_file_00000000475471fd8fee6d503fb9b32c.png",
+    # Cliff Diver Variants (use same as front)
+    "cliff_diver_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/mc5ce0am_file_00000000b28471f59ee4f09204ae8b4c.png",
+    "cliff_diver_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/gvht2fcl_file_00000000e45871f58bb0cd737a148e65.png",
+    "cliff_diver_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/cbcqxk2v_file_00000000be2871f89046161bc2021442.png",
+    "cliff_diver_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/pkla48mo_file_000000007b9071fd99ae61a5d7af6f09.png",
     # Band 6: Anthrash
     "scotch_ian": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/ecjxi0zu_file_0000000058b071fda35cc951b6f03a0b.png",
     "scott_eaten": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/mgyvbjh8_file_00000000c9dc71fdb2de5295e9fe4e18.png",
@@ -1158,6 +1168,71 @@ INITIAL_CARDS = [
         "series": 1,
         "band": "Metallikuh",
         "card_type": "B"
+    },
+    # Cliff Diver Variants
+    {
+        "id": "card_cliff_diver_toxic",
+        "name": "Cliff Diver (Toxic)",
+        "description": "The Toxic variant of Cliff Diver, his dive now leaves a radioactive splash. The ocean refuses to take him back.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["cliff_diver_toxic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver_toxic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Metallikuh",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_cliff_diver",
+        "variant_name": "Toxic"
+    },
+    {
+        "id": "card_cliff_diver_electric",
+        "name": "Cliff Diver (Electric)",
+        "description": "The Electric variant of Cliff Diver, his body now crackles with lightning. Every dive creates a thunderstorm.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["cliff_diver_electric"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver_electric"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Metallikuh",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_cliff_diver",
+        "variant_name": "Electric"
+    },
+    {
+        "id": "card_cliff_diver_hellfire",
+        "name": "Cliff Diver (Hellfire)",
+        "description": "The Hellfire variant of Cliff Diver, diving straight into the flames of hell. The water evaporates before he hits it.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["cliff_diver_hellfire"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver_hellfire"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Metallikuh",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_cliff_diver",
+        "variant_name": "Hellfire"
+    },
+    {
+        "id": "card_cliff_diver_cosmic",
+        "name": "Cliff Diver (Cosmic)",
+        "description": "The Cosmic variant of Cliff Diver, diving through wormholes across the universe. He's not sure where he'll land.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["cliff_diver_cosmic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_diver_cosmic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Metallikuh",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_cliff_diver",
+        "variant_name": "Cosmic"
     },
     # Band 6: Anthrash
     {
