@@ -370,6 +370,11 @@ CARD_IMAGE_URLS = {
     "tom_angeltipper_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/er6nkpjt_file_000000002e90722fbd1dd4539682f0de.png",
     "tom_angeltipper_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/orhnkc9q_file_000000001a4071f59cc34259021437b7.png",
     "tom_angelflipper": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/pli2mcqj_enhanced-1771278822551.jpg",
+    # Tom Angelflipper Variants
+    "tom_angelflipper_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/w9jxdjnr_file_00000000735471f59d340025ba270a9c.png",
+    "tom_angelflipper_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/3nnmp0jy_file_00000000ecf871f5bf2cfe681d6dfff7.png",
+    "tom_angelflipper_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/35ri9jnz_file_000000001d78722f95d7a5a44a627feb.png",
+    "tom_angelflipper_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/t64siqy9_file_00000000ebe071f5812f8e6817887525.png",
     # Band 7: Sacrud Ryche
     "philled_up": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/a4luonk7_enhanced-1771278919638.jpg",
     "phil_grind": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/535v6r16_enhanced-1771278999569.jpg",
@@ -2209,6 +2214,71 @@ INITIAL_CARDS = [
         "series": 2,
         "band": "Sodumb",
         "card_type": "B"
+    },
+    # Tom Angelflipper Variants
+    {
+        "id": "card_tom_angelflipper_bloodbath",
+        "name": "Tom Angelflipper (Bloodbath)",
+        "description": "The Bloodbath variant of Tom Angelflipper. His health waivers are now written in blood. The angels don't just fall - they splatter.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tom_angelflipper_bloodbath"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_tom_angelflipper",
+        "variant_name": "Bloodbath"
+    },
+    {
+        "id": "card_tom_angelflipper_ice",
+        "name": "Tom Angelflipper (Ice)",
+        "description": "The Ice variant of Tom Angelflipper. His frozen Schnapps turns angels into ice sculptures before they even hit the ground.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tom_angelflipper_ice"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_tom_angelflipper",
+        "variant_name": "Ice"
+    },
+    {
+        "id": "card_tom_angelflipper_psychedelic",
+        "name": "Tom Angelflipper (Psychedelic)",
+        "description": "The Psychedelic variant of Tom Angelflipper. His angels trail rainbow contrails and his Schnapps glows with cosmic energy.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tom_angelflipper_psychedelic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_tom_angelflipper",
+        "variant_name": "Psychedelic"
+    },
+    {
+        "id": "card_tom_angelflipper_biomechanical",
+        "name": "Tom Angelflipper (Biomechanical)",
+        "description": "The Biomechanical variant of Tom Angelflipper. Half-man, half-machine, his cybernetic arm calculates the perfect angle for flipping robo-angels.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tom_angelflipper_biomechanical"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_tom_angelflipper",
+        "variant_name": "Biomechanical"
     },
     # Band 7: Sacrud Ryche
     {
