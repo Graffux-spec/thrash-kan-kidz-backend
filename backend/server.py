@@ -356,6 +356,11 @@ CARD_IMAGE_URLS = {
     # Band 3: Hallows Heave
     "tommy_stewart": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/k4dqnji8_enhanced-1771278246182.jpg",
     "tommy_spewart": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/f61hd5kz_enhanced-1771278293743.jpg",
+    # Tommy Spewart Variants
+    "tommy_spewart_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/l7ov0tqh_file_0000000032e471f8b3bb69e79bb36030.png",
+    "tommy_spewart_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/abvr82kh_file_00000000e4b871fdb1054996d5bbce6f.png",
+    "tommy_spewart_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ue9d6ymo_file_000000003c4471f8bedd0b1b70e8df4a.png",
+    "tommy_spewart_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/9malerev_file_00000000448c71fdbe6c4f2338bcf41c.png",
     # Band 4: Pussessed
     "jeff_possess_ya_s2": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jzgfyc6y_enhanced-1771278343087.jpg",
     # Jeff Possess Ya Variants
@@ -2108,6 +2113,71 @@ INITIAL_CARDS = [
         "series": 2,
         "band": "Hallows Heave",
         "card_type": "B"
+    },
+    # Tommy Spewart Variants
+    {
+        "id": "card_tommy_spewart_bloodbath",
+        "name": "Tommy SPEWart (Bloodbath)",
+        "description": "The Bloodbath variant of Tommy SPEWart. His warts now bleed eternally. Every scream erupts in crimson glory.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tommy_spewart_bloodbath"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Hallows Heave",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_tommy_spewart",
+        "variant_name": "Bloodbath"
+    },
+    {
+        "id": "card_tommy_spewart_ice",
+        "name": "Tommy SPEWart (Ice)",
+        "description": "The Ice variant of Tommy SPEWart. His warts are frozen solid but still growing. Frostbitten horror incarnate.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tommy_spewart_ice"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Hallows Heave",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_tommy_spewart",
+        "variant_name": "Ice"
+    },
+    {
+        "id": "card_tommy_spewart_psychedelic",
+        "name": "Tommy SPEWart (Psychedelic)",
+        "description": "The Psychedelic variant of Tommy SPEWart. His rainbow warts pulse with cosmic energy. Each growth is a window to another dimension.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tommy_spewart_psychedelic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Hallows Heave",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_tommy_spewart",
+        "variant_name": "Psychedelic"
+    },
+    {
+        "id": "card_tommy_spewart_biomechanical",
+        "name": "Tommy SPEWart (Biomechanical)",
+        "description": "The Biomechanical variant of Tommy SPEWart. His warts are now cybernetic implants that keep multiplying. Even technology can't stop the growth.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tommy_spewart_biomechanical"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Hallows Heave",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_tommy_spewart",
+        "variant_name": "Biomechanical"
     },
     # Band 4: Pussessed
     {
