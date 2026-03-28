@@ -259,6 +259,11 @@ CARD_IMAGE_URLS = {
     # Band 4: Testyment
     "billy_chuck": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/wyz5xr3e_file_00000000fb00722fa6b9aa0e95bdfee0.png",
     "chuck_roast": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/tt9zf49y_file_000000009cf471fd9f9ec310d1d825f1%20%282%29.png",
+    # Billy Chuck Variants
+    "billy_chuck_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/4elgkv20_enhanced-1774205918055.jpg",
+    "billy_chuck_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/tg5h8pxn_enhanced-1774206040191.jpg",
+    "billy_chuck_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/j8l0vapq_enhanced-1774206227254.jpg",
+    "billy_chuck_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/oqh3kmd8_enhanced-1774206317657.jpg",
     # Band 5: Metallikuh
     "cliff_diver": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/3253t70u_file_00000000da2c71f8a3882344e443bca5.png",
     "cliff_burpin": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/vj8zbqec_file_00000000efb871f8aff2dad98e7da9e0.png",
@@ -360,6 +365,11 @@ CARD_BACK_IMAGE_URLS = {
     # Band 4: Testyment
     "billy_chuck": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/hxqdjff7_file_00000000a10c71f884e6b3625a31bd00.png",
     "chuck_roast": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/m158yvhx_file_00000000ee187230978fd25aac62ddc5.png",
+    # Billy Chuck Variants (use same as front)
+    "billy_chuck_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/4elgkv20_enhanced-1774205918055.jpg",
+    "billy_chuck_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/tg5h8pxn_enhanced-1774206040191.jpg",
+    "billy_chuck_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/j8l0vapq_enhanced-1774206227254.jpg",
+    "billy_chuck_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/oqh3kmd8_enhanced-1774206317657.jpg",
     # Band 5: Metallikuh
     "cliff_diver": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/qpm4wvvq_file_0000000079d471f88a22462a2aded95c.png",
     "cliff_burpin": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/4yuf3wp5_file_00000000475471fd8fee6d503fb9b32c.png",
@@ -811,6 +821,71 @@ INITIAL_CARDS = [
         "series": 1,
         "band": "Testyment",
         "card_type": "B"
+    },
+    # Billy Chuck Variants
+    {
+        "id": "card_billy_chuck_toxic",
+        "name": "Billy Chuck (Toxic)",
+        "description": "The Toxic variant of Billy Chuck, his moonshine now glows radioactive green. His pig mutated into something unspeakable.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["billy_chuck_toxic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["billy_chuck_toxic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Testyment",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_billy_chuck",
+        "variant_name": "Toxic"
+    },
+    {
+        "id": "card_billy_chuck_electric",
+        "name": "Billy Chuck (Electric)",
+        "description": "The Electric variant of Billy Chuck, crackling with backwoods lightning. His overalls are charged with 10,000 volts of redneck energy.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["billy_chuck_electric"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["billy_chuck_electric"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Testyment",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_billy_chuck",
+        "variant_name": "Electric"
+    },
+    {
+        "id": "card_billy_chuck_hellfire",
+        "name": "Billy Chuck (Hellfire)",
+        "description": "The Hellfire variant of Billy Chuck, straight from the devil's barnyard. His pitchfork is aflame and his moonshine burns eternal.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["billy_chuck_hellfire"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["billy_chuck_hellfire"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Testyment",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_billy_chuck",
+        "variant_name": "Hellfire"
+    },
+    {
+        "id": "card_billy_chuck_cosmic",
+        "name": "Billy Chuck (Cosmic)",
+        "description": "The Cosmic variant of Billy Chuck, abducted by aliens and returned with interdimensional moonshine. His pig now floats.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["billy_chuck_cosmic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["billy_chuck_cosmic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Testyment",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_billy_chuck",
+        "variant_name": "Cosmic"
     },
     # Band 5: Metallikuh
     {
