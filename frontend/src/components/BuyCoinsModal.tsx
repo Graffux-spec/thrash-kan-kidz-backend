@@ -8,10 +8,13 @@ import {
   ActivityIndicator,
   Linking,
   Platform,
-  FlatList,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../src/context/AppContext';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface CoinPackage {
   id: string;
@@ -118,79 +121,8 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
     }
   };
 
-  // Render a package card
-  const renderPackageCard = ({ item: pkg }: { item: CoinPackage }) => (
-    <TouchableOpacity
-      key={pkg.id}
-      style={[
-        styles.packageCard,
-        pkg.best_value && styles.packageCardBestValue,
-      ]}
-      onPress={() => handlePurchase(pkg.id)}
-      disabled={purchasing !== null}
-    >
-      {pkg.best_value && (
-        <View style={styles.bestValueBadge}>
-          <Text style={styles.bestValueText}>BEST VALUE</Text>
-        </View>
-      )}
-      
-      <Text style={styles.packageIcon}>{getPackageIcon(pkg.id)}</Text>
-      <Text style={styles.packageName}>{pkg.name}</Text>
-      
-      {/* Show coins with bonus */}
-      <View style={styles.coinsContainer}>
-        {pkg.bonus_coins && pkg.bonus_coins > 0 ? (
-          <>
-            <Text style={styles.packageCoins}>{pkg.total_coins?.toLocaleString()}</Text>
-            <View style={styles.bonusBadge}>
-              <Text style={styles.bonusText}>+{pkg.bonus_coins} BONUS</Text>
-            </View>
-          </>
-        ) : (
-          <Text style={styles.packageCoins}>{pkg.coins.toLocaleString()}</Text>
-        )}
-        <Text style={styles.coinsLabel}>Coins</Text>
-      </View>
-      
-      {/* Savings indicator */}
-      <Text style={styles.savingsText}>
-        {pkg.effective_coins_per_dollar?.toFixed(0) || Math.round(pkg.coins / pkg.price)} coins per $1
-      </Text>
-      
-      <View style={[
-        styles.priceButton,
-        pkg.best_value && styles.priceButtonBestValue,
-      ]}>
-        {purchasing === pkg.id ? (
-          <ActivityIndicator size="small" color="#000" />
-        ) : (
-          <Text style={styles.priceText}>${pkg.price.toFixed(2)}</Text>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-
-  // Header component for FlatList
-  const ListHeader = () => (
-    <>
-      {isFirstPurchase && (
-        <View style={styles.firstPurchaseBanner}>
-          <Text style={styles.firstPurchaseIcon}>🎉</Text>
-          <View style={styles.firstPurchaseTextContainer}>
-            <Text style={styles.firstPurchaseTitle}>First Purchase Bonus!</Text>
-            <Text style={styles.firstPurchaseSubtitle}>
-              Get {bonusPercentage}% extra coins on your first purchase!
-            </Text>
-          </View>
-        </View>
-      )}
-      <Text style={styles.subtitle}>Choose a coin package</Text>
-    </>
-  );
-
-  // Footer component for FlatList
-  const ListFooter = () => (
+  // Footer component for the content
+  const FooterContent = () => (
     <View style={styles.footer}>
       <Text style={styles.footerText}>
         Secure payment powered by Stripe
@@ -198,7 +130,7 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
       <View style={styles.iapNote}>
         <Ionicons name="information-circle-outline" size={14} color="#888" />
         <Text style={styles.iapNoteText}>
-          In-App Purchases coming soon for iOS/Android
+          In-App Purchases coming soon
         </Text>
       </View>
     </View>
@@ -223,30 +155,89 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
             </TouchableOpacity>
           </View>
 
-          {loading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#FFD700" />
-            </View>
-          ) : error ? (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
-              <TouchableOpacity onPress={fetchPackages} style={styles.retryButton}>
-                <Text style={styles.retryText}>Retry</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <FlatList
-              data={packages}
-              renderItem={renderPackageCard}
-              keyExtractor={(item) => item.id}
-              ListHeaderComponent={ListHeader}
-              ListFooterComponent={ListFooter}
-              ItemSeparatorComponent={ItemSeparator}
-              contentContainerStyle={styles.flatListContent}
-              showsVerticalScrollIndicator={true}
-              bounces={true}
-            />
-          )}
+          <ScrollView 
+            style={styles.scrollContent}
+            contentContainerStyle={styles.scrollContentContainer}
+            showsVerticalScrollIndicator={true}
+            scrollEnabled={true}
+          >
+            {isFirstPurchase && (
+              <View style={styles.firstPurchaseBanner}>
+                <Text style={styles.firstPurchaseIcon}>🎉</Text>
+                <View style={styles.firstPurchaseTextContainer}>
+                  <Text style={styles.firstPurchaseTitle}>First Purchase Bonus!</Text>
+                  <Text style={styles.firstPurchaseSubtitle}>
+                    Get {bonusPercentage}% extra coins on your first purchase!
+                  </Text>
+                </View>
+              </View>
+            )}
+
+            <Text style={styles.subtitle}>Choose a coin package</Text>
+
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#FFD700" />
+              </View>
+            ) : error ? (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{error}</Text>
+                <TouchableOpacity onPress={fetchPackages} style={styles.retryButton}>
+                  <Text style={styles.retryText}>Retry</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.packagesContainer}>
+                {packages.map((pkg) => (
+                  <TouchableOpacity
+                    key={pkg.id}
+                    style={[
+                      styles.packageCard,
+                      pkg.best_value && styles.packageCardBestValue,
+                    ]}
+                    onPress={() => handlePurchase(pkg.id)}
+                    disabled={purchasing !== null}
+                  >
+                    {pkg.best_value && (
+                      <View style={styles.bestValueBadge}>
+                        <Text style={styles.bestValueText}>BEST VALUE</Text>
+                      </View>
+                    )}
+                    
+                    <Text style={styles.packageIcon}>{getPackageIcon(pkg.id)}</Text>
+                    <Text style={styles.packageName}>{pkg.name}</Text>
+                    
+                    <View style={styles.coinsContainer}>
+                      {pkg.bonus_coins && pkg.bonus_coins > 0 ? (
+                        <>
+                          <Text style={styles.packageCoins}>{pkg.total_coins?.toLocaleString()}</Text>
+                          <View style={styles.bonusBadge}>
+                            <Text style={styles.bonusText}>+{pkg.bonus_coins}</Text>
+                          </View>
+                        </>
+                      ) : (
+                        <Text style={styles.packageCoins}>{pkg.coins.toLocaleString()}</Text>
+                      )}
+                      <Text style={styles.coinsLabel}>Coins</Text>
+                    </View>
+                    
+                    <View style={[
+                      styles.priceButton,
+                      pkg.best_value && styles.priceButtonBestValue,
+                    ]}>
+                      {purchasing === pkg.id ? (
+                        <ActivityIndicator size="small" color="#000" />
+                      ) : (
+                        <Text style={styles.priceText}>${pkg.price.toFixed(2)}</Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+
+            <FooterContent />
+          </ScrollView>
         </View>
       </View>
     </Modal>
@@ -343,15 +334,20 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     paddingHorizontal: 4,
-    paddingBottom: 16,
-    gap: 10,
+    paddingBottom: 8,
+  },
+  scrollContent: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    paddingBottom: 20,
   },
   packagesContainer: {
     gap: 10,
   },
   packageCard: {
     backgroundColor: '#252540',
-    borderRadius: 12,
+    borderRadius: 10,
     padding: 12,
     alignItems: 'center',
     borderWidth: 2,
@@ -364,63 +360,65 @@ const styles = StyleSheet.create({
   },
   bestValueBadge: {
     position: 'absolute',
-    top: -10,
+    top: -8,
     backgroundColor: '#FFD700',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
   },
   bestValueText: {
     color: '#000',
-    fontSize: 9,
+    fontSize: 7,
     fontWeight: 'bold',
   },
   packageIcon: {
-    fontSize: 24,
-    marginBottom: 4,
+    fontSize: 20,
+    marginBottom: 2,
   },
   packageName: {
-    fontSize: 15,
+    fontSize: 11,
     fontWeight: 'bold',
     color: '#fff',
+    textAlign: 'center',
   },
   coinsContainer: {
     alignItems: 'center',
-    marginVertical: 4,
+    marginVertical: 2,
   },
   packageCoins: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#FFD700',
   },
   coinsLabel: {
-    fontSize: 11,
+    fontSize: 9,
     color: '#888',
-    marginTop: 1,
+    marginTop: 0,
   },
   bonusBadge: {
     backgroundColor: '#4CAF50',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-    marginTop: 2,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 4,
+    marginTop: 1,
   },
   bonusText: {
     color: '#fff',
-    fontSize: 9,
+    fontSize: 7,
     fontWeight: 'bold',
   },
   savingsText: {
-    fontSize: 10,
+    fontSize: 8,
     color: '#888',
-    marginBottom: 6,
+    marginBottom: 4,
+    textAlign: 'center',
   },
   priceButton: {
     backgroundColor: '#FFD700',
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    borderRadius: 20,
-    minWidth: 80,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
+    minWidth: 60,
     alignItems: 'center',
   },
   priceButtonBestValue: {
@@ -428,25 +426,25 @@ const styles = StyleSheet.create({
   },
   priceText: {
     color: '#000',
-    fontSize: 15,
+    fontSize: 12,
     fontWeight: 'bold',
   },
   footer: {
-    marginTop: 12,
+    marginTop: 10,
     alignItems: 'center',
   },
   footerText: {
     color: '#666',
-    fontSize: 12,
+    fontSize: 10,
   },
   iapNote: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 6,
     gap: 4,
   },
   iapNoteText: {
     color: '#888',
-    fontSize: 11,
+    fontSize: 9,
   },
 });
