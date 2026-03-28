@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   Image,
   Modal,
@@ -21,6 +20,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { FlashList } from '@shopify/flash-list';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 56) / 3; // 3 cards per row for smaller size
@@ -276,51 +276,52 @@ export default function CollectionScreen() {
           </View>
         </View>
 
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-          {/* Trade-In Section */}
-          {tradeInEligible.length > 0 && (
-            <View style={styles.tradeInSection}>
-              <Text style={styles.tradeInTitle}>🔄 Trade-In for Variants</Text>
-              <Text style={styles.tradeInSubtitle}>Trade 5 duplicates for a rare variant!</Text>
-              {tradeInEligible.map((item) => (
-                <View key={item.card.id} style={styles.tradeInCard}>
-                  <Image 
-                    source={{ uri: item.card.front_image_url }}
-                    style={styles.tradeInImage}
-                    resizeMode="cover"
-                  />
-                  <View style={styles.tradeInInfo}>
-                    <Text style={styles.tradeInName}>{item.card.name}</Text>
-                    <Text style={styles.tradeInQuantity}>
-                      {item.quantity} duplicates • {item.variants_owned}/{item.variants_total} variants
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    style={[styles.tradeInButton, isTrading && styles.tradeInButtonDisabled]}
-                    onPress={() => handleTradeIn(item.card.id)}
-                    disabled={isTrading}
-                    data-testid={`trade-in-${item.card.id}`}
-                  >
-                    <Text style={styles.tradeInButtonText}>
-                      {isTrading ? '...' : 'TRADE IN'}
-                    </Text>
-                  </TouchableOpacity>
+        {/* Trade-In Header Section */}
+        {tradeInEligible.length > 0 && (
+          <View style={styles.tradeInSection}>
+            <Text style={styles.tradeInTitle}>🔄 Trade-In for Variants</Text>
+            <Text style={styles.tradeInSubtitle}>Trade 5 duplicates for a rare variant!</Text>
+            {tradeInEligible.map((item) => (
+              <View key={item.card.id} style={styles.tradeInCard}>
+                <Image 
+                  source={{ uri: item.card.front_image_url }}
+                  style={styles.tradeInImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.tradeInInfo}>
+                  <Text style={styles.tradeInName}>{item.card.name}</Text>
+                  <Text style={styles.tradeInQuantity}>
+                    {item.quantity} duplicates • {item.variants_owned}/{item.variants_total} variants
+                  </Text>
                 </View>
-              ))}
-            </View>
-          )}
+                <TouchableOpacity
+                  style={[styles.tradeInButton, isTrading && styles.tradeInButtonDisabled]}
+                  onPress={() => handleTradeIn(item.card.id)}
+                  disabled={isTrading}
+                  data-testid={`trade-in-${item.card.id}`}
+                >
+                  <Text style={styles.tradeInButtonText}>
+                    {isTrading ? '...' : 'TRADE IN'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        )}
 
-          {filteredCards.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyStateIcon}>🃏</Text>
-              <Text style={styles.emptyStateTitle}>No Cards Yet!</Text>
-              <Text style={styles.emptyStateSubtitle}>
-                Head to the Shop to open some card packs and start your collection!
-              </Text>
-            </View>
-          ) : (
-            <View style={styles.cardsGrid}>
-              {filteredCards.map((uc) => (
+        {filteredCards.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyStateIcon}>🃏</Text>
+            <Text style={styles.emptyStateTitle}>No Cards Yet!</Text>
+            <Text style={styles.emptyStateSubtitle}>
+              Head to the Shop to open some card packs and start your collection!
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.flashListContainer}>
+            <FlashList
+              data={filteredCards}
+              renderItem={({ item: uc }) => (
                 <FlippableCard
                   key={uc.user_card_id}
                   userCard={uc}
@@ -329,10 +330,15 @@ export default function CollectionScreen() {
                     modalFlipProgress.value = 0;
                   }}
                 />
-              ))}
-            </View>
-          )}
-        </ScrollView>
+              )}
+              keyExtractor={(item) => item.user_card_id}
+              numColumns={3}
+              estimatedItemSize={CARD_HEIGHT + 12}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.flashListContent}
+            />
+          </View>
+        )}
 
         {/* Trade-In Result Modal */}
         <Modal
@@ -490,8 +496,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontWeight: '600',
   },
-  scrollView: {
+  flashListContainer: {
     flex: 1,
+    paddingHorizontal: 12,
+  },
+  flashListContent: {
+    paddingBottom: 100,
   },
   emptyState: {
     flex: 1,
@@ -515,13 +525,6 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     lineHeight: 20,
-  },
-  cardsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: 12,
-    justifyContent: 'flex-start',
-    paddingBottom: 24,
   },
   cardContainer: {
     width: CARD_WIDTH,
