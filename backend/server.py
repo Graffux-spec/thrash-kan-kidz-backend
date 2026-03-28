@@ -339,6 +339,11 @@ CARD_IMAGE_URLS = {
     # =====================
     # Band 1: Construction
     "smeared_schmier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jshleumx_enhanced-1771278042580.jpg",
+    # Smeared Schmier Variants
+    "smeared_schmier_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/1kge2loz_file_00000000caa071fdbe4eb5d61e2f9138.png",
+    "smeared_schmier_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/7ky8bjoa_file_000000009c3071fd844145018bca9441.png",
+    "smeared_schmier_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ok3xdw4b_file_00000000ab4071fda2bcb5f8eb22a220.png",
+    "smeared_schmier_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/a9oasf2f_file_00000000432071fdb28eabcd111ceaa1.png",
     "beer_schmier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lutlvn34_enhanced-1771279297015.jpg",
     # Beer Schmier Variants
     "beer_schmier_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/9t6m1r4d_file_00000000333471fd9e68b65a1c5fefe0.png",
@@ -1926,6 +1931,71 @@ INITIAL_CARDS = [
         "series": 2,
         "band": "Construction",
         "card_type": "A"
+    },
+    # Smeared Schmier Variants
+    {
+        "id": "card_smeared_schmier_bloodbath",
+        "name": "Smeared Schmier (Bloodbath)",
+        "description": "The Bloodbath variant of Smeared Schmier. His smears are now pure crimson gore. Every stage dive leaves a trail of bloody devastation.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["smeared_schmier_bloodbath"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_smeared_schmier",
+        "variant_name": "Bloodbath"
+    },
+    {
+        "id": "card_smeared_schmier_ice",
+        "name": "Smeared Schmier (Ice)",
+        "description": "The Ice variant of Smeared Schmier. His filth has frozen solid. Every dive shatters the frozen slime into icicles of pure disgust.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["smeared_schmier_ice"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_smeared_schmier",
+        "variant_name": "Ice"
+    },
+    {
+        "id": "card_smeared_schmier_psychedelic",
+        "name": "Smeared Schmier (Psychedelic)",
+        "description": "The Psychedelic variant of Smeared Schmier. His slime now glows with rainbow colors. Every smear is a kaleidoscopic nightmare.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["smeared_schmier_psychedelic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_smeared_schmier",
+        "variant_name": "Psychedelic"
+    },
+    {
+        "id": "card_smeared_schmier_biomechanical",
+        "name": "Smeared Schmier (Biomechanical)",
+        "description": "The Biomechanical variant of Smeared Schmier. His cybernetic body now oozes machine oil and hydraulic fluid. Industrial-grade filth.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["smeared_schmier_biomechanical"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_smeared_schmier",
+        "variant_name": "Biomechanical"
     },
     {
         "id": "card_beer_schmier",

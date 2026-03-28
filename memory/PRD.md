@@ -1,10 +1,12 @@
 # Thrash Kan Kidz - Product Requirements Document
 
 ## Latest Update: March 28, 2026
-- Added Cliff Burpin variants (Toxic, Electric, Hellfire, Cosmic)
-- Added Scotch Ian variants (Toxic, Electric, Hellfire, Cosmic)
-- Fixed `to_list(100)` limit bug that was truncating card results
-- Total cards in DB: 104 (49 base + 52 variants + 3 rewards)
+- **SERIES 1 & 2 VARIANTS COMPLETE!**
+- Added all 128 variant cards (64 per series)
+- Series 1 variants: Toxic, Electric, Hellfire, Cosmic
+- Series 2 variants: Bloodbath, Ice, Psychedelic, Biomechanical
+- Universal variant back images for each type
+- Total cards in DB: 180 (49 base + 128 variants + 3 rewards)
 
 ## Original Problem Statement
 Build a mobile card collecting app for "Thrash Kan Kidz" cards where users:
