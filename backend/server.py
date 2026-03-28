@@ -326,6 +326,11 @@ CARD_IMAGE_URLS = {
     "paul_bawl_off_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/q9u38yoo_file_00000000c50071f8ab272c1ec07d5bf3.png",
     "paul_bawl_off_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/epkvtm5w_file_00000000526471f89cb084328cb8f62f.png",
     "blood_bonder": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/63m30i4q_file_00000000a374722f8343b54e3a06558f.png",
+    # Blood Bonder Variants
+    "blood_bonder_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/g1gj4638_file_000000009c7c722fa8d83b8cb6c61f3b.png",
+    "blood_bonder_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/w8bozxys_file_000000005390722faad4ad5fc2e117aa.png",
+    "blood_bonder_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/x2b5h7d0_file_00000000beb071f59440c7ab80f96f0a.png",
+    "blood_bonder_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/zkg799uk_file_00000000357071f58e97192639f90e1b.png",
     # Rare achievement cards (Series completion rewards)
     "kerry_the_king": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/gfh1huso_file_000000001f5071fd88973aa9c05bebac.png",
     "strap_on_taylor": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/ruqqtjrv_file_00000000ca38722f86b98bf35e6892e2.png",
@@ -482,6 +487,11 @@ CARD_BACK_IMAGE_URLS = {
     "paul_bawl_off_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/q9u38yoo_file_00000000c50071f8ab272c1ec07d5bf3.png",
     "paul_bawl_off_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/epkvtm5w_file_00000000526471f89cb084328cb8f62f.png",
     "blood_bonder": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/uknhwlhn_file_00000000e53871f8b1042baf1259181b.png",
+    # Blood Bonder Variants (use same as front)
+    "blood_bonder_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/g1gj4638_file_000000009c7c722fa8d83b8cb6c61f3b.png",
+    "blood_bonder_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/w8bozxys_file_000000005390722faad4ad5fc2e117aa.png",
+    "blood_bonder_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/x2b5h7d0_file_00000000beb071f59440c7ab80f96f0a.png",
+    "blood_bonder_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/zkg799uk_file_00000000357071f58e97192639f90e1b.png",
     # Rare achievement cards backs (Series completion rewards)
     "kerry_the_king": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/cwro1dog_file_00000000833071fd8adc51da518e9550.png",
     "strap_on_taylor": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/gz3tkef8_file_000000009ed8722f84c332f7ccad83d3.png",
@@ -1744,6 +1754,71 @@ INITIAL_CARDS = [
         "series": 1,
         "band": "Eggsodus",
         "card_type": "B"
+    },
+    # Blood Bonder Variants
+    {
+        "id": "card_blood_bonder_toxic",
+        "name": "Blood Bonder (Toxic)",
+        "description": "The Toxic variant of Blood Bonder, his blood has mutated into radioactive sludge. Every drop burns through the stage floor.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["blood_bonder_toxic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder_toxic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Eggsodus",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_blood_bonder",
+        "variant_name": "Toxic"
+    },
+    {
+        "id": "card_blood_bonder_electric",
+        "name": "Blood Bonder (Electric)",
+        "description": "The Electric variant of Blood Bonder, his blood conducts lightning. Every vein pulses with deadly voltage.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["blood_bonder_electric"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder_electric"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Eggsodus",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_blood_bonder",
+        "variant_name": "Electric"
+    },
+    {
+        "id": "card_blood_bonder_hellfire",
+        "name": "Blood Bonder (Hellfire)",
+        "description": "The Hellfire variant of Blood Bonder, his blood burns with demonic flames. Each splatter ignites the mosh pit.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["blood_bonder_hellfire"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder_hellfire"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Eggsodus",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_blood_bonder",
+        "variant_name": "Hellfire"
+    },
+    {
+        "id": "card_blood_bonder_cosmic",
+        "name": "Blood Bonder (Cosmic)",
+        "description": "The Cosmic variant of Blood Bonder, his blood contains stardust and nebulae. His veins flow with the power of supernovas.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["blood_bonder_cosmic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["blood_bonder_cosmic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Eggsodus",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_blood_bonder",
+        "variant_name": "Cosmic"
     },
     # =====================
     # SERIES 2 - 8 bands, 16 cards (A & B for each band)
