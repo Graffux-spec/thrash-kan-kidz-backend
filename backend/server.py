@@ -364,6 +364,11 @@ CARD_IMAGE_URLS = {
     "billy_mylanta": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/5mr9wy38_enhanced-1771278589241.jpg",
     # Band 6: Sodumb
     "tom_angeltipper": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/kopt4n28_enhanced-1771278644576.jpg",
+    # Tom Angeltipper Variants
+    "tom_angeltipper_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/yrxwxwg8_file_000000004458722fafb993524e957280.png",
+    "tom_angeltipper_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/5u7rau5t_file_000000004c6071f5879ceb73630534e4.png",
+    "tom_angeltipper_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/er6nkpjt_file_000000002e90722fbd1dd4539682f0de.png",
+    "tom_angeltipper_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/orhnkc9q_file_000000001a4071f59cc34259021437b7.png",
     "tom_angelflipper": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/pli2mcqj_enhanced-1771278822551.jpg",
     # Band 7: Sacrud Ryche
     "philled_up": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/a4luonk7_enhanced-1771278919638.jpg",
@@ -2126,6 +2131,71 @@ INITIAL_CARDS = [
         "series": 2,
         "band": "Sodumb",
         "card_type": "A"
+    },
+    # Tom Angeltipper Variants
+    {
+        "id": "card_tom_angeltipper_bloodbath",
+        "name": "Tom Angeltipper (Bloodbath)",
+        "description": "The Bloodbath variant of Tom Angeltipper. The angels aren't just falling now - they're bleeding. His Schnapps is 100 proof crimson.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tom_angeltipper_bloodbath"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_tom_angeltipper",
+        "variant_name": "Bloodbath"
+    },
+    {
+        "id": "card_tom_angeltipper_ice",
+        "name": "Tom Angeltipper (Ice)",
+        "description": "The Ice variant of Tom Angeltipper. He's tossing frozen angels into snowbanks. His Schnapps has turned to ice water.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tom_angeltipper_ice"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_tom_angeltipper",
+        "variant_name": "Ice"
+    },
+    {
+        "id": "card_tom_angeltipper_psychedelic",
+        "name": "Tom Angeltipper (Psychedelic)",
+        "description": "The Psychedelic variant of Tom Angeltipper. The angels he tips are now neon-colored hallucinations. His Schnapps is laced with something otherworldly.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tom_angeltipper_psychedelic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_tom_angeltipper",
+        "variant_name": "Psychedelic"
+    },
+    {
+        "id": "card_tom_angeltipper_biomechanical",
+        "name": "Tom Angeltipper (Biomechanical)",
+        "description": "The Biomechanical variant of Tom Angeltipper. His cyborg arm tips mechanical angels. Even machines fear his monthly Schnapps ritual.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tom_angeltipper_biomechanical"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Sodumb",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_tom_angeltipper",
+        "variant_name": "Biomechanical"
     },
     {
         "id": "card_tom_angelflipper",
