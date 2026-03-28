@@ -235,6 +235,11 @@ CARD_IMAGE_URLS = {
     "tom_da_playa_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/3q3w1vwe_enhanced-1773602540143.jpg",
     "tom_da_playa_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/qeil0ghj_enhanced-1773618665694.jpg",
     "tom_da_playa_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/741jupbe_enhanced-1773618832172.jpg",
+    # Chum Araya Variants
+    "chum_araya_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/p2swl9mk_enhanced-1774166623212.jpg",
+    "chum_araya_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/1gk3o5lo_enhanced-1774166736101.jpg",
+    "chum_araya_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/t7rcvvon_enhanced-1774166884359.jpg",
+    "chum_araya_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/d0ln8fri_enhanced-1774166976308.jpg",
     # Band 2: Megadef
     "musty_dave": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/nggi41l4_file_00000000319871f583003b0145086e96.png",
     "daves_mustang": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/8t15nt7u_file_0000000079ec71fdbe0a31c88426db30.png",
@@ -331,6 +336,11 @@ CARD_BACK_IMAGE_URLS = {
     "tom_da_playa_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/3q3w1vwe_enhanced-1773602540143.jpg",
     "tom_da_playa_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/qeil0ghj_enhanced-1773618665694.jpg",
     "tom_da_playa_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/741jupbe_enhanced-1773618832172.jpg",
+    # Chum Araya Variants (use same as front)
+    "chum_araya_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/p2swl9mk_enhanced-1774166623212.jpg",
+    "chum_araya_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/1gk3o5lo_enhanced-1774166736101.jpg",
+    "chum_araya_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/t7rcvvon_enhanced-1774166884359.jpg",
+    "chum_araya_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/d0ln8fri_enhanced-1774166976308.jpg",
     # Band 2: Megadef
     "musty_dave": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/z7kf9k7g_file_00000000ae7c722f8927ccf43d190b52.png",
     "daves_mustang": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/05n3fgpt_file_000000008f0471fd8eb6563d4dc546d5.png",
@@ -515,6 +525,71 @@ INITIAL_CARDS = [
         "series": 1,
         "band": "$LAYA",
         "card_type": "B"
+    },
+    # Chum Araya Variants
+    {
+        "id": "card_chum_araya_toxic",
+        "name": "Chum Araya (Toxic)",
+        "description": "The Toxic variant of Chum Araya, oozing with radioactive fury. His bass lines are so contaminated they come with a hazmat warning.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["chum_araya_toxic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya_toxic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "$LAYA",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_chum_araya",
+        "variant_name": "Toxic"
+    },
+    {
+        "id": "card_chum_araya_electric",
+        "name": "Chum Araya (Electric)",
+        "description": "The Electric variant of Chum Araya, crackling with high-voltage energy. Touch his bass and you'll be raining sparks.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["chum_araya_electric"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya_electric"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "$LAYA",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_chum_araya",
+        "variant_name": "Electric"
+    },
+    {
+        "id": "card_chum_araya_hellfire",
+        "name": "Chum Araya (Hellfire)",
+        "description": "The Hellfire variant of Chum Araya, burning with demonic intensity. His bass solos summon flames from the underworld.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["chum_araya_hellfire"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya_hellfire"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "$LAYA",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_chum_araya",
+        "variant_name": "Hellfire"
+    },
+    {
+        "id": "card_chum_araya_cosmic",
+        "name": "Chum Araya (Cosmic)",
+        "description": "The Cosmic variant of Chum Araya, transcending space and time. His grooves echo across galaxies.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["chum_araya_cosmic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya_cosmic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "$LAYA",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_chum_araya",
+        "variant_name": "Cosmic"
     },
     # Band 2: Megadef
     {
