@@ -43,34 +43,30 @@ interface UserCard {
   acquired_at: string;
 }
 
-// Flippable Card Component
+// Flippable Card Component - Only shows owned cards now
 const FlippableCard = ({ 
   userCard, 
-  isOwned, 
   onPress 
 }: { 
   userCard: UserCard; 
-  isOwned: boolean; 
   onPress: () => void;
 }) => {
   const flipProgress = useSharedValue(0);
   const [isFlipped, setIsFlipped] = useState(false);
   
-  // Check if card can be flipped (only owned cards that are available)
-  const canFlip = isOwned && userCard.card.available !== false;
+  // Check if this is a variant card
+  const isVariant = !!userCard.card.base_card_id;
 
   const flipCard = () => {
-    if (!canFlip) return; // Don't flip if not allowed
     const newValue = isFlipped ? 0 : 1;
     flipProgress.value = withTiming(newValue, { duration: 400 });
     setIsFlipped(!isFlipped);
   };
 
-  // Swipe gesture for flipping - only enabled for owned, available cards
+  // Swipe gesture for flipping
   const swipeGesture = Gesture.Pan()
-    .enabled(canFlip)
     .onEnd((event) => {
-      if (canFlip && (Math.abs(event.velocityX) > 200 || Math.abs(event.translationX) > 50)) {
+      if (Math.abs(event.velocityX) > 200 || Math.abs(event.translationX) > 50) {
         runOnJS(flipCard)();
       }
     });
@@ -78,9 +74,7 @@ const FlippableCard = ({
   // Tap gesture for modal
   const tapGesture = Gesture.Tap()
     .onEnd(() => {
-      if (isOwned) {
-        runOnJS(onPress)();
-      }
+      runOnJS(onPress)();
     });
 
   const composedGesture = Gesture.Race(swipeGesture, tapGesture);
@@ -109,39 +103,22 @@ const FlippableCard = ({
 
   return (
     <GestureDetector gesture={composedGesture}>
-      <View style={[styles.cardContainer, !isOwned && styles.cardLocked]}>
+      <View style={[styles.cardContainer, isVariant && styles.variantCardBorder]}>
         {/* Front of card */}
         <Animated.View style={frontAnimatedStyle}>
-          {isOwned ? (
-            // Show actual card image for owned cards
-            <Image
-              source={{ uri: userCard.card.front_image_url }}
-              style={[
-                styles.cardImage, 
-                userCard.card.available === false && styles.cardImageComingSoon
-              ]}
-              resizeMode="cover"
-              blurRadius={userCard.card.available === false ? 10 : 0}
-            />
-          ) : (
-            // Show mystery card for unowned cards - hide image
-            <View style={styles.mysteryCard}>
-              <View style={styles.mysteryCardInner}>
-                <Text style={styles.mysteryIcon}>❓</Text>
-                <Text style={styles.mysteryText}>???</Text>
-              </View>
-            </View>
-          )}
-          {userCard.card.available === false && (
-            <View style={styles.comingSoonOverlay}>
-              <Text style={styles.comingSoonIcon}>⏰</Text>
-              <Text style={styles.comingSoonText}>COMING</Text>
-              <Text style={styles.comingSoonText}>SOON</Text>
-            </View>
-          )}
+          <Image
+            source={{ uri: userCard.card.front_image_url }}
+            style={styles.cardImage}
+            resizeMode="cover"
+          />
           {userCard.quantity > 1 && (
             <View style={styles.quantityBadge}>
               <Text style={styles.quantityText}>x{userCard.quantity}</Text>
+            </View>
+          )}
+          {isVariant && (
+            <View style={styles.variantBadge}>
+              <Text style={styles.variantBadgeText}>VAR</Text>
             </View>
           )}
         </Animated.View>
@@ -149,35 +126,25 @@ const FlippableCard = ({
         {/* Back of card */}
         <Animated.View style={[backAnimatedStyle]}>
           <View style={styles.cardBackContainer}>
-            {isOwned ? (
-              <Image
-                source={{ uri: userCard.card.back_image_url }}
-                style={styles.cardImage}
-                resizeMode="cover"
-              />
-            ) : (
-              <View style={styles.mysteryCard}>
-                <View style={styles.mysteryCardInner}>
-                  <Text style={styles.mysteryIcon}>❓</Text>
-                </View>
-              </View>
-            )}
+            <Image
+              source={{ uri: userCard.card.back_image_url }}
+              style={styles.cardImage}
+              resizeMode="cover"
+            />
           </View>
         </Animated.View>
 
-        {/* Card name badge - only show for owned cards */}
+        {/* Card name badge */}
         <View style={styles.cardNameBadge}>
           <Text style={styles.cardNameText} numberOfLines={1}>
-            {isOwned ? userCard.card.name : '???'}
+            {userCard.card.name}
           </Text>
         </View>
 
-        {/* Swipe hint - only show for owned, available cards */}
-        {canFlip && (
-          <View style={styles.swipeHint}>
-            <Text style={styles.swipeHintText}>↔</Text>
-          </View>
-        )}
+        {/* Swipe hint */}
+        <View style={styles.swipeHint}>
+          <Text style={styles.swipeHintText}>↔</Text>
+        </View>
       </View>
     </GestureDetector>
   );
@@ -186,7 +153,6 @@ const FlippableCard = ({
 export default function CollectionScreen() {
   const { user, userCards, allCards, apiUrl, refreshData } = useApp();
   const [selectedCard, setSelectedCard] = useState<UserCard | null>(null);
-  const [filter, setFilter] = useState<'all' | 'owned' | 'missing'>('all');
   const [tradeInEligible, setTradeInEligible] = useState<any[]>([]);
   const [showTradeInResult, setShowTradeInResult] = useState(false);
   const [tradeInResult, setTradeInResult] = useState<any>(null);
@@ -253,40 +219,21 @@ export default function CollectionScreen() {
     );
   }
 
-  const ownedCardIds = new Set(userCards.map(uc => uc.card.id));
+  // Group owned cards by type for display
+  const ownedBaseCards = userCards.filter(uc => !uc.card.base_card_id); // Base cards (no parent)
+  const ownedVariants = userCards.filter(uc => uc.card.base_card_id); // Variant cards (have parent)
+  const ownedRewards = userCards.filter(uc => uc.card.rarity === 'rare' || uc.card.rarity === 'epic');
   
-  // Filter out rare cards from the main collection (they have their own section in shop)
-  // Only show Series 1 cards for now
-  const commonCards = allCards.filter(card => card.rarity === 'common' && card.series === 1);
+  // Count owned common base cards per series for progress display
+  const ownedSeries1Commons = ownedBaseCards.filter(uc => uc.card.series === 1 && uc.card.rarity === 'common').length;
+  const ownedSeries2Commons = ownedBaseCards.filter(uc => uc.card.series === 2 && uc.card.rarity === 'common').length;
+  const ownedSeries3Commons = ownedBaseCards.filter(uc => uc.card.series === 3 && uc.card.rarity === 'common').length;
   
-  const getFilteredCards = () => {
-    switch (filter) {
-      case 'owned':
-        return userCards;
-      case 'missing':
-        return commonCards
-          .filter(card => !ownedCardIds.has(card.id))
-          .map(card => ({
-            user_card_id: `missing_${card.id}`,
-            card,
-            quantity: 0,
-            acquired_at: '',
-          }));
-      default:
-        const owned = userCards;
-        const missing = commonCards
-          .filter(card => !ownedCardIds.has(card.id))
-          .map(card => ({
-            user_card_id: `missing_${card.id}`,
-            card,
-            quantity: 0,
-            acquired_at: '',
-          }));
-        return [...owned, ...missing];
-    }
-  };
-
-  const filteredCards = getFilteredCards();
+  // Total owned cards (base + variants + rewards)
+  const totalOwned = userCards.length;
+  
+  // Simply return ALL owned cards - no mystery/coming soon placeholders
+  const filteredCards = userCards;
 
   const flipModalCard = () => {
     modalFlipProgress.value = withTiming(modalFlipProgress.value === 0 ? 1 : 0, { duration: 500 });
@@ -316,23 +263,17 @@ export default function CollectionScreen() {
         <View style={styles.header}>
           <Text style={styles.title}>My Collection</Text>
           <Text style={styles.subtitle}>
-            {userCards.filter(uc => uc.card.series === 1 && uc.card.rarity === 'common').length} / {commonCards.length} Cards • Swipe to flip!
+            {totalOwned} Cards Collected • Swipe to flip!
           </Text>
-        </View>
-
-        {/* Filter Tabs */}
-        <View style={styles.filterContainer}>
-          {(['all', 'owned', 'missing'] as const).map((f) => (
-            <TouchableOpacity
-              key={f}
-              style={[styles.filterTab, filter === f && styles.filterTabActive]}
-              onPress={() => setFilter(f)}
-            >
-              <Text style={[styles.filterText, filter === f && styles.filterTextActive]}>
-                {f.charAt(0).toUpperCase() + f.slice(1)}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          {/* Series Progress */}
+          <View style={styles.seriesProgress}>
+            <Text style={styles.seriesProgressText}>S1: {ownedSeries1Commons}/16</Text>
+            <Text style={styles.seriesProgressText}>S2: {ownedSeries2Commons}/16</Text>
+            <Text style={styles.seriesProgressText}>S3: {ownedSeries3Commons}/16</Text>
+            {ownedVariants.length > 0 && (
+              <Text style={styles.variantProgressText}>+{ownedVariants.length} Variants</Text>
+            )}
+          </View>
         </View>
 
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -369,19 +310,28 @@ export default function CollectionScreen() {
             </View>
           )}
 
-          <View style={styles.cardsGrid}>
-            {filteredCards.map((uc) => (
-              <FlippableCard
-                key={uc.user_card_id}
-                userCard={uc}
-                isOwned={uc.quantity > 0}
-                onPress={() => {
-                  setSelectedCard(uc);
-                  modalFlipProgress.value = 0;
-                }}
-              />
-            ))}
-          </View>
+          {filteredCards.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyStateIcon}>🃏</Text>
+              <Text style={styles.emptyStateTitle}>No Cards Yet!</Text>
+              <Text style={styles.emptyStateSubtitle}>
+                Head to the Shop to open some card packs and start your collection!
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.cardsGrid}>
+              {filteredCards.map((uc) => (
+                <FlippableCard
+                  key={uc.user_card_id}
+                  userCard={uc}
+                  onPress={() => {
+                    setSelectedCard(uc);
+                    modalFlipProgress.value = 0;
+                  }}
+                />
+              ))}
+            </View>
+          )}
         </ScrollView>
 
         {/* Trade-In Result Modal */}
@@ -516,31 +466,55 @@ const styles = StyleSheet.create({
     color: '#ccc',
     marginTop: 4,
   },
-  filterContainer: {
+  seriesProgress: {
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    flexWrap: 'wrap',
+    marginTop: 8,
+    gap: 8,
   },
-  filterTab: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: 'rgba(26, 26, 46, 0.9)',
-    marginRight: 8,
-  },
-  filterTabActive: {
-    backgroundColor: '#FFD700',
-  },
-  filterText: {
-    color: '#ccc',
-    fontSize: 14,
+  seriesProgressText: {
+    fontSize: 12,
+    color: '#FFD700',
+    backgroundColor: 'rgba(255, 215, 0, 0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
     fontWeight: '600',
   },
-  filterTextActive: {
-    color: '#000',
+  variantProgressText: {
+    fontSize: 12,
+    color: '#9b59b6',
+    backgroundColor: 'rgba(155, 89, 182, 0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    fontWeight: '600',
   },
   scrollView: {
     flex: 1,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 40,
+    marginTop: 60,
+  },
+  emptyStateIcon: {
+    fontSize: 64,
+    marginBottom: 16,
+  },
+  emptyStateTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 8,
+  },
+  emptyStateSubtitle: {
+    fontSize: 14,
+    color: '#888',
+    textAlign: 'center',
+    lineHeight: 20,
   },
   cardsGrid: {
     flexDirection: 'row',
@@ -558,8 +532,23 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginHorizontal: 4,
   },
-  cardLocked: {
-    // No opacity change - mystery card handles the visual
+  variantCardBorder: {
+    borderWidth: 2,
+    borderColor: '#9b59b6',
+  },
+  variantBadge: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    backgroundColor: '#9b59b6',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  variantBadgeText: {
+    color: '#fff',
+    fontSize: 8,
+    fontWeight: 'bold',
   },
   cardImage: {
     width: '100%',
@@ -572,67 +561,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: '#1a1a2e',
-  },
-  cardImageLocked: {
-    opacity: 0.4,
-  },
-  cardImageComingSoon: {
-    opacity: 0.5,
-  },
-  mysteryCard: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#0f0f1a',
-    borderRadius: 10,
-    borderWidth: 3,
-    borderColor: '#333',
-    overflow: 'hidden',
-  },
-  mysteryCardInner: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#1a1a2e',
-    margin: 6,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#2a2a4e',
-  },
-  mysteryIcon: {
-    fontSize: 32,
-    marginBottom: 4,
-  },
-  mysteryText: {
-    color: '#666',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  lockedOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 10,
-  },
-  lockedIcon: {
-    fontSize: 24,
-  },
-  comingSoonOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    borderRadius: 10,
-  },
-  comingSoonIcon: {
-    fontSize: 24,
-    marginBottom: 4,
-  },
-  comingSoonText: {
-    color: '#FFD700',
-    fontSize: 10,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
   quantityBadge: {
     position: 'absolute',

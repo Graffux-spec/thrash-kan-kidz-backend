@@ -1,6 +1,13 @@
 # Thrash Kan Kidz - Product Requirements Document
 
 ## Latest Update: March 28, 2026
+- **COLLECTION VIEW UI UPDATED!**
+- Removed "Coming Soon" and mystery card placeholders
+- Collection now shows ONLY owned cards
+- Added series progress display (S1: X/16, S2: X/16, S3: X/16)
+- Variant cards display with purple border and "VAR" badge
+- Shows "+X Variants" count in header
+- Empty state for users with no cards yet
 - **SERIES 1 & 2 VARIANTS COMPLETE!**
 - Added all 128 variant cards (64 per series)
 - Series 1 variants: Toxic, Electric, Hellfire, Cosmic
@@ -195,7 +202,9 @@ Users can purchase coins with real money via Stripe:
 - Payment success handling
 
 ## Known Issues
-1. (P0) Expo Go error on mobile device - may need cache clear
+1. (P0) Expo Go error on mobile device - "java.io.IOException: Failed to download remote update"
+   - Try: Clear Expo Go app cache, reinstall Expo Go, check network/VPN
+   - OTA updates already disabled in app.json
 2. (P1) TouchableOpacity login button unreliable in web preview
 3. (P3) Web preview scrolling can be unreliable on long lists
 

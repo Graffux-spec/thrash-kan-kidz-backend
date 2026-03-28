@@ -9,9 +9,10 @@
     "userInterfaceStyle": "dark",
     "newArchEnabled": false,
     "updates": {
-      "enabled": false
+      "enabled": false,
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "NEVER"
     },
-    "runtimeVersion": "1.0.0",
     "description": "Collect thrash metal trading cards! Earn coins, complete goals, unlock rare and epic cards. Trade with friends and build the ultimate collection!",
     "githubUrl": "https://github.com/thrashkankidz",
     "primaryColor": "#8B0000",
