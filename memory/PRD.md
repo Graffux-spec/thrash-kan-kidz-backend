@@ -1,6 +1,14 @@
 # Thrash Kan Kidz - Product Requirements Document
 
 ## Latest Update: March 28, 2026
+- **BACKEND REFACTORING STARTED!**
+- Created modular architecture: `/data`, `/models`, `/routes`, `/services`
+- Extracted card data (3,217 lines) to `data/cards_data.py`
+- Extracted goals data (56 lines) to `data/goals_data.py`
+- Created `config.py` for app settings (94 lines)
+- Created `database.py` for MongoDB connection (28 lines)
+- Created Pydantic models in `models/` directory
+- Route placeholders ready for future extraction
 - **COLLECTION VIEW UI UPDATED!**
 - Removed "Coming Soon" and mystery card placeholders
 - Collection now shows ONLY owned cards
