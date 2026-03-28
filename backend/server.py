@@ -358,6 +358,11 @@ CARD_IMAGE_URLS = {
     "tommy_spewart": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/f61hd5kz_enhanced-1771278293743.jpg",
     # Band 4: Pussessed
     "jeff_possess_ya_s2": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jzgfyc6y_enhanced-1771278343087.jpg",
+    # Jeff Possess Ya Variants
+    "jeff_possess_ya_s2_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/sko2mg1w_file_00000000e43c722facc931a950c73822.png",
+    "jeff_possess_ya_s2_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/7ra8qofd_file_00000000b85c71f5b52b0e719aa774d8.png",
+    "jeff_possess_ya_s2_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/0wcfw7ln_file_00000000414c71f5b0779143a7f60123.png",
+    "jeff_possess_ya_s2_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/cu4c31u3_file_0000000047d4722fa70d135c54f6eeb8.png",
     "chef_becerra": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/iz6crfrh_enhanced-1771278405486.jpg",
     # Band 5: S.T.D.
     "bully_milano": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/rrqcmuzv_enhanced-1771278534417.jpg",
@@ -2112,6 +2117,71 @@ INITIAL_CARDS = [
         "series": 2,
         "band": "Pussessed",
         "card_type": "A"
+    },
+    # Jeff Possess Ya Variants
+    {
+        "id": "card_jeff_possess_ya_s2_bloodbath",
+        "name": "Jeff Possess Ya (Bloodbath)",
+        "description": "The Bloodbath variant of Jeff Possess Ya. His possession ritual now involves bathing in fresh blood. The demon within demands crimson sacrifice.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_bloodbath"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Pussessed",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_jeff_possess_ya_s2",
+        "variant_name": "Bloodbath"
+    },
+    {
+        "id": "card_jeff_possess_ya_s2_ice",
+        "name": "Jeff Possess Ya (Ice)",
+        "description": "The Ice variant of Jeff Possess Ya. Frozen in eternal possession, his icy demon has turned his victims to frost statues.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_ice"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Pussessed",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_jeff_possess_ya_s2",
+        "variant_name": "Ice"
+    },
+    {
+        "id": "card_jeff_possess_ya_s2_psychedelic",
+        "name": "Jeff Possess Ya (Psychedelic)",
+        "description": "The Psychedelic variant of Jeff Possess Ya. His possession trips through rainbow dimensions. The demon within is high on cosmic energy.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_psychedelic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Pussessed",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_jeff_possess_ya_s2",
+        "variant_name": "Psychedelic"
+    },
+    {
+        "id": "card_jeff_possess_ya_s2_biomechanical",
+        "name": "Jeff Possess Ya (Biomechanical)",
+        "description": "The Biomechanical variant of Jeff Possess Ya. Half-man, half-machine, his cybernetic possession spreads like a digital virus.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_biomechanical"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Pussessed",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_jeff_possess_ya_s2",
+        "variant_name": "Biomechanical"
     },
     {
         "id": "card_chef_becerra",
