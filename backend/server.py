@@ -362,6 +362,11 @@ CARD_IMAGE_URLS = {
     # Band 5: S.T.D.
     "bully_milano": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/rrqcmuzv_enhanced-1771278534417.jpg",
     "billy_mylanta": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/5mr9wy38_enhanced-1771278589241.jpg",
+    # Billy Mylanta Variants
+    "billy_mylanta_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/fad7md56_file_00000000f0b4722f99ff248a683bda81.png",
+    "billy_mylanta_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/tix9wkpe_file_0000000005b071f5b38bdd77f001aeb5.png",
+    "billy_mylanta_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/crzi5bte_file_000000005250722f87d13de42f4c702f.png",
+    "billy_mylanta_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/4lzzq94u_file_00000000f1ac71f586e113e856bdde57.png",
     # Band 6: Sodumb
     "tom_angeltipper": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/kopt4n28_enhanced-1771278644576.jpg",
     # Tom Angeltipper Variants
@@ -2142,6 +2147,71 @@ INITIAL_CARDS = [
         "series": 2,
         "band": "S.T.D.",
         "card_type": "B"
+    },
+    # Billy Mylanta Variants
+    {
+        "id": "card_billy_mylanta_bloodbath",
+        "name": "Billy Mylanta (Bloodbath)",
+        "description": "The Bloodbath variant of Billy Mylanta. His bathroom breaks now involve crimson eruptions. The toilet has become a portal to hell.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["billy_mylanta_bloodbath"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "S.T.D.",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_billy_mylanta",
+        "variant_name": "Bloodbath"
+    },
+    {
+        "id": "card_billy_mylanta_ice",
+        "name": "Billy Mylanta (Ice)",
+        "description": "The Ice variant of Billy Mylanta. Frozen to the frozen toilet in a frozen bathroom. His gas attacks now create ice crystals.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["billy_mylanta_ice"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "S.T.D.",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_billy_mylanta",
+        "variant_name": "Ice"
+    },
+    {
+        "id": "card_billy_mylanta_psychedelic",
+        "name": "Billy Mylanta (Psychedelic)",
+        "description": "The Psychedelic variant of Billy Mylanta. His bathroom trips are now interdimensional experiences. The tiles pulse with colors unknown to science.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["billy_mylanta_psychedelic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "S.T.D.",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_billy_mylanta",
+        "variant_name": "Psychedelic"
+    },
+    {
+        "id": "card_billy_mylanta_biomechanical",
+        "name": "Billy Mylanta (Biomechanical)",
+        "description": "The Biomechanical variant of Billy Mylanta. His cybernetic digestive system has turned the bathroom into a factory. Industrial-strength gas attacks.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["billy_mylanta_biomechanical"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "S.T.D.",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_billy_mylanta",
+        "variant_name": "Biomechanical"
     },
     # Band 6: Sodumb
     {
