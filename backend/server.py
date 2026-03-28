@@ -256,6 +256,11 @@ CARD_IMAGE_URLS = {
     # Band 3: Sepulchura
     "maxi_pad": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/6cc9oltm_file_000000000a5471f5ae6a72ba59efab72.png",
     "maximum": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/2revzgsz_file_000000000f8c71f5a1ceebe96981364d.png",
+    # Maxi Pad Variants
+    "maxi_pad_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/itufg769_file_00000000ce5071fd9678d1143ae8b19c.png",
+    "maxi_pad_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/jnosp4ca_file_00000000636c722faa0ead59b1aab559.png",
+    "maxi_pad_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/a1u4ygu4_file_000000008cf0722fb6a4ff38e9edd7f0.png",
+    "maxi_pad_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/fwqzpzlu_file_0000000016ec71f5b0764ebedc2590f5.png",
     # Band 4: Testyment
     "billy_chuck": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/wyz5xr3e_file_00000000fb00722fa6b9aa0e95bdfee0.png",
     "chuck_roast": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/tt9zf49y_file_000000009cf471fd9f9ec310d1d825f1%20%282%29.png",
@@ -367,6 +372,11 @@ CARD_BACK_IMAGE_URLS = {
     # Band 3: Sepulchura
     "maxi_pad": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/rstninpu_file_00000000ed6c71f8801642ff21a5d10f.png",
     "maximum": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/xkztrnkt_file_00000000ea9871f8985aecfb04305ed7.png",
+    # Maxi Pad Variants (use same as front)
+    "maxi_pad_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/itufg769_file_00000000ce5071fd9678d1143ae8b19c.png",
+    "maxi_pad_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/jnosp4ca_file_00000000636c722faa0ead59b1aab559.png",
+    "maxi_pad_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/a1u4ygu4_file_000000008cf0722fb6a4ff38e9edd7f0.png",
+    "maxi_pad_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/fwqzpzlu_file_0000000016ec71f5b0764ebedc2590f5.png",
     # Band 4: Testyment
     "billy_chuck": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/hxqdjff7_file_00000000a10c71f884e6b3625a31bd00.png",
     "chuck_roast": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/m158yvhx_file_00000000ee187230978fd25aac62ddc5.png",
@@ -804,6 +814,71 @@ INITIAL_CARDS = [
         "series": 1,
         "band": "Sepulchura",
         "card_type": "B"
+    },
+    # Maxi Pad Variants
+    {
+        "id": "card_maxi_pad_toxic",
+        "name": "Maxi Pad (Toxic)",
+        "description": "The Toxic variant of Maxi Pad, oozing radioactive goo. His sweat has mutated into something even more disgusting.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["maxi_pad_toxic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["maxi_pad_toxic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Sepulchura",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_maxi_pad",
+        "variant_name": "Toxic"
+    },
+    {
+        "id": "card_maxi_pad_electric",
+        "name": "Maxi Pad (Electric)",
+        "description": "The Electric variant of Maxi Pad, crackling with shocking energy. His slime now conducts electricity.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["maxi_pad_electric"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["maxi_pad_electric"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Sepulchura",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_maxi_pad",
+        "variant_name": "Electric"
+    },
+    {
+        "id": "card_maxi_pad_hellfire",
+        "name": "Maxi Pad (Hellfire)",
+        "description": "The Hellfire variant of Maxi Pad, engulfed in eternal flames. His gross collection has been incinerated but somehow smells worse.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["maxi_pad_hellfire"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["maxi_pad_hellfire"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Sepulchura",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_maxi_pad",
+        "variant_name": "Hellfire"
+    },
+    {
+        "id": "card_maxi_pad_cosmic",
+        "name": "Maxi Pad (Cosmic)",
+        "description": "The Cosmic variant of Maxi Pad, spreading filth across the universe. Alien civilizations have quarantined entire galaxies.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["maxi_pad_cosmic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["maxi_pad_cosmic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Sepulchura",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_maxi_pad",
+        "variant_name": "Cosmic"
     },
     # Band 4: Testyment
     {
