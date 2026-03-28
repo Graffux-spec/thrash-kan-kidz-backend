@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Request
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -5314,6 +5315,18 @@ async def root():
 @api_router.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
+@api_router.get("/download/frontend")
+async def download_frontend():
+    """Download the frontend project as a zip file"""
+    zip_path = Path("/app/frontend_build.zip")
+    if not zip_path.exists():
+        raise HTTPException(status_code=404, detail="Download file not found")
+    return FileResponse(
+        path=str(zip_path),
+        filename="thrash-kan-kidz-frontend.zip",
+        media_type="application/zip"
+    )
 
 # Include the router in the main app
 app.include_router(api_router)
