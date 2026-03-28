@@ -300,6 +300,11 @@ CARD_IMAGE_URLS = {
     "scotch_ian_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/puhuton7_file_000000001964722fbd1c833ab3337e12.png",
     "scotch_ian_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/vvma6lix_file_000000003cdc71fbae9f27b5061a4d98.png",
     "scott_eaten": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/g7kyk9s9_file_00000000d70c71fdb7b87b53d2b770cd.png",
+    # Scott Eaten Variants
+    "scott_eaten_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/8wm9sb0k_file_00000000ee6c71fd8223cc73a03471a6.png",
+    "scott_eaten_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/u6tv4vgp_file_00000000bc7c71fdba47c183ea1bd559.png",
+    "scott_eaten_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dmse8kub_file_00000000dd60722f970c4f446e24ed56.png",
+    "scott_eaten_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/6c4kgqg4_file_00000000dc18722f93a43028ec656e4f.png",
     # Band 7: Kreaturd
     "silly_mille": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/paaodduf_file_0000000018b871fda0fd7e44b8c11def.png",
     "mille_gorezza": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/g91wp9yv_file_000000002b6871f8adc873413d3619f3.png",
@@ -446,6 +451,11 @@ CARD_BACK_IMAGE_URLS = {
     "scotch_ian_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/puhuton7_file_000000001964722fbd1c833ab3337e12.png",
     "scotch_ian_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/vvma6lix_file_000000003cdc71fbae9f27b5061a4d98.png",
     "scott_eaten": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/mgyvbjh8_file_00000000c9dc71fdb2de5295e9fe4e18.png",
+    # Scott Eaten Variants (use same as front)
+    "scott_eaten_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/8wm9sb0k_file_00000000ee6c71fd8223cc73a03471a6.png",
+    "scott_eaten_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/u6tv4vgp_file_00000000bc7c71fdba47c183ea1bd559.png",
+    "scott_eaten_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dmse8kub_file_00000000dd60722f970c4f446e24ed56.png",
+    "scott_eaten_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/6c4kgqg4_file_00000000dc18722f93a43028ec656e4f.png",
     # Band 7: Kreaturd
     "silly_mille": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jfks6ym6_file_0000000044cc71f5b295bcd8f73d0398.png",
     "mille_gorezza": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/1asg9g5i_file_00000000674c71f5a6ddd9c12c7ffcdb.png",
@@ -1410,6 +1420,71 @@ INITIAL_CARDS = [
         "series": 1,
         "band": "Anthrash",
         "card_type": "B"
+    },
+    # Scott Eaten Variants
+    {
+        "id": "card_scott_eaten_toxic",
+        "name": "Scott Eaten (Toxic)",
+        "description": "The Toxic variant of Scott Eaten, his appetite now extends to radioactive waste. One bite and he glows brighter than a nuclear meltdown.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["scott_eaten_toxic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scott_eaten_toxic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Anthrash",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_scott_eaten",
+        "variant_name": "Toxic"
+    },
+    {
+        "id": "card_scott_eaten_electric",
+        "name": "Scott Eaten (Electric)",
+        "description": "The Electric variant of Scott Eaten, lightning surges through his digestive system. Every bite creates a power surge.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["scott_eaten_electric"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scott_eaten_electric"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Anthrash",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_scott_eaten",
+        "variant_name": "Electric"
+    },
+    {
+        "id": "card_scott_eaten_hellfire",
+        "name": "Scott Eaten (Hellfire)",
+        "description": "The Hellfire variant of Scott Eaten, his stomach burns with demonic flames. He literally has fire in his belly.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["scott_eaten_hellfire"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scott_eaten_hellfire"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Anthrash",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_scott_eaten",
+        "variant_name": "Hellfire"
+    },
+    {
+        "id": "card_scott_eaten_cosmic",
+        "name": "Scott Eaten (Cosmic)",
+        "description": "The Cosmic variant of Scott Eaten, his appetite spans galaxies. He's eaten asteroids, comets, and a few unlucky space probes.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["scott_eaten_cosmic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scott_eaten_cosmic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Anthrash",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_scott_eaten",
+        "variant_name": "Cosmic"
     },
     # Band 7: Kreaturd
     {
