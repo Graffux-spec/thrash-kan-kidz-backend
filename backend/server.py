@@ -340,6 +340,11 @@ CARD_IMAGE_URLS = {
     # Band 1: Construction
     "smeared_schmier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jshleumx_enhanced-1771278042580.jpg",
     "beer_schmier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lutlvn34_enhanced-1771279297015.jpg",
+    # Beer Schmier Variants
+    "beer_schmier_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/9t6m1r4d_file_00000000333471fd9e68b65a1c5fefe0.png",
+    "beer_schmier_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/k8v188j5_file_00000000faf071fda77eb92f27226ff0.png",
+    "beer_schmier_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/kthvupwq_file_00000000bd9871f5a03ad06c03c4cbbb.png",
+    "beer_schmier_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/83x9qu5o_file_00000000c3d071fd964f422deec4fecc.png",
     # Band 2: Voivodka
     "piggy_in_a_blanket": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/dpfv01yo_enhanced-1771278142034.jpg",
     # Piggy in a Blanket Variants
@@ -362,10 +367,10 @@ CARD_IMAGE_URLS = {
     "tommy_stewart_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/adraiy0y_file_00000000446071f8864335af1f30030a.png",
     "tommy_spewart": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/f61hd5kz_enhanced-1771278293743.jpg",
     # Tommy Spewart Variants
-    "tommy_spewart_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/l7ov0tqh_file_0000000032e471f8b3bb69e79bb36030.png",
-    "tommy_spewart_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/abvr82kh_file_00000000e4b871fdb1054996d5bbce6f.png",
-    "tommy_spewart_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ue9d6ymo_file_000000003c4471f8bedd0b1b70e8df4a.png",
-    "tommy_spewart_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/9malerev_file_00000000448c71fdbe6c4f2338bcf41c.png",
+    "tommy_spewart_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/l9cehmsx_file_0000000032e471f8b3bb69e79bb36030.png",
+    "tommy_spewart_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/0qbjl54p_file_00000000e4b871fdb1054996d5bbce6f.png",
+    "tommy_spewart_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/c5x56s9a_file_000000003c4471f8bedd0b1b70e8df4a.png",
+    "tommy_spewart_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/25jwdchg_file_00000000448c71fdbe6c4f2338bcf41c.png",
     # Band 4: Pussessed
     "jeff_possess_ya_s2": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jzgfyc6y_enhanced-1771278343087.jpg",
     # Jeff Possess Ya Variants
@@ -1934,6 +1939,71 @@ INITIAL_CARDS = [
         "series": 2,
         "band": "Construction",
         "card_type": "B"
+    },
+    # Beer Schmier Variants
+    {
+        "id": "card_beer_schmier_bloodbath",
+        "name": "Beer Schmier (Bloodbath)",
+        "description": "The Bloodbath variant of Beer Schmier. His beer is now blood-red and his vomit is pure crimson. The mosh pit runs red with his drunken carnage.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["beer_schmier_bloodbath"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_beer_schmier",
+        "variant_name": "Bloodbath"
+    },
+    {
+        "id": "card_beer_schmier_ice",
+        "name": "Beer Schmier (Ice)",
+        "description": "The Ice variant of Beer Schmier. His beer has frozen solid but he still chugs it. Brain freeze is his permanent state of existence.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["beer_schmier_ice"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_beer_schmier",
+        "variant_name": "Ice"
+    },
+    {
+        "id": "card_beer_schmier_psychedelic",
+        "name": "Beer Schmier (Psychedelic)",
+        "description": "The Psychedelic variant of Beer Schmier. His beer is laced with something cosmic. Every sip takes him to rainbow dimensions of pure thrash.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["beer_schmier_psychedelic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_beer_schmier",
+        "variant_name": "Psychedelic"
+    },
+    {
+        "id": "card_beer_schmier_biomechanical",
+        "name": "Beer Schmier (Biomechanical)",
+        "description": "The Biomechanical variant of Beer Schmier. His cybernetic liver processes beer at industrial speeds. The machine that never stops drinking.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["beer_schmier_biomechanical"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 2,
+        "band": "Construction",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_beer_schmier",
+        "variant_name": "Biomechanical"
     },
     # Band 2: Voivodka
     {
