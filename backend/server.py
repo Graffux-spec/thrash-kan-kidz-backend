@@ -294,6 +294,11 @@ CARD_IMAGE_URLS = {
     "cliff_burpin_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2kd1s8h7_file_00000000b06071f8803d4356e2c07470.png",
     # Band 6: Anthrash
     "scotch_ian": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/wfx5afyp_file_0000000067c071fd8fbea79ea1359879.png",
+    # Scotch Ian Variants
+    "scotch_ian_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/0vxhdv3x_file_00000000a2cc71fd9e0d49ab78036784.png",
+    "scotch_ian_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/979s4bg7_file_000000000f4871f8a0e8899b1e56bc1f.png",
+    "scotch_ian_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/puhuton7_file_000000001964722fbd1c833ab3337e12.png",
+    "scotch_ian_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/vvma6lix_file_000000003cdc71fbae9f27b5061a4d98.png",
     "scott_eaten": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/g7kyk9s9_file_00000000d70c71fdb7b87b53d2b770cd.png",
     # Band 7: Kreaturd
     "silly_mille": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/paaodduf_file_0000000018b871fda0fd7e44b8c11def.png",
@@ -428,8 +433,18 @@ CARD_BACK_IMAGE_URLS = {
     "cliff_diver_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/gvht2fcl_file_00000000e45871f58bb0cd737a148e65.png",
     "cliff_diver_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/cbcqxk2v_file_00000000be2871f89046161bc2021442.png",
     "cliff_diver_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/pkla48mo_file_000000007b9071fd99ae61a5d7af6f09.png",
+    # Cliff Burpin Variants (use same as front)
+    "cliff_burpin_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/71biwhb5_file_000000000ee4722fa9c2b4c0f6b3139f.png",
+    "cliff_burpin_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/4p896zhf_enhanced-1774674468823.jpg",
+    "cliff_burpin_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/irnn5899_file_00000000d8f471fd957140f6f64fbc5e.png",
+    "cliff_burpin_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2kd1s8h7_file_00000000b06071f8803d4356e2c07470.png",
     # Band 6: Anthrash
     "scotch_ian": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/ecjxi0zu_file_0000000058b071fda35cc951b6f03a0b.png",
+    # Scotch Ian Variants (use same as front)
+    "scotch_ian_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/0vxhdv3x_file_00000000a2cc71fd9e0d49ab78036784.png",
+    "scotch_ian_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/979s4bg7_file_000000000f4871f8a0e8899b1e56bc1f.png",
+    "scotch_ian_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/puhuton7_file_000000001964722fbd1c833ab3337e12.png",
+    "scotch_ian_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/vvma6lix_file_000000003cdc71fbae9f27b5061a4d98.png",
     "scott_eaten": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/mgyvbjh8_file_00000000c9dc71fdb2de5295e9fe4e18.png",
     # Band 7: Kreaturd
     "silly_mille": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/jfks6ym6_file_0000000044cc71f5b295bcd8f73d0398.png",
@@ -1239,6 +1254,71 @@ INITIAL_CARDS = [
         "base_card_id": "card_cliff_diver",
         "variant_name": "Cosmic"
     },
+    # Cliff Burpin Variants
+    {
+        "id": "card_cliff_burpin_toxic",
+        "name": "Cliff Burpin (Toxic)",
+        "description": "The Toxic variant of Cliff Burpin, his burps now release radioactive gases. One belch and the whole room evacuates.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["cliff_burpin_toxic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_burpin_toxic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Metallikuh",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_cliff_burpin",
+        "variant_name": "Toxic"
+    },
+    {
+        "id": "card_cliff_burpin_electric",
+        "name": "Cliff Burpin (Electric)",
+        "description": "The Electric variant of Cliff Burpin, his burps now spark with lightning. Stand too close and you'll get zapped.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["cliff_burpin_electric"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_burpin_electric"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Metallikuh",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_cliff_burpin",
+        "variant_name": "Electric"
+    },
+    {
+        "id": "card_cliff_burpin_hellfire",
+        "name": "Cliff Burpin (Hellfire)",
+        "description": "The Hellfire variant of Cliff Burpin, his burps erupt in demonic flames. Satan himself asks him to tone it down.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["cliff_burpin_hellfire"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_burpin_hellfire"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Metallikuh",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_cliff_burpin",
+        "variant_name": "Hellfire"
+    },
+    {
+        "id": "card_cliff_burpin_cosmic",
+        "name": "Cliff Burpin (Cosmic)",
+        "description": "The Cosmic variant of Cliff Burpin, his burps now ripple through spacetime. Astronomers track his digestive events.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["cliff_burpin_cosmic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["cliff_burpin_cosmic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Metallikuh",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_cliff_burpin",
+        "variant_name": "Cosmic"
+    },
     # Band 6: Anthrash
     {
         "id": "card_scotch_ian",
@@ -1252,6 +1332,71 @@ INITIAL_CARDS = [
         "series": 1,
         "band": "Anthrash",
         "card_type": "A"
+    },
+    # Scotch Ian Variants
+    {
+        "id": "card_scotch_ian_toxic",
+        "name": "Scotch Ian (Toxic)",
+        "description": "The Toxic variant of Scotch Ian, his whiskey now glows radioactive green. One sip and you'll be belching nuclear fumes.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["scotch_ian_toxic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scotch_ian_toxic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Anthrash",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_scotch_ian",
+        "variant_name": "Toxic"
+    },
+    {
+        "id": "card_scotch_ian_electric",
+        "name": "Scotch Ian (Electric)",
+        "description": "The Electric variant of Scotch Ian, lightning crackles through his kilt. His solos now literally shock audiences.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["scotch_ian_electric"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scotch_ian_electric"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Anthrash",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_scotch_ian",
+        "variant_name": "Electric"
+    },
+    {
+        "id": "card_scotch_ian_hellfire",
+        "name": "Scotch Ian (Hellfire)",
+        "description": "The Hellfire variant of Scotch Ian, his whiskey burns with demonic flames. His breath could melt steel beams.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["scotch_ian_hellfire"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scotch_ian_hellfire"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Anthrash",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_scotch_ian",
+        "variant_name": "Hellfire"
+    },
+    {
+        "id": "card_scotch_ian_cosmic",
+        "name": "Scotch Ian (Cosmic)",
+        "description": "The Cosmic variant of Scotch Ian, his whiskey distilled from stardust. His hangovers span galaxies.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["scotch_ian_cosmic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scotch_ian_cosmic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 1,
+        "band": "Anthrash",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_scotch_ian",
+        "variant_name": "Cosmic"
     },
     {
         "id": "card_scott_eaten",
@@ -2051,7 +2196,7 @@ async def seed_database():
 @api_router.get("/cards")
 async def get_all_cards():
     """Get all available cards"""
-    cards = await db.cards.find().to_list(100)
+    cards = await db.cards.find().to_list(500)
     return [Card(**card) for card in cards]
 
 @api_router.get("/cards/rare")
