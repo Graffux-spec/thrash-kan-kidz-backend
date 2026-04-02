@@ -246,6 +246,34 @@ CARD_IMAGE_URLS = {
     "slob_urbinati": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/at4glnr4_enhanced-1774075087938.jpg",
     # Epic reward card (Series 3)
     "sean_kill_again": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lxq89ltr_file_000000007a0471f5a1da1f0e20a9b30a.png",
+    
+    # =====================
+    # SERIES 4 - DEATH METAL EDITION (8 bands, 16 cards)
+    # =====================
+    # Band 1: Obitchuary
+    "tardy_donald": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/fmef8kju_enhanced-1771260495032.jpg",
+    "party_tardy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xcp7rubw_enhanced-1771260959725.jpg",
+    # Band 2: Deaf
+    "emo_chuck": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/myssxyf1_enhanced-1771263476980.jpg",
+    "chunk_schuldiner": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/a7punneg_file_00000000495871fd97d476fe9b1cb7cd.png",
+    # Band 3: Kannibal Korpse
+    "boy_george_fisher": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/96r1zgd7_enhanced-1771263799189.jpg",
+    "george_porkgrinder": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/m4ao5cd7_file_00000000cb0871f7ba4ee54c5f0b21e8.png",
+    # Band 4: Morbud Anal
+    "steve_trucker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/9jmap7jp_enhanced-1771263960632.jpg",
+    "heave_tucker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/c4zbrfrh_enhanced-1771264027484.jpg",
+    # Band 5: Butchered Taint
+    "scrawny_ronnie": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/oj8sshmv_enhanced-1771264082951.jpg",
+    "ronstrocity": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/vy1jr4vl_enhanced-1771264151043.jpg",
+    # Band 6: Assfux
+    "fartin_van_drunen": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/npyshkh5_enhanced-1771264216187.jpg",
+    "martin_van_druid": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/mwh1mmak_enhanced-1771264269394.jpg",
+    # Band 7: Carcuss
+    "beers_n_steers": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/cqbx6peg_enhanced-1771264328618.jpg",
+    "hillbilly_steer": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/t24db8ii_enhanced-1771264533304.jpg",
+    # Band 8: Suphocation
+    "tank_mullen": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ulcnc7dt_enhanced-1771264485780.jpg",
+    "frank_mullet": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/847230c9_enhanced-1771264657267.jpg",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -422,6 +450,34 @@ CARD_BACK_IMAGE_URLS = {
     "slob_urbinati": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/at4glnr4_enhanced-1774075087938.jpg",
     # Epic reward card (Series 3)
     "sean_kill_again": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lxq89ltr_file_000000007a0471f5a1da1f0e20a9b30a.png",
+    
+    # =====================
+    # SERIES 4 - DEATH METAL EDITION (8 bands, 16 cards)
+    # =====================
+    # Band 1: Obitchuary
+    "tardy_donald": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/drqbkvyt_enhanced-1771266752532.jpg",
+    "party_tardy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/5m9z6pj3_enhanced-1771264923980.jpg",
+    # Band 2: Deaf
+    "emo_chuck": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/8185bb8r_enhanced-1771266263175.jpg",
+    "chunk_schuldiner": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/wq0hqhhx_enhanced-1771266889803.jpg",
+    # Band 3: Kannibal Korpse
+    "boy_george_fisher": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/vxn0t9si_enhanced-1771265494253.jpg",
+    "george_porkgrinder": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2g2m4qos_enhanced-1771265161473.jpg",
+    # Band 4: Morbud Anal
+    "steve_trucker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/bqsawm90_enhanced-1771266383683.jpg",
+    "heave_tucker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/jf6zy563_enhanced-1771266576956.jpg",
+    # Band 5: Butchered Taint
+    "scrawny_ronnie": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/626ckmmb_enhanced-1771267008497.jpg",
+    "ronstrocity": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ljoovj20_enhanced-1771265053711.jpg",
+    # Band 6: Assfux
+    "fartin_van_drunen": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/kdzepyns_enhanced-1771266031580.jpg",
+    "martin_van_druid": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/m1nu0nmq_enhanced-1771266077340.jpg",
+    # Band 7: Carcuss
+    "beers_n_steers": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/32xhgmvr_enhanced-1771266165712.jpg",
+    "hillbilly_steer": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/05hlpdpv_enhanced-1771265568549.jpg",
+    # Band 8: Suphocation
+    "tank_mullen": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/y01bfawy_enhanced-1771265868993.jpg",
+    "frank_mullet": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/se6mspjy_enhanced-1771265421438.jpg",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -3213,5 +3269,224 @@ INITIAL_CARDS = [
         "achievement_required": 48,  # Unlocks after completing Series 3
         "series_reward": 3,
         "band": "Violents"
+    },
+    # =====================
+    # SERIES 4 - DEATH METAL EDITION (8 bands, 16 cards)
+    # =====================
+    # Band 1: Obitchuary
+    {
+        "id": "card_tardy_donald",
+        "name": "Tardy Donald",
+        "description": "The legendary drummer of Obitchuary. Always late to practice but never late to blast beats. His timing is as unpredictable as his hair.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tardy_donald"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tardy_donald"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Obitchuary",
+        "card_type": "A"
+    },
+    {
+        "id": "card_party_tardy",
+        "name": "Party Tardy",
+        "description": "The bassist who turned 'fashionably late' into a lifestyle. Known for showing up to gigs after the encore. Chaos is guaranteed.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["party_tardy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["party_tardy"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Obitchuary",
+        "card_type": "B"
+    },
+    # Band 2: Deaf
+    {
+        "id": "card_emo_chuck",
+        "name": "Emo Chuck",
+        "description": "The emotionally devastated guitarist of Deaf. Dead inside but the riffs are alive. His tears are made of pure doom metal.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["emo_chuck"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["emo_chuck"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Deaf",
+        "card_type": "A"
+    },
+    {
+        "id": "card_chunk_schuldiner",
+        "name": "Chunk Schuldiner",
+        "description": "The cannibal guitarist who eats competition for breakfast, lunch, and dinner. Always eating. Always starving for more.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["chunk_schuldiner"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["chunk_schuldiner"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Deaf",
+        "card_type": "B"
+    },
+    # Band 3: Kannibal Korpse
+    {
+        "id": "card_boy_george_fisher",
+        "name": "Boy George Fisher",
+        "description": "The rainbow-haired vocalist of Kannibal Korpse. Party-fueled death metal at its finest. Rainbow remains, party slains.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["boy_george_fisher"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["boy_george_fisher"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Kannibal Korpse",
+        "card_type": "A"
+    },
+    {
+        "id": "card_george_porkgrinder",
+        "name": "George Porkgrinder",
+        "description": "The vocalist with the most severe death metal vocals. Filthier lyrics, faster death. Eats microphones for breakfast.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["george_porkgrinder"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["george_porkgrinder"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Kannibal Korpse",
+        "card_type": "B"
+    },
+    # Band 4: Morbud Anal
+    {
+        "id": "card_steve_trucker",
+        "name": "Steve Trucker",
+        "description": "The truck-driving vocalist of Morbud Anal. Hell on 18 wheels. Has CB conversations with Satan during long hauls.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["steve_trucker"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["steve_trucker"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Morbud Anal",
+        "card_type": "A"
+    },
+    {
+        "id": "card_heave_tucker",
+        "name": "Heave Tucker",
+        "description": "The bassist who mastered the art of barf-box death metal. Spews and feasts. Never least. Warning: projectile hazard.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["heave_tucker"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["heave_tucker"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Morbud Anal",
+        "card_type": "B"
+    },
+    # Band 5: Butchered Taint
+    {
+        "id": "card_scrawny_ronnie",
+        "name": "Scrawny Ronnie",
+        "description": "The malnutrition riff master of Butchered Taint. Once mistaken for a microphone stand mid-set. Do not lean on him—he will tip over.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["scrawny_ronnie"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["scrawny_ronnie"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Butchered Taint",
+        "card_type": "A"
+    },
+    {
+        "id": "card_ronstrocity",
+        "name": "Ronstrocity",
+        "description": "The guitarist who has never played a solo sober. Extended exposure may confuse blown speakers and poor life decisions.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["ronstrocity"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["ronstrocity"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Butchered Taint",
+        "card_type": "B"
+    },
+    # Band 6: Assfux
+    {
+        "id": "card_fartin_van_drunen",
+        "name": "Fartin Van Drunen",
+        "description": "The vocalist of Assfux whose flatulent death metal kills. Destructive stench is his trench. Fueled by death and tacos.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["fartin_van_drunen"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["fartin_van_drunen"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Assfux",
+        "card_type": "A"
+    },
+    {
+        "id": "card_martin_van_druid",
+        "name": "Martin Van Druid",
+        "description": "The druid vocalist who conjures foul flatulent forces. Unholy stench for the wretched. His cauldron emits pure doom.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["martin_van_druid"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["martin_van_druid"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Assfux",
+        "card_type": "B"
+    },
+    # Band 7: Carcuss
+    {
+        "id": "card_beers_n_steers",
+        "name": "Beers n Steers",
+        "description": "The guitarist who rides demonic bulls while shredding. Wreckless death metal at its bloodiest. A hog-wild hootenanny of horror.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["beers_n_steers"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["beers_n_steers"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Carcuss",
+        "card_type": "A"
+    },
+    {
+        "id": "card_hillbilly_steer",
+        "name": "Hillbilly Steer",
+        "description": "The redneck death metal guitarist of Carcuss. Moonshine-powered riffs and pure wreckage on stage.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["hillbilly_steer"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["hillbilly_steer"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Carcuss",
+        "card_type": "B"
+    },
+    # Band 8: Suphocation
+    {
+        "id": "card_tank_mullen",
+        "name": "Tank Mullen",
+        "description": "The glutossive vocalist of Suphocation. Weakness: Salads (unconfirmed myth). His burgers are brutal and so are his growls.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["tank_mullen"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["tank_mullen"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Suphocation",
+        "card_type": "A"
+    },
+    {
+        "id": "card_frank_mullet",
+        "name": "Frank Mullet",
+        "description": "The maggot-infested vocalist with the legendary mullet. Vegas has odds 696 to 1 his guitar gets stuck in his hair.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["frank_mullet"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["frank_mullet"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 4,
+        "band": "Suphocation",
+        "card_type": "B"
     },
 ]

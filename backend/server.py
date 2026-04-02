@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 import base64
 import random
 from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
+from data.cards_data import INITIAL_CARDS, CARD_IMAGE_URLS, CARD_BACK_IMAGE_URLS, RARE_CARD_ACHIEVEMENTS
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env', override=False)
