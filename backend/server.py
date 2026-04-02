@@ -5329,6 +5329,18 @@ async def download_frontend():
         media_type="application/zip"
     )
 
+@api_router.get("/download/backend")
+async def download_backend():
+    """Download the backend project as a zip file"""
+    zip_path = Path("/app/backend_deploy.zip")
+    if not zip_path.exists():
+        raise HTTPException(status_code=404, detail="Download file not found")
+    return FileResponse(
+        path=str(zip_path),
+        filename="thrash-kan-kidz-backend.zip",
+        media_type="application/zip"
+    )
+
 # Include the router in the main app
 app.include_router(api_router)
 
