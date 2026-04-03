@@ -231,6 +231,7 @@ export default function CollectionScreen() {
             numColumns={3}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.flashListContent}
+            estimatedItemSize={CARD_HEIGHT + 8}
           />
         </View>
       )}
