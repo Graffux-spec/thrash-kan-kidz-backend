@@ -11,7 +11,9 @@ const TabIcon = ({ emoji, focused }: { emoji: string; focused: boolean }) => (
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
-  const bottomPadding = Math.max(insets.bottom, 20); // At least 20px padding
+  // Use a much larger minimum padding to avoid OS nav buttons
+  // Android gesture nav bar is typically 48px, add extra buffer
+  const bottomPadding = Math.max(insets.bottom, 48);
   
   return (
     <AppProvider>
@@ -22,7 +24,8 @@ export default function TabLayout() {
             styles.tabBar,
             { 
               paddingBottom: bottomPadding,
-              height: 65 + bottomPadding,
+              height: 70 + bottomPadding,
+              marginBottom: Platform.OS === 'android' ? 0 : 0,
             }
           ],
           tabBarActiveTintColor: '#FFD700',
@@ -110,14 +113,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a2e',
     borderTopColor: '#333',
     borderTopWidth: 1,
-    paddingBottom: 12,
-    paddingTop: 10,
-    height: 75,
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    paddingTop: 8,
+    // Remove position absolute - let it flow naturally with safe area
   },
   tabBarLabel: {
     fontSize: 10,
