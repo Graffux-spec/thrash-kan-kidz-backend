@@ -9,11 +9,11 @@ import {
   Dimensions,
   Alert,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../src/context/AppContext';
-import { FlashList } from '@shopify/flash-list';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 56) / 3;
@@ -215,7 +215,7 @@ export default function CollectionScreen() {
         </View>
       ) : (
         <View style={styles.flashListContainer}>
-          <FlashList
+          <FlatList
             data={filteredCards}
             renderItem={({ item: uc }) => (
               <SimpleCard
@@ -231,7 +231,6 @@ export default function CollectionScreen() {
             numColumns={3}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.flashListContent}
-            estimatedItemSize={CARD_HEIGHT + 8}
           />
         </View>
       )}
