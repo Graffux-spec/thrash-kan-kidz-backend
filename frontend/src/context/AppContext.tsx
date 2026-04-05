@@ -291,17 +291,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (!user) return;
     
     try {
-      const [userRes, cardsRes, goalsRes, tradesRes] = await Promise.all([
+      const [userRes, cardsRes, goalsRes, tradesRes, allCardsRes] = await Promise.all([
         axios.get(`${API_URL}/api/users/${user.id}`),
         axios.get(`${API_URL}/api/users/${user.id}/cards`),
         axios.get(`${API_URL}/api/users/${user.id}/goals`),
-        axios.get(`${API_URL}/api/users/${user.id}/trades`)
+        axios.get(`${API_URL}/api/users/${user.id}/trades`),
+        axios.get(`${API_URL}/api/cards`)
       ]);
       
       setUser(userRes.data);
       setUserCards(cardsRes.data);
       setUserGoals(goalsRes.data);
       setTrades(tradesRes.data);
+      setAllCards(allCardsRes.data);
     } catch (error) {
       console.error('Failed to refresh data:', error);
     }
