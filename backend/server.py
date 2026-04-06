@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 import base64
 import random
 import bcrypt
-from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
+import stripe
 from data.cards_data import INITIAL_CARDS, CARD_IMAGE_URLS, CARD_BACK_IMAGE_URLS, RARE_CARD_ACHIEVEMENTS
 
 ROOT_DIR = Path(__file__).parent
@@ -2421,37 +2421,42 @@ async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_
     success_url = f"{origin_url}/payment-success?session_id={{CHECKOUT_SESSION_ID}}"
     cancel_url = f"{origin_url}/shop"
     
-    # Create webhook URL
-    host_url = str(http_request.base_url).rstrip('/')
-    webhook_url = f"{host_url}api/webhook/stripe"
-    
-    # Initialize Stripe checkout
-    stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
-    
-    # Create checkout session with server-defined amount
-    checkout_request = CheckoutSessionRequest(
-        amount=float(package["price"]),
-        currency=package["currency"],
-        success_url=success_url,
-        cancel_url=cancel_url,
-        metadata={
-            "user_id": user_id,
-            "package_id": request.package_id,
-            "coins_amount": str(total_coins),
-            "base_coins": str(base_coins),
-            "bonus_coins": str(bonus_coins),
-            "is_first_purchase": str(is_first_purchase),
-            "source": "thrashkan_app"
-        }
-    )
+    # Initialize Stripe with API key
+    stripe.api_key = stripe_api_key
     
     try:
-        session: CheckoutSessionResponse = await stripe_checkout.create_checkout_session(checkout_request)
+        # Create Stripe checkout session
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': package["currency"],
+                    'product_data': {
+                        'name': f'{package["coins"]} Coins',
+                        'description': f'Thrash Kan Kidz coin pack',
+                    },
+                    'unit_amount': int(package["price"] * 100),  # Stripe uses cents
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                "user_id": user_id,
+                "package_id": request.package_id,
+                "coins_amount": str(total_coins),
+                "base_coins": str(base_coins),
+                "bonus_coins": str(bonus_coins),
+                "is_first_purchase": str(is_first_purchase),
+                "source": "thrashkan_app"
+            }
+        )
         
         # Create payment transaction record BEFORE redirecting to Stripe
         transaction = PaymentTransaction(
             user_id=user_id,
-            session_id=session.session_id,
+            session_id=session.id,
             package_id=request.package_id,
             amount=package["price"],
             currency=package["currency"],
@@ -2471,7 +2476,7 @@ async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_
         
         return {
             "checkout_url": session.url,
-            "session_id": session.session_id,
+            "session_id": session.id,
             "package": package,
             "is_first_purchase": is_first_purchase,
             "bonus_coins": bonus_coins,
@@ -2504,18 +2509,22 @@ async def get_payment_status(session_id: str):
         raise HTTPException(status_code=500, detail="Payment service not configured")
     
     # Check with Stripe
-    stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url="")
+    stripe.api_key = stripe_api_key
     
     try:
-        checkout_status: CheckoutStatusResponse = await stripe_checkout.get_checkout_status(session_id)
+        # Retrieve session from Stripe
+        session = stripe.checkout.Session.retrieve(session_id)
+        
+        # Determine payment status
+        payment_status = "paid" if session.payment_status == "paid" else session.payment_status
         
         # Update transaction status
-        new_status = "completed" if checkout_status.payment_status == "paid" else transaction.get("status")
+        new_status = "completed" if payment_status == "paid" else transaction.get("status")
         
         await db.payment_transactions.update_one(
             {"session_id": session_id},
             {"$set": {
-                "payment_status": checkout_status.payment_status,
+                "payment_status": payment_status,
                 "status": new_status,
                 "updated_at": datetime.utcnow()
             }}
@@ -2523,7 +2532,7 @@ async def get_payment_status(session_id: str):
         
         # If payment is successful and not already processed, credit coins
         coins_credited = 0
-        if checkout_status.payment_status == "paid" and transaction.get("payment_status") != "paid":
+        if payment_status == "paid" and transaction.get("payment_status") != "paid":
             user_id = transaction.get("user_id")
             coins_amount = transaction.get("coins_amount", 0)
             
@@ -2537,9 +2546,9 @@ async def get_payment_status(session_id: str):
         
         return {
             "status": new_status,
-            "payment_status": checkout_status.payment_status,
-            "amount_total": checkout_status.amount_total,
-            "currency": checkout_status.currency,
+            "payment_status": payment_status,
+            "amount_total": session.amount_total,
+            "currency": session.currency,
             "coins_credited": coins_credited,
             "already_processed": transaction.get("payment_status") == "paid"
         }
@@ -2551,45 +2560,57 @@ async def get_payment_status(session_id: str):
 async def stripe_webhook(request: Request):
     """Handle Stripe webhook events"""
     stripe_api_key = os.environ.get("STRIPE_API_KEY")
+    stripe_webhook_secret = os.environ.get("STRIPE_WEBHOOK_SECRET")
+    
     if not stripe_api_key:
         raise HTTPException(status_code=500, detail="Payment service not configured")
     
-    host_url = str(request.base_url).rstrip('/')
-    webhook_url = f"{host_url}api/webhook/stripe"
-    stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
+    stripe.api_key = stripe_api_key
     
     try:
         body = await request.body()
         signature = request.headers.get("Stripe-Signature")
         
-        webhook_response = await stripe_checkout.handle_webhook(body, signature)
+        # Verify webhook signature if secret is configured
+        if stripe_webhook_secret and signature:
+            try:
+                event = stripe.Webhook.construct_event(body, signature, stripe_webhook_secret)
+            except stripe.error.SignatureVerificationError:
+                raise HTTPException(status_code=400, detail="Invalid signature")
+        else:
+            # Parse event without verification (not recommended for production)
+            import json
+            event = json.loads(body)
         
-        # Process based on event type
-        if webhook_response.payment_status == "paid":
-            session_id = webhook_response.session_id
+        # Process checkout.session.completed event
+        if event.get("type") == "checkout.session.completed":
+            session = event["data"]["object"]
+            session_id = session["id"]
+            payment_status = session.get("payment_status", "")
             
-            # Find transaction and credit coins if not already done
-            transaction = await db.payment_transactions.find_one({"session_id": session_id})
-            if transaction and transaction.get("payment_status") != "paid":
-                user_id = transaction.get("user_id")
-                coins_amount = transaction.get("coins_amount", 0)
-                
-                # Credit coins
-                await db.users.update_one(
-                    {"id": user_id},
-                    {"$inc": {"coins": coins_amount}}
-                )
-                
-                # Update transaction
-                await db.payment_transactions.update_one(
-                    {"session_id": session_id},
-                    {"$set": {
-                        "payment_status": "paid",
-                        "status": "completed",
-                        "updated_at": datetime.utcnow()
-                    }}
-                )
-                logger.info(f"Webhook: Credited {coins_amount} coins to user {user_id}")
+            if payment_status == "paid":
+                # Find transaction and credit coins if not already done
+                transaction = await db.payment_transactions.find_one({"session_id": session_id})
+                if transaction and transaction.get("payment_status") != "paid":
+                    user_id = transaction.get("user_id")
+                    coins_amount = transaction.get("coins_amount", 0)
+                    
+                    # Credit coins
+                    await db.users.update_one(
+                        {"id": user_id},
+                        {"$inc": {"coins": coins_amount}}
+                    )
+                    
+                    # Update transaction
+                    await db.payment_transactions.update_one(
+                        {"session_id": session_id},
+                        {"$set": {
+                            "payment_status": "paid",
+                            "status": "completed",
+                            "updated_at": datetime.utcnow()
+                        }}
+                    )
+                    logger.info(f"Webhook: Credited {coins_amount} coins to user {user_id}")
         
         return {"received": True}
     except Exception as e:
