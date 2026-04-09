@@ -1552,7 +1552,7 @@ async def check_series_completion(user_id: str, series_num: int):
 
 @api_router.get("/users/{user_id}/spin-pool")
 async def get_spin_pool(user_id: str):
-    """Get the cards available in the spin pool for this user's current series"""
+    """Get the cards available in the spin pool for all unlocked series"""
     user = await db.users.find_one({"id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -1566,18 +1566,18 @@ async def get_spin_pool(user_id: str):
     completed_series = user.get("completed_series", [])
     current_series = max(s for s in unlocked_series if s not in completed_series) if [s for s in unlocked_series if s not in completed_series] else max(unlocked_series)
     
-    # Get series config
+    # Get series config for current series (for display purposes)
     series_config = SERIES_CONFIG.get(current_series, {})
     
-    # Get cards from current series only
+    # Get cards from ALL unlocked series (so users can collect duplicates for variants)
     series_cards = await db.cards.find({
-        "series": current_series,
+        "series": {"$in": unlocked_series},
         "rarity": "common",
         "available": True,
         "engagement_milestone": None
-    }, {"_id": 0}).to_list(100)
+    }, {"_id": 0}).to_list(500)
     
-    # Get user's owned cards from this series
+    # Get user's owned cards
     user_cards = await db.user_cards.find({"user_id": user_id}).to_list(1000)
     owned_card_ids = set(uc["card_id"] for uc in user_cards)
     
@@ -1585,14 +1585,16 @@ async def get_spin_pool(user_id: str):
     for card in series_cards:
         card["owned"] = card["id"] in owned_card_ids
     
-    # Get rare reward info for this series
+    # Get rare reward info for current series
     rare_reward = None
     if series_config.get("rare_reward"):
         rare_card = await db.cards.find_one({"id": series_config["rare_reward"]}, {"_id": 0})
         if rare_card:
             rare_reward = rare_card
     
-    owned_count = sum(1 for c in series_cards if c["owned"])
+    # Count owned cards in current series only (for progress display)
+    current_series_cards = [c for c in series_cards if c.get("series") == current_series]
+    owned_count = sum(1 for c in current_series_cards if c["owned"])
     
     return {
         "current_series": current_series,
@@ -1600,7 +1602,7 @@ async def get_spin_pool(user_id: str):
         "series_description": series_config.get("description", ""),
         "series_cards": series_cards,
         "owned_count": owned_count,
-        "total_count": len(series_cards),
+        "total_count": len(current_series_cards),
         "rare_reward": rare_reward,
         "spin_cost": SPIN_COST,
         "is_complete": current_series in completed_series,
