@@ -572,6 +572,11 @@ CARD_BACK_IMAGE_URLS = {
     # Band 8: Suphocation
     "tank_mullen": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/y01bfawy_enhanced-1771265868993.jpg",
     "frank_mullet": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/a82tiios_file_000000005a7c71f59151781a543298c8.png",
+    # Series 4 Variant Universal Backs
+    "variant_back_skeletal": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/pcp3u8lp_enhanced-1775336088123.jpg",
+    "variant_back_oceanic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/adth1lnp_enhanced-1775338554772.jpg",
+    "variant_back_diamond": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/k4ihtk3g_enhanced-1775338624419.jpg",
+    "variant_back_stoned": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dvn5wkni_enhanced-1775338750692.jpg",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -4485,7 +4490,7 @@ INITIAL_CARDS = [
         "description": "The Skeletal variant of Boy George Fisher. His party never stops, even in the afterlife.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["boy_george_fisher_skeletal"],
-        "back_image_url": CARD_IMAGE_URLS["boy_george_fisher_skeletal"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_skeletal"],
         "coin_cost": 0,
         "available": False,
         "series": 4,
@@ -4501,7 +4506,7 @@ INITIAL_CARDS = [
         "description": "The Oceanic variant of Boy George Fisher. Deep sea death metal from the abyss.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["boy_george_fisher_oceanic"],
-        "back_image_url": CARD_IMAGE_URLS["boy_george_fisher_oceanic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_oceanic"],
         "coin_cost": 0,
         "available": False,
         "series": 4,
@@ -4517,7 +4522,7 @@ INITIAL_CARDS = [
         "description": "The Diamond variant of Boy George Fisher. Precious and deadly, his vocals cut like gems.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["boy_george_fisher_diamond"],
-        "back_image_url": CARD_IMAGE_URLS["boy_george_fisher_diamond"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_diamond"],
         "coin_cost": 0,
         "available": False,
         "series": 4,
@@ -4533,7 +4538,7 @@ INITIAL_CARDS = [
         "description": "The Stoned variant of Boy George Fisher. Rock solid and high on death metal.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["boy_george_fisher_stoned"],
-        "back_image_url": CARD_IMAGE_URLS["boy_george_fisher_stoned"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_stoned"],
         "coin_cost": 0,
         "available": False,
         "series": 4,
