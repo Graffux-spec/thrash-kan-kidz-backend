@@ -515,20 +515,20 @@ CARD_BACK_IMAGE_URLS = {
     # SERIES 3 CARDS - Back Images (using front images as placeholders)
     # =====================
     # Band 1: Underkill
-    "nobby_blitz": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/da8apu4g_file_000000002df871fd8b305fcf9ab03516.png",
+    "nobby_blitz": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/mhy5e5ke_enhanced-1771735320014.jpg",
     "bobby_blitzed": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lu063bq0_enhanced-1773629964983.jpg",
     # Band 2: Meadow Church
-    "david_whine": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/7ozsynle_enhanced-1771761544757.jpg",
+    "david_whine": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/cq7vs42v_enhanced-1771761582312.jpg",
     "david_slayne": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lbqueqph_enhanced-1771761582312.jpg",
     # Band 3: Sabutt
     "martini_walkyier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/c2di7ijf_enhanced-1771761620137.jpg",
     "martin_wankyier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/7q2a177y_enhanced-1771761655080.jpg",
     # Band 4: Celtic Frosty
-    "tom_g_worrier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/nwq6liuo_enhanced-1772424120932.jpg",
-    "tom_g_wore_out": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/sicmrezn_enhanced-1772424264300.jpg",
+    "tom_g_worrier": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ikpa7awh_enhanced-1772424120932.jpg",
+    "tom_g_wore_out": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/usu9388e_enhanced-1772424264300.jpg",
     # Band 5: Venum
     "coronos": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/b6qbwv4h_enhanced-1772913854119.jpg",
-    "groanos": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/f227o83l_enhanced-1772914984744.jpg",
+    "groanos": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/irf0vxsr_enhanced-1772916479578.jpg",
     # Band 6: Sadust
     "darren_travesty": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/mcvafkhx_enhanced-1772919382679.jpg",
     "daring_travis": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/zs0t04mj_enhanced-1772919920441.jpg",
