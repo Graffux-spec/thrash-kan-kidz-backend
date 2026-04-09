@@ -2314,8 +2314,8 @@ INITIAL_CARDS = [
     # Band 4: Pussessed
     {
         "id": "card_jeff_possess_ya_s2",
-        "name": "Jeff Possess Ya",
-        "description": "Jeff Becerra's brand of possessione is a full-body experience. Your head grows horns and your soul is doomed.",
+        "name": "Chef Becerra",
+        "description": "For his gourmet zombies, Chef Becerra puts the flesh in flesh-eating. This soup of the day is shredded limb-sine meat.",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2"],
         "back_image_url": CARD_BACK_IMAGE_URLS["jeff_possess_ya_s2"],
@@ -2325,11 +2325,11 @@ INITIAL_CARDS = [
         "band": "Pussessed",
         "card_type": "A"
     },
-    # Jeff Possess Ya Variants
+    # Chef Becerra Variants
     {
         "id": "card_jeff_possess_ya_s2_bloodbath",
-        "name": "Jeff Possess Ya (Bloodbath)",
-        "description": "The Bloodbath variant of Jeff Possess Ya. His possession ritual now involves bathing in fresh blood. The demon within demands crimson sacrifice.",
+        "name": "Chef Becerra (Bloodbath)",
+        "description": "The Bloodbath variant of Chef Becerra. His kitchen is now a slaughterhouse. Every dish comes with a side of fresh carnage.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_bloodbath"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
@@ -2344,8 +2344,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_jeff_possess_ya_s2_ice",
-        "name": "Jeff Possess Ya (Ice)",
-        "description": "The Ice variant of Jeff Possess Ya. Frozen in eternal possession, his icy demon has turned his victims to frost statues.",
+        "name": "Chef Becerra (Ice)",
+        "description": "The Ice variant of Chef Becerra. His frozen cuisine keeps the meat fresh forever. Served ice cold, literally.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_ice"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
@@ -2360,8 +2360,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_jeff_possess_ya_s2_psychedelic",
-        "name": "Jeff Possess Ya (Psychedelic)",
-        "description": "The Psychedelic variant of Jeff Possess Ya. His possession trips through rainbow dimensions. The demon within is high on cosmic energy.",
+        "name": "Chef Becerra (Psychedelic)",
+        "description": "The Psychedelic variant of Chef Becerra. His recipes include rainbow spices from another dimension.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_psychedelic"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
@@ -2376,8 +2376,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_jeff_possess_ya_s2_biomechanical",
-        "name": "Jeff Possess Ya (Biomechanical)",
-        "description": "The Biomechanical variant of Jeff Possess Ya. Half-man, half-machine, his cybernetic possession spreads like a digital virus.",
+        "name": "Chef Becerra (Biomechanical)",
+        "description": "The Biomechanical variant of Chef Becerra. His cyborg kitchen serves up mechanized meals of terror.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_biomechanical"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
@@ -2392,8 +2392,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_chef_becerra",
-        "name": "Chef Becerra",
-        "description": "For his gourmet zombies, Chef Becerra puts the flesh in flesh-eating. This soup of the day is shredded limb-sine meat.",
+        "name": "Jeff Possess Ya",
+        "description": "Jeff Becerra's brand of possession is a full-body experience. Your head grows horns and your soul is doomed.",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["chef_becerra"],
         "back_image_url": CARD_BACK_IMAGE_URLS["chef_becerra"],
@@ -2403,11 +2403,11 @@ INITIAL_CARDS = [
         "band": "Pussessed",
         "card_type": "B"
     },
-    # Chef Becerra Variants
+    # Jeff Possess Ya Variants
     {
         "id": "card_chef_becerra_bloodbath",
-        "name": "Chef Becerra (Bloodbath)",
-        "description": "The Bloodbath variant of Chef Becerra. His kitchen is now a slaughterhouse. Every dish comes with a side of fresh carnage.",
+        "name": "Jeff Possess Ya (Bloodbath)",
+        "description": "The Bloodbath variant of Jeff Possess Ya. His possession ritual now involves bathing in fresh blood. The demon within demands crimson sacrifice.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["chef_becerra_bloodbath"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
@@ -2422,8 +2422,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_chef_becerra_ice",
-        "name": "Chef Becerra (Ice)",
-        "description": "The Ice variant of Chef Becerra. His frozen cuisine keeps the meat fresh forever. Served ice cold, literally.",
+        "name": "Jeff Possess Ya (Ice)",
+        "description": "The Ice variant of Jeff Possess Ya. Frozen in eternal possession, his icy demon has turned his victims to frost statues.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["chef_becerra_ice"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
@@ -2438,8 +2438,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_chef_becerra_psychedelic",
-        "name": "Chef Becerra (Psychedelic)",
-        "description": "The Psychedelic variant of Chef Becerra. His rainbow soup takes you on a culinary trip to other dimensions.",
+        "name": "Jeff Possess Ya (Psychedelic)",
+        "description": "The Psychedelic variant of Jeff Possess Ya. His possession trips through rainbow dimensions. The demon within is high on cosmic energy.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["chef_becerra_psychedelic"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
@@ -2454,8 +2454,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_chef_becerra_biomechanical",
-        "name": "Chef Becerra (Biomechanical)",
-        "description": "The Biomechanical variant of Chef Becerra. His cybernetic arms chop and dice with machine precision. Industrial-strength cooking.",
+        "name": "Jeff Possess Ya (Biomechanical)",
+        "description": "The Biomechanical variant of Jeff Possess Ya. Half-man, half-machine, his cybernetic possession spreads like a digital virus.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["chef_becerra_biomechanical"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],
