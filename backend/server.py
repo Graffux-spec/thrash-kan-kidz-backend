@@ -1401,7 +1401,8 @@ async def spin_wheel(user_id: str):
     
     # Get current series (the highest unlocked series that's not completed)
     completed_series = user.get("completed_series", [])
-    current_series = max(s for s in unlocked_series if s not in completed_series) if unlocked_series else 1
+    uncompleted = [s for s in unlocked_series if s not in completed_series]
+    current_series = max(uncompleted) if uncompleted else max(unlocked_series)
     
     # Get available cards for the spin (only from current series)
     series_cards = await db.cards.find({
