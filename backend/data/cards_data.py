@@ -432,6 +432,9 @@ CARD_IMAGE_URLS = {
     # Band 1: Jugglenut
     "harlan_quinn": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/tptiqs13_enhanced-1774838738027.jpg",
     "harley_glenn": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/tr4yw2ta_enhanced-1774839561271.jpg",
+    # Band 2: Ese Slaya
+    "steve_pooper": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/1wxkimei_enhanced-1774840368042.jpg",
+    "steve_copper": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/p1xl6c8l_enhanced-1774843784508.jpg",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -659,6 +662,9 @@ CARD_BACK_IMAGE_URLS = {
     # Band 1: Jugglenut
     "harlan_quinn": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dnhjgiua_enhanced-1774838859083.jpg",
     "harley_glenn": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xc5t0x3e_enhanced-1774840277365.jpg",
+    # Band 2: Ese Slaya
+    "steve_pooper": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/li82nbow_enhanced-1774840513198.jpg",
+    "steve_copper": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/24rzollu_enhanced-1774843883501.jpg",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -5814,6 +5820,33 @@ INITIAL_CARDS = [
         "available": True,
         "series": 5,
         "band": "Jugglenut",
+        "card_type": "B"
+    },
+    # Band 2: Ese Slaya
+    {
+        "id": "card_steve_pooper",
+        "name": "Steve Pooper",
+        "description": "Steve Pooper always gives 110% on stage... sometimes all at once. When the pressure hits, the crowd gets more than an encore.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["steve_pooper"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["steve_pooper"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Ese Slaya",
+        "card_type": "A"
+    },
+    {
+        "id": "card_steve_copper",
+        "name": "Steve Copper",
+        "description": "Once the transformation started, Steve didn't fight it... now every scream carries a charge, and every show leaves the stage corroded.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["steve_copper"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["steve_copper"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Ese Slaya",
         "card_type": "B"
     },
 ]
