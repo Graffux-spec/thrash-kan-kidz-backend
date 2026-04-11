@@ -444,6 +444,9 @@ CARD_IMAGE_URLS = {
     # Band 5: Slotter
     "dave_spewson": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/y162p4w2_enhanced-1775018229237.jpg",
     "dave_hussein": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/0a0mn74h_enhanced-1775018530036.jpg",
+    # Band 6: Homicidal Tendencies
+    "mike_mule": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/5gqqs4z2_enhanced-1775027951691.jpg",
+    "mickey_muir": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/kzyddc50_enhanced-1775308281614.jpg",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -683,6 +686,9 @@ CARD_BACK_IMAGE_URLS = {
     # Band 5: Slotter
     "dave_spewson": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/g27ry0c9_enhanced-1775019238472.jpg",
     "dave_hussein": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2oa15qtt_enhanced-1775018598474.jpg",
+    # Band 6: Homicidal Tendencies
+    "mike_mule": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/whxlfrhv_enhanced-1775027996586.jpg",
+    "mickey_muir": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/a3gojfhb_file_000000000a1c71f5b7c749c0525a85ec.png",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -5946,6 +5952,33 @@ INITIAL_CARDS = [
         "available": True,
         "series": 5,
         "band": "Slotter",
+        "card_type": "B"
+    },
+    # Band 6: Homicidal Tendencies
+    {
+        "id": "card_mike_mule",
+        "name": "Mike Mule",
+        "description": "This savage donkey bellows into the mic like a war beast. The voice of Homicidal Tendencies unleashes raw rage that tramples you to the ground horns first! He'll unleash a headbanging stampede to the screams of doom!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["mike_mule"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["mike_mule"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Homicidal Tendencies",
+        "card_type": "A"
+    },
+    {
+        "id": "card_mickey_muir",
+        "name": "Mickey Muir",
+        "description": "He's loud, he's drunk, he's psychotic. Mickey Muir can't wait to go apeshit, screaming on stage and getting plastered. If there's a fight to be had, he'll front it with a bearded sneer and mosh with the drunkiest of thrashers.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["mickey_muir"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["mickey_muir"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Homicidal Tendencies",
         "card_type": "B"
     },
 ]
