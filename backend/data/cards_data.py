@@ -447,6 +447,9 @@ CARD_IMAGE_URLS = {
     # Band 6: Homicidal Tendencies
     "mike_mule": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/5gqqs4z2_enhanced-1775027951691.jpg",
     "mickey_muir": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/kzyddc50_enhanced-1775308281614.jpg",
+    # Band 7: Witchtower
+    "jason_mcmustard": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/l9tgneyx_file_00000000260871fdb7177f9ed29deb0d.png",
+    "mc_master": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/h5zm1e6i_file_00000000cdc8722f850116af623160cf.png",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -689,6 +692,9 @@ CARD_BACK_IMAGE_URLS = {
     # Band 6: Homicidal Tendencies
     "mike_mule": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/whxlfrhv_enhanced-1775027996586.jpg",
     "mickey_muir": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/a3gojfhb_file_000000000a1c71f5b7c749c0525a85ec.png",
+    # Band 7: Witchtower
+    "jason_mcmustard": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/gf797z4q_file_000000009d6471fdb213855532b329d8.png",
+    "mc_master": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/y88w09jh_file_00000000374471f5ac34bb60a54fbd88.png",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -5979,6 +5985,33 @@ INITIAL_CARDS = [
         "available": True,
         "series": 5,
         "band": "Homicidal Tendencies",
+        "card_type": "B"
+    },
+    # Band 7: Witchtower
+    {
+        "id": "card_jason_mcmustard",
+        "name": "Jason McMustard",
+        "description": "This lunatic blasts out high-intensity vocals, splattering the front row in yellow globs of fury. Jason McMustard thrashes harder and messier than a mosh pit in a hot dog factory!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["jason_mcmustard"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["jason_mcmustard"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Witchtower",
+        "card_type": "A"
+    },
+    {
+        "id": "card_mc_master",
+        "name": "M.C. Master",
+        "description": "He spits bars from the crypt with a voice that rattles coffins and cracks skulls. M.C. Master blends horror and hip-hop into a cursed cadence -- dropping rhymes so deadly they resurrect the pit into a full-blown undead riot!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["mc_master"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["mc_master"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Witchtower",
         "card_type": "B"
     },
 ]
