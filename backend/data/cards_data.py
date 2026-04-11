@@ -441,6 +441,9 @@ CARD_IMAGE_URLS = {
     # Band 4: Nuclear Ass Salt
     "dan_licker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/gcfj3te1_enhanced-1774883565495.jpg",
     "dan_milker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/jb9qm0ed_file_00000000f74471f88b3222465a3b2200.png",
+    # Band 5: Slotter
+    "dave_spewson": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/y162p4w2_enhanced-1775018229237.jpg",
+    "dave_hussein": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/0a0mn74h_enhanced-1775018530036.jpg",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -677,6 +680,9 @@ CARD_BACK_IMAGE_URLS = {
     # Band 4: Nuclear Ass Salt
     "dan_licker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/vr4l2rsy_file_00000000ba3871fda8de1fcde2904a76.png",
     "dan_milker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ar9dcdg9_file_00000000dbec71f8a5029fad46fafb2e.png",
+    # Band 5: Slotter
+    "dave_spewson": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/g27ry0c9_enhanced-1775019238472.jpg",
+    "dave_hussein": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2oa15qtt_enhanced-1775018598474.jpg",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -5913,6 +5919,33 @@ INITIAL_CARDS = [
         "available": True,
         "series": 5,
         "band": "Nuclear Ass Salt",
+        "card_type": "B"
+    },
+    # Band 5: Slotter
+    {
+        "id": "card_dave_spewson",
+        "name": "Dave Spewson",
+        "description": "He's gargling chunks and screaming on the scene, even after spewing up gallons of green. SLOTTER isn't stopping 'til they're torn to shreds, while Dave's in the front, making the crowd lose threads!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["dave_spewson"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["dave_spewson"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Slotter",
+        "card_type": "A"
+    },
+    {
+        "id": "card_dave_hussein",
+        "name": "Dave Hussein",
+        "description": "He's the brutal tyrant on strings and screams, crushing wimps, posers, and any scumbag who gets in the way. Armed with his deadly Flying V, he shreds through the stage while barking orders. In SLOTTER, Dave rules.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["dave_hussein"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["dave_hussein"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Slotter",
         "card_type": "B"
     },
 ]
