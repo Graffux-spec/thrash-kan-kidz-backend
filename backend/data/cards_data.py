@@ -333,6 +333,8 @@ CARD_IMAGE_URLS = {
     # =====================
     # SERIES 4 - DEATH METAL EDITION (8 bands, 16 cards)
     # =====================
+    # Rare reward card (Series 4)
+    "jeff_wanker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/q2j5vt8i_file_0000000000c071fda5587a2727740c8e.png",
     # Band 1: Obitchuary
     "tardy_donald": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/fmef8kju_enhanced-1771260495032.jpg",
     "tardy_donald_skeletal": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/sit8byml_enhanced-1775339848666.jpg",
@@ -604,6 +606,8 @@ CARD_BACK_IMAGE_URLS = {
     "slob_urbinati": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2rx6qrpd_enhanced-1774075141856.jpg",
     # Epic reward card (Series 3)
     "sean_kill_again": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lxq89ltr_file_000000007a0471f5a1da1f0e20a9b30a.png",
+    # Rare reward card (Series 4)
+    "jeff_wanker": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/lrod0iks_enhanced-1775928154564.jpg",
     
     # =====================
     # SERIES 4 - DEATH METAL EDITION (8 bands, 16 cards)
@@ -5730,5 +5734,21 @@ INITIAL_CARDS = [
         "is_variant": True,
         "base_card_id": "card_frank_mullet",
         "variant_name": "Stoned"
+    },
+    # =====================
+    # RARE CARD - Series 4 completion reward
+    # =====================
+    {
+        "id": "card_jeff_wanker",
+        "name": "Jeff Wanker",
+        "description": "JEFF WANKER is the disgusting dunce of death-gore! When he isn't vomiting out \"voldills\" onstage with CARCUSS, he's oozing and putrefying backstage. May reek of rotting meat.",
+        "rarity": "rare",
+        "front_image_url": CARD_IMAGE_URLS["jeff_wanker"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["jeff_wanker"],
+        "coin_cost": 100,
+        "available": False,
+        "achievement_required": 64,
+        "series_reward": 4,
+        "band": "Carcuss"
     },
 ]
