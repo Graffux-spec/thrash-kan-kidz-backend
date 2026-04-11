@@ -52,21 +52,44 @@ A mobile card collecting app featuring thrash/death metal parody cards. Users op
 
 ---
 
+## Series 4 Variant Progress (Updated April 11, 2026)
+- [x] Tardy Donald (Skeletal, Oceanic, Diamond, Stoned)
+- [x] Party Tardy (Skeletal, Oceanic, Diamond, Stoned)
+- [x] Boy George Fisher (Skeletal, Oceanic, Diamond, Stoned)
+- [x] Steve Trucker (Skeletal, Oceanic, Diamond, Stoned)
+- [x] George Porkgrinder (Skeletal, Oceanic, Diamond, Stoned)
+- [x] Chunk Schuldiner (Skeletal, Oceanic, Diamond, Stoned)
+- [ ] Emo Chuck (awaiting artwork)
+- [ ] Heave Tucker (awaiting artwork)
+- [ ] Scrawny Ronnie (awaiting artwork)
+- [ ] Ronstrocity (awaiting artwork)
+- [ ] Fartin Van Drunen (awaiting artwork)
+- [ ] Martin Van Druid (awaiting artwork)
+- [ ] Beers n Steers (awaiting artwork)
+- [ ] Hillbilly Steer (awaiting artwork)
+- [ ] Tank Mullen (awaiting artwork)
+- [ ] Frank Mullet (awaiting artwork)
+
 ## Known Limitations
 - Render free tier sleeps after 15 mins inactivity (30 sec wake-up time)
 - Card flip animations removed (EAS build compatibility)
+- EAS Build quota exhausted until ~May 1, 2026
 
 ## Backlog
 
+### P0 - Immediate (Awaiting User Uploads)
+- [ ] Add remaining 10 Series 4 variant sets (see list above)
+- [ ] Series 5 base cards + variants
+
 ### P1 - High Priority
+- [ ] EAS Build Version 15 (after quota reset ~May 1)
 - [ ] Restore card flip animations in Collection view
 - [ ] Google Play Billing integration (replace Stripe for Android)
-- [ ] Complete Series 4 (need reward card + variants artwork)
 
 ### P2 - Medium Priority
 - [ ] User-to-user card trading feature
-- [ ] Series 5 cards (awaiting artwork)
 - [ ] Refactor `server.py` into route modules
+- [ ] BuyCoinsModal scrolling fix
 
 ### P3 - Future
 - [ ] Upgrade Render to paid tier for always-on

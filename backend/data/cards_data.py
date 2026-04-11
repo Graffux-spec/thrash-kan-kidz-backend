@@ -347,6 +347,10 @@ CARD_IMAGE_URLS = {
     # Band 2: Deaf
     "emo_chuck": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/myssxyf1_enhanced-1771263476980.jpg",
     "chunk_schuldiner": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/a7punneg_file_00000000495871fd97d476fe9b1cb7cd.png",
+    "chunk_schuldiner_skeletal": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/8d8vjnbp_enhanced-1775366227133.jpg",
+    "chunk_schuldiner_oceanic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/1lgu2ry2_enhanced-1775366270274.jpg",
+    "chunk_schuldiner_diamond": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/fu8gud39_enhanced-1775366312342.jpg",
+    "chunk_schuldiner_stoned": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/bx4pk5o7_file_0000000083a071fd8e247f8443624b0b.png",
     # Band 3: Kannibal Korpse
     "boy_george_fisher": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2mu240bc_file_00000000e33871fd8c2d3a8680f76958.png",
     "boy_george_fisher_skeletal": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/n2ltk7jm_file_0000000009fc71f892925649034af2ee.png",
@@ -4614,6 +4618,71 @@ INITIAL_CARDS = [
         "series": 4,
         "band": "Deaf",
         "card_type": "B"
+    },
+    # Chunk Schuldiner Variants
+    {
+        "id": "card_chunk_schuldiner_skeletal",
+        "name": "Chunk Schuldiner (Skeletal)",
+        "description": "The Skeletal variant of Chunk Schuldiner. Still devouring in the afterlife.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["chunk_schuldiner_skeletal"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_skeletal"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 4,
+        "band": "Deaf",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_chunk_schuldiner",
+        "variant_name": "Skeletal"
+    },
+    {
+        "id": "card_chunk_schuldiner_oceanic",
+        "name": "Chunk Schuldiner (Oceanic)",
+        "description": "The Oceanic variant of Chunk Schuldiner. Deep sea feasting from the abyss.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["chunk_schuldiner_oceanic"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_oceanic"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 4,
+        "band": "Deaf",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_chunk_schuldiner",
+        "variant_name": "Oceanic"
+    },
+    {
+        "id": "card_chunk_schuldiner_diamond",
+        "name": "Chunk Schuldiner (Diamond)",
+        "description": "The Diamond variant of Chunk Schuldiner. Precious and insatiable.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["chunk_schuldiner_diamond"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_diamond"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 4,
+        "band": "Deaf",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_chunk_schuldiner",
+        "variant_name": "Diamond"
+    },
+    {
+        "id": "card_chunk_schuldiner_stoned",
+        "name": "Chunk Schuldiner (Stoned)",
+        "description": "The Stoned variant of Chunk Schuldiner. Petrified hunger that never ends.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["chunk_schuldiner_stoned"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_stoned"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 4,
+        "band": "Deaf",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_chunk_schuldiner",
+        "variant_name": "Stoned"
     },
     # Band 3: Kannibal Korpse
     {
