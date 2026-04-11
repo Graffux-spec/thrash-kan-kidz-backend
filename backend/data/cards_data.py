@@ -450,6 +450,9 @@ CARD_IMAGE_URLS = {
     # Band 7: Witchtower
     "jason_mcmustard": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/l9tgneyx_file_00000000260871fdb7177f9ed29deb0d.png",
     "mc_master": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/h5zm1e6i_file_00000000cdc8722f850116af623160cf.png",
+    # Band 8: Riding Corpse
+    "walter_trashler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/jx1mloxl_file_0000000050e071f5bd984a98179d61cc.png",
+    "wart_er_trachsler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/bhn1i0dt_file_00000000b57471fb9bb0f9388b3cbf20.png",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -695,6 +698,9 @@ CARD_BACK_IMAGE_URLS = {
     # Band 7: Witchtower
     "jason_mcmustard": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/gf797z4q_file_000000009d6471fdb213855532b329d8.png",
     "mc_master": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/y88w09jh_file_00000000374471f5ac34bb60a54fbd88.png",
+    # Band 8: Riding Corpse
+    "walter_trashler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/8jzw993t_file_000000006ddc71fb9a67537347556605.png",
+    "wart_er_trachsler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/3y7tyqq3_file_00000000e22471fbaa957eda0456dd47.png",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -6012,6 +6018,33 @@ INITIAL_CARDS = [
         "available": True,
         "series": 5,
         "band": "Witchtower",
+        "card_type": "B"
+    },
+    # Band 8: Riding Corpse
+    {
+        "id": "card_walter_trashler",
+        "name": "Walter Trashler",
+        "description": "This festering fret freak crawled straight outta the landfill, shredding solos with fingers coated in sludge. Walter Trashler turns every stage into a toxic wasteland -- and the crowd EATS IT UP like week-old roadkill!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["walter_trashler"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["walter_trashler"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Riding Corpse",
+        "card_type": "A"
+    },
+    {
+        "id": "card_wart_er_trachsler",
+        "name": "Wart-er Trachsler",
+        "description": "Wart-er Trachsler doesn't just melt faces -- he contaminates 'em. Every riff oozes disease, every solo spreads faster than backstage rash. By the end of the set, the crowd's not moshing... they're MUTATING!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["wart_er_trachsler"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["wart_er_trachsler"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 5,
+        "band": "Riding Corpse",
         "card_type": "B"
     },
 ]
