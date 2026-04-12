@@ -22,6 +22,7 @@ export default function TradeScreen() {
     userCards,
     trades,
     allUsers,
+    apiUrl,
     createTrade,
     acceptTrade,
     rejectTrade,
@@ -35,6 +36,8 @@ export default function TradeScreen() {
   const [requestedCards, setRequestedCards] = useState<string[]>([]);
   const [creating, setCreating] = useState(false);
   const [processing, setProcessing] = useState<string | null>(null);
+  const [targetUserCards, setTargetUserCards] = useState<any[]>([]);
+  const [loadingTargetCards, setLoadingTargetCards] = useState(false);
 
   if (!user) {
     return (
@@ -348,7 +351,13 @@ export default function TradeScreen() {
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>New Trade</Text>
-              <TouchableOpacity onPress={() => setShowNewTrade(false)}>
+              <TouchableOpacity onPress={() => {
+                setShowNewTrade(false);
+                setSelectedUser(null);
+                setTargetUserCards([]);
+                setOfferedCards([]);
+                setRequestedCards([]);
+              }}>
                 <Ionicons name="close" size={24} color="#fff" />
               </TouchableOpacity>
             </View>
@@ -364,7 +373,21 @@ export default function TradeScreen() {
                       styles.userItem,
                       selectedUser?.id === u.id && styles.userItemSelected,
                     ]}
-                    onPress={() => setSelectedUser(u)}
+                    onPress={() => {
+                      setSelectedUser(u);
+                      setRequestedCards([]);
+                      setLoadingTargetCards(true);
+                      fetch(`${apiUrl}/api/users/${u.id}/cards`)
+                        .then(res => res.json())
+                        .then(data => {
+                          setTargetUserCards(data.cards || []);
+                          setLoadingTargetCards(false);
+                        })
+                        .catch(() => {
+                          setTargetUserCards([]);
+                          setLoadingTargetCards(false);
+                        });
+                    }}
                   >
                     <Ionicons name="person-circle" size={40} color={selectedUser?.id === u.id ? '#FFD700' : '#666'} />
                     <Text style={[
@@ -411,29 +434,35 @@ export default function TradeScreen() {
                 <>
                   <Text style={styles.modalSectionTitle}>Request from {selectedUser.username}</Text>
                   <Text style={styles.modalHint}>Select cards you want in exchange</Text>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    {userCards.filter(uc => uc.quantity > 0).map(uc => (
-                      <TouchableOpacity
-                        key={`req_${uc.card.id}`}
-                        style={[
-                          styles.selectableCard,
-                          requestedCards.includes(uc.card.id) && styles.selectableCardSelected,
-                        ]}
-                        onPress={() => toggleRequestedCard(uc.card.id)}
-                      >
-                        <Image
-                          source={{ uri: uc.card.front_image_url }}
-                          style={styles.selectableCardImage}
-                          resizeMode="cover"
-                        />
-                        {requestedCards.includes(uc.card.id) && (
-                          <View style={styles.selectedOverlay}>
-                            <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
-                          </View>
-                        )}
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
+                  {loadingTargetCards ? (
+                    <ActivityIndicator size="small" color="#FFD700" style={{ marginVertical: 20 }} />
+                  ) : targetUserCards.length > 0 ? (
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                      {targetUserCards.map(uc => (
+                        <TouchableOpacity
+                          key={`req_${uc.card.id}`}
+                          style={[
+                            styles.selectableCard,
+                            requestedCards.includes(uc.card.id) && styles.selectableCardSelected,
+                          ]}
+                          onPress={() => toggleRequestedCard(uc.card.id)}
+                        >
+                          <Image
+                            source={{ uri: uc.card.front_image_url }}
+                            style={styles.selectableCardImage}
+                            resizeMode="cover"
+                          />
+                          {requestedCards.includes(uc.card.id) && (
+                            <View style={styles.selectedOverlay}>
+                              <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
+                            </View>
+                          )}
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  ) : (
+                    <Text style={styles.modalHint}>This user has no cards yet</Text>
+                  )}
                 </>
               )}
             </ScrollView>
