@@ -46,6 +46,7 @@ export default function ShopScreen() {
   const [showBuyCoins, setShowBuyCoins] = useState(false);
   const [spinPool, setSpinPool] = useState<SpinPoolData | null>(null);
   const [spinConfig, setSpinConfig] = useState({ spin_cost: 50 });
+  const [selectedSeries, setSelectedSeries] = useState<number | null>(null);
   const [packState, setPackState] = useState<'idle' | 'shaking' | 'opening' | 'revealed'>('idle');
   const [cardFlipped, setCardFlipped] = useState(false);
   const [showFrontImage, setShowFrontImage] = useState(false);
@@ -81,12 +82,13 @@ export default function ShopScreen() {
     fetchSpinData();
   }, [user]);
 
-  const fetchSpinData = async () => {
+  const fetchSpinData = async (series?: number) => {
     if (!user) return;
     try {
+      const seriesParam = series ? `?series=${series}` : '';
       const [configRes, poolRes] = await Promise.all([
         fetch(`${apiUrl}/api/spin/config`),
-        fetch(`${apiUrl}/api/users/${user.id}/spin-pool`)
+        fetch(`${apiUrl}/api/users/${user.id}/spin-pool${seriesParam}`)
       ]);
       const config = await configRes.json();
       const pool = await poolRes.json();
@@ -95,6 +97,12 @@ export default function ShopScreen() {
     } catch (error) {
       console.error('Error fetching spin data:', error);
     }
+  };
+
+  const handleSeriesChange = (series: number) => {
+    setSelectedSeries(series);
+    resetAnimations();
+    fetchSpinData(series);
   };
 
   const resetAnimations = () => {
@@ -413,6 +421,34 @@ export default function ShopScreen() {
           </View>
         </View>
 
+        {/* Series Toggle */}
+        {spinPool && spinPool.unlocked_series && spinPool.unlocked_series.length > 1 && (
+          <View style={styles.seriesToggles} data-testid="series-toggle">
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.seriesToggleScroll}>
+              {spinPool.unlocked_series.sort((a: number, b: number) => a - b).map((s: number) => (
+                <TouchableOpacity
+                  key={s}
+                  style={[
+                    styles.seriesToggleBtn,
+                    spinPool.current_series === s && styles.seriesToggleBtnActive,
+                    spinPool.completed_series?.includes(s) && styles.seriesToggleBtnComplete,
+                  ]}
+                  onPress={() => handleSeriesChange(s)}
+                  data-testid={`series-toggle-${s}`}
+                >
+                  <Text style={[
+                    styles.seriesToggleText,
+                    spinPool.current_series === s && styles.seriesToggleTextActive,
+                  ]}>S{s}</Text>
+                  {spinPool.completed_series?.includes(s) && (
+                    <Ionicons name="checkmark-circle" size={12} color="#4CAF50" style={{ marginLeft: 2 }} />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
         {/* Series Progress */}
         {spinPool && (
           <View style={styles.seriesProgress}>
@@ -661,6 +697,40 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   // Series Progress
+  seriesToggles: {
+    marginHorizontal: 16,
+    marginBottom: 8,
+  },
+  seriesToggleScroll: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingVertical: 4,
+  },
+  seriesToggleBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+  },
+  seriesToggleBtnActive: {
+    backgroundColor: 'rgba(255, 215, 0, 0.25)',
+    borderColor: '#FFD700',
+  },
+  seriesToggleBtnComplete: {
+    borderColor: '#4CAF50',
+  },
+  seriesToggleText: {
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  seriesToggleTextActive: {
+    color: '#FFD700',
+  },
   seriesProgress: {
     backgroundColor: 'rgba(26, 26, 46, 0.9)',
     borderRadius: 16,

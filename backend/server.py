@@ -159,20 +159,32 @@ SERIES_CONFIG = {
     1: {
         "name": "Series 1",
         "cards_required": 16,
-        "rare_reward": "card_kerry_the_king",  # Kerry the King is the Series 1 rare reward
+        "rare_reward": "card_kerry_the_king",
         "description": "The Original Thrash Kan Kidz"
     },
     2: {
         "name": "Series 2", 
         "cards_required": 16,
-        "rare_reward": "card_strap_on_taylor",  # Strap-On Taylor is the Series 2 rare reward
+        "rare_reward": "card_strap_on_taylor",
         "description": "More Mayhem"
     },
     3: {
         "name": "Series 3",
         "cards_required": 16,
-        "rare_reward": "card_sean_kill_again",  # Sean Kill-Again is the Series 3 epic reward
+        "rare_reward": "card_martin_generic_aint",
         "description": "The Thrash Continues"
+    },
+    4: {
+        "name": "Series 4",
+        "cards_required": 16,
+        "rare_reward": "card_jeff_wanker",
+        "description": "Death Metal Edition"
+    },
+    5: {
+        "name": "Series 5",
+        "cards_required": 16,
+        "rare_reward": "card_sean_kill_again",
+        "description": "Thrash Metal Edition"
     }
 }
 
@@ -1555,7 +1567,7 @@ async def check_series_completion(user_id: str, series_num: int):
     }
 
 @api_router.get("/users/{user_id}/spin-pool")
-async def get_spin_pool(user_id: str):
+async def get_spin_pool(user_id: str, series: int = None):
     """Get the cards available in the spin pool for all unlocked series"""
     user = await db.users.find_one({"id": user_id})
     if not user:
@@ -1566,9 +1578,13 @@ async def get_spin_pool(user_id: str):
     if not unlocked_series:
         unlocked_series = [1]
     
-    # Get current series (the highest unlocked series that's not completed)
+    # Use requested series if provided and unlocked, otherwise auto-detect
     completed_series = user.get("completed_series", [])
-    current_series = max(s for s in unlocked_series if s not in completed_series) if [s for s in unlocked_series if s not in completed_series] else max(unlocked_series)
+    if series and series in unlocked_series:
+        current_series = series
+    else:
+        uncompleted = [s for s in unlocked_series if s not in completed_series]
+        current_series = max(uncompleted) if uncompleted else max(unlocked_series)
     
     # Get series config for current series (for display purposes)
     series_config = SERIES_CONFIG.get(current_series, {})
