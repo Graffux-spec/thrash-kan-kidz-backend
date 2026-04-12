@@ -48,6 +48,7 @@ export default function ShopScreen() {
   const [spinConfig, setSpinConfig] = useState({ spin_cost: 50 });
   const [packState, setPackState] = useState<'idle' | 'shaking' | 'opening' | 'revealed'>('idle');
   const [cardFlipped, setCardFlipped] = useState(false);
+  const [showFrontImage, setShowFrontImage] = useState(false);
   
   // Animation values
   const shakeAnim = useRef(new Animated.Value(0)).current;
@@ -106,6 +107,7 @@ export default function ShopScreen() {
     glowAnim.setValue(0);
     setPackState('idle');
     setCardFlipped(false);
+    setShowFrontImage(false);
   };
 
   const handleOpenPack = async () => {
@@ -229,18 +231,26 @@ export default function ShopScreen() {
     
     setCardFlipped(true);
     
-    // Flip animation
+    // Flip to 90deg (edge-on), swap image, then flip back to 0
     Animated.timing(cardFlipAnim, {
-      toValue: 1,
-      duration: 400,
+      toValue: 0.5,
+      duration: 200,
       useNativeDriver: true,
     }).start(() => {
-      // After flip, show the result modal
-      setTimeout(() => {
-        setShowResult(true);
-        refreshData();
-        fetchSpinData();
-      }, 800);
+      // At 90deg the card is edge-on, now show front image
+      setShowFrontImage(true);
+      Animated.timing(cardFlipAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(() => {
+        // After flip completes, show the result modal
+        setTimeout(() => {
+          setShowResult(true);
+          refreshData();
+          fetchSpinData();
+        }, 800);
+      });
     });
   };
 
@@ -471,7 +481,7 @@ export default function ShopScreen() {
                 >
                   {/* Show pack cover on back, card front when flipped */}
                   <Image
-                    source={{ uri: cardFlipped && spinResult ? spinResult.won_card.front_image_url : packCoverImage }}
+                    source={{ uri: showFrontImage && spinResult ? spinResult.won_card.front_image_url : packCoverImage }}
                     style={styles.revealedCardImage}
                     resizeMode="cover"
                   />
