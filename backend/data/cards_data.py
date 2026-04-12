@@ -494,6 +494,10 @@ CARD_IMAGE_URLS = {
     # Band 7: Witchtower
     "jason_mcmustard": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/l9tgneyx_file_00000000260871fdb7177f9ed29deb0d.png",
     "mc_master": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/h5zm1e6i_file_00000000cdc8722f850116af623160cf.png",
+    "mc_master_shadow": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hn7oways_file_000000006190722fa9debee119c114ab.png",
+    "mc_master_magma": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/c9n9yrv0_file_00000000617c722f975dadd722da0ad3.png",
+    "mc_master_cheesy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/t0xeu6gd_file_000000003ca0722fa6521407b1d4a808.png",
+    "mc_master_mutant": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/374428bv_file_00000000a870722fa6aea2521b81bb03.png",
     # Band 8: Riding Corpse
     "walter_trashler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/jx1mloxl_file_0000000050e071f5bd984a98179d61cc.png",
     "wart_er_trachsler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/bhn1i0dt_file_00000000b57471fb9bb0f9388b3cbf20.png",
@@ -6783,6 +6787,71 @@ INITIAL_CARDS = [
         "series": 5,
         "band": "Witchtower",
         "card_type": "B"
+    },
+    # M.C. Master Variants
+    {
+        "id": "card_mc_master_shadow",
+        "name": "M.C. Master (Shadow)",
+        "description": "The Shadow variant of M.C. Master. Spitting undead bars from the crypt.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["mc_master_shadow"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_shadow"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Witchtower",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_mc_master",
+        "variant_name": "Shadow"
+    },
+    {
+        "id": "card_mc_master_magma",
+        "name": "M.C. Master (Magma)",
+        "description": "The Magma variant of M.C. Master. Fiery bars melting the stage.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["mc_master_magma"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_magma"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Witchtower",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_mc_master",
+        "variant_name": "Magma"
+    },
+    {
+        "id": "card_mc_master_cheesy",
+        "name": "M.C. Master (Cheesy)",
+        "description": "The Cheesy variant of M.C. Master. Dropping rhymes dripping with melted gold.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["mc_master_cheesy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_cheesy"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Witchtower",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_mc_master",
+        "variant_name": "Cheesy"
+    },
+    {
+        "id": "card_mc_master_mutant",
+        "name": "M.C. Master (Mutant)",
+        "description": "The Mutant variant of M.C. Master. Toxic rhymes from a mutated undead MC.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["mc_master_mutant"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_mutant"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Witchtower",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_mc_master",
+        "variant_name": "Mutant"
     },
     # Band 8: Riding Corpse
     {
