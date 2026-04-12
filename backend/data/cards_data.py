@@ -509,6 +509,10 @@ CARD_IMAGE_URLS = {
     "walter_trashler_cheesy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/qbmuc8fi_file_00000000337471fb99dfe5aec1830f52.png",
     "walter_trashler_mutant": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/3mu64nue_file_000000002b7471fbab6f7f74c413a170.png",
     "wart_er_trachsler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/bhn1i0dt_file_00000000b57471fb9bb0f9388b3cbf20.png",
+    "wart_er_trachsler_shadow": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/fhoc5400_file_00000000de3871fbbf6ae501acd1476a.png",
+    "wart_er_trachsler_magma": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/kpj2uobd_file_0000000005fc71fb8ba2a68cf5da3703.png",
+    "wart_er_trachsler_cheesy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/mro3caqz_file_000000004ff871fb854448876e0bbc85.png",
+    "wart_er_trachsler_mutant": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/tf81yqu3_file_00000000788c71fbb5371c8f3011c148.png",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -7017,5 +7021,70 @@ INITIAL_CARDS = [
         "series": 5,
         "band": "Riding Corpse",
         "card_type": "B"
+    },
+    # Wart-er Trachsler Variants
+    {
+        "id": "card_wart_er_trachsler_shadow",
+        "name": "Wart-er Trachsler (Shadow)",
+        "description": "The Shadow variant of Wart-er Trachsler. Spreading disease in the dark.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["wart_er_trachsler_shadow"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_shadow"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Riding Corpse",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_wart_er_trachsler",
+        "variant_name": "Shadow"
+    },
+    {
+        "id": "card_wart_er_trachsler_magma",
+        "name": "Wart-er Trachsler (Magma)",
+        "description": "The Magma variant of Wart-er Trachsler. Molten riffs that melt your face clean off.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["wart_er_trachsler_magma"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_magma"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Riding Corpse",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_wart_er_trachsler",
+        "variant_name": "Magma"
+    },
+    {
+        "id": "card_wart_er_trachsler_cheesy",
+        "name": "Wart-er Trachsler (Cheesy)",
+        "description": "The Cheesy variant of Wart-er Trachsler. Pizza guitar and cheddar warts -- deliciously disgusting.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["wart_er_trachsler_cheesy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_cheesy"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Riding Corpse",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_wart_er_trachsler",
+        "variant_name": "Cheesy"
+    },
+    {
+        "id": "card_wart_er_trachsler_mutant",
+        "name": "Wart-er Trachsler (Mutant)",
+        "description": "The Mutant variant of Wart-er Trachsler. Eyeballs, tentacles, and ooze -- the ultimate mutation.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["wart_er_trachsler_mutant"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_mutant"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Riding Corpse",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_wart_er_trachsler",
+        "variant_name": "Mutant"
     },
 ]
