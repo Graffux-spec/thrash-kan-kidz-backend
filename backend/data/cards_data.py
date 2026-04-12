@@ -476,6 +476,10 @@ CARD_IMAGE_URLS = {
     # Band 5: Slotter
     "dave_spewson": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/y162p4w2_enhanced-1775018229237.jpg",
     "dave_hussein": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/0a0mn74h_enhanced-1775018530036.jpg",
+    "dave_hussein_shadow": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hb6ukbtx_file_00000000066c722fadeb982e743e2c0e.png",
+    "dave_hussein_magma": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/e8qggltr_enhanced-1775018787238.jpg",
+    "dave_hussein_cheesy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/i6qwbuk0_enhanced-1775018856720.jpg",
+    "dave_hussein_mutant": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/9mzjc52k_enhanced-1775018924811.jpg",
     # Band 6: Homicidal Tendencies
     "mike_mule": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/5gqqs4z2_enhanced-1775027951691.jpg",
     "mickey_muir": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/kzyddc50_enhanced-1775308281614.jpg",
@@ -6522,6 +6526,71 @@ INITIAL_CARDS = [
         "series": 5,
         "band": "Slotter",
         "card_type": "B"
+    },
+    # Dave Hussein Variants
+    {
+        "id": "card_dave_hussein_shadow",
+        "name": "Dave Hussein (Shadow)",
+        "description": "The Shadow variant of Dave Hussein. Commanding from the shadows with his Flying V.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["dave_hussein_shadow"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_shadow"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Slotter",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_dave_hussein",
+        "variant_name": "Shadow"
+    },
+    {
+        "id": "card_dave_hussein_magma",
+        "name": "Dave Hussein (Magma)",
+        "description": "The Magma variant of Dave Hussein. Scorched earth riffs from the dictator of doom.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["dave_hussein_magma"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_magma"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Slotter",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_dave_hussein",
+        "variant_name": "Magma"
+    },
+    {
+        "id": "card_dave_hussein_cheesy",
+        "name": "Dave Hussein (Cheesy)",
+        "description": "The Cheesy variant of Dave Hussein. Melted cheddar on the Flying V of tyranny.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["dave_hussein_cheesy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_cheesy"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Slotter",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_dave_hussein",
+        "variant_name": "Cheesy"
+    },
+    {
+        "id": "card_dave_hussein_mutant",
+        "name": "Dave Hussein (Mutant)",
+        "description": "The Mutant variant of Dave Hussein. Mutated tyrant shredding with toxic fury.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["dave_hussein_mutant"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_mutant"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 5,
+        "band": "Slotter",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_dave_hussein",
+        "variant_name": "Mutant"
     },
     # Band 6: Homicidal Tendencies
     {
