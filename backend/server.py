@@ -213,35 +213,44 @@ class PaymentTransaction(BaseModel):
 COIN_PACKAGES = {
     "small": {
         "id": "small",
+        "google_play_product_id": "thrash_kan_kidz_coins_200",
         "name": "Starter Pack",
         "coins": 200,
         "price": 1.99,
         "currency": "usd",
         "description": "200 coins for new collectors",
-        "coins_per_dollar": 100.5,  # 200 / 1.99
+        "coins_per_dollar": 100.5,
         "bonus_percentage": 0
     },
     "medium": {
-        "id": "medium", 
+        "id": "medium",
+        "google_play_product_id": "thrash_kan_kidz_coins_500",
         "name": "Collector Pack",
         "coins": 500,
         "price": 4.99,
         "currency": "usd",
         "description": "500 coins - Best for regular collectors",
-        "coins_per_dollar": 100.2,  # 500 / 4.99
+        "coins_per_dollar": 100.2,
         "bonus_percentage": 0
     },
     "large": {
         "id": "large",
+        "google_play_product_id": "thrash_kan_kidz_coins_1000",
         "name": "Ultimate Pack",
         "coins": 1000,
         "price": 9.99,
         "currency": "usd",
         "description": "1000 coins - Best value!",
-        "coins_per_dollar": 100.1,  # 1000 / 9.99
+        "coins_per_dollar": 100.1,
         "bonus_percentage": 0,
         "best_value": True
     }
+}
+
+# Google Play product ID to package mapping
+GOOGLE_PLAY_PRODUCT_MAP = {
+    pkg["google_play_product_id"]: pkg["id"]
+    for pkg in COIN_PACKAGES.values()
 }
 
 # First-time purchase bonus
@@ -2507,6 +2516,84 @@ async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_
     except Exception as e:
         logger.error(f"Error creating checkout session: {e}")
         raise HTTPException(status_code=500, detail="Failed to create checkout session")
+
+# Google Play Billing verification endpoint
+class GooglePlayPurchaseRequest(BaseModel):
+    product_id: str
+    purchase_token: str
+    user_id: str
+
+@api_router.post("/users/{user_id}/verify-google-purchase")
+async def verify_google_play_purchase(user_id: str, request: GooglePlayPurchaseRequest):
+    """Verify a Google Play in-app purchase and grant coins"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Map Google Play product ID to package
+    package_id = GOOGLE_PLAY_PRODUCT_MAP.get(request.product_id)
+    if not package_id:
+        raise HTTPException(status_code=400, detail="Invalid product ID")
+    
+    package = COIN_PACKAGES[package_id]
+    
+    # Check for duplicate purchase token
+    existing = await db.payment_transactions.find_one({
+        "purchase_token": request.purchase_token,
+        "payment_status": "paid"
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="Purchase already processed")
+    
+    # Check first purchase bonus
+    has_purchased = await db.payment_transactions.find_one({
+        "user_id": user_id,
+        "payment_status": "paid"
+    })
+    is_first_purchase = has_purchased is None
+    
+    base_coins = package["coins"]
+    bonus_coins = int(base_coins * FIRST_PURCHASE_BONUS_PERCENTAGE / 100) if is_first_purchase else 0
+    total_coins = base_coins + bonus_coins
+    
+    # Record transaction
+    transaction = {
+        "user_id": user_id,
+        "package_id": package_id,
+        "product_id": request.product_id,
+        "purchase_token": request.purchase_token,
+        "platform": "android",
+        "payment_method": "google_play",
+        "coins_amount": total_coins,
+        "base_coins": base_coins,
+        "bonus_coins": bonus_coins,
+        "price": package["price"],
+        "currency": package["currency"],
+        "payment_status": "paid",
+        "status": "completed",
+        "is_first_purchase": is_first_purchase,
+        "created_at": datetime.utcnow(),
+    }
+    await db.payment_transactions.insert_one(transaction)
+    
+    # Credit coins to user
+    await db.users.update_one(
+        {"id": user_id},
+        {"$inc": {"coins": total_coins}}
+    )
+    
+    logger.info(f"Google Play purchase verified: {total_coins} coins for user {user_id}")
+    
+    updated_user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    
+    return {
+        "success": True,
+        "coins_granted": total_coins,
+        "base_coins": base_coins,
+        "bonus_coins": bonus_coins,
+        "is_first_purchase": is_first_purchase,
+        "new_balance": updated_user.get("coins", 0)
+    }
 
 @api_router.get("/payments/status/{session_id}")
 async def get_payment_status(session_id: str):

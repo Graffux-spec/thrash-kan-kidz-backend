@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,30 @@ import {
   Platform,
   ScrollView,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../src/context/AppContext';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Google Play product IDs mapped to package IDs
+const GOOGLE_PLAY_PRODUCTS: Record<string, string> = {
+  'small': 'thrash_kan_kidz_coins_200',
+  'medium': 'thrash_kan_kidz_coins_500',
+  'large': 'thrash_kan_kidz_coins_1000',
+};
+
+// Check if native IAP is available (only on actual device builds)
+let RNIap: any = null;
+try {
+  if (Platform.OS === 'android' || Platform.OS === 'ios') {
+    RNIap = require('react-native-iap');
+  }
+} catch (e) {
+  // react-native-iap not available (Expo Go or web)
+  RNIap = null;
+}
 
 interface CoinPackage {
   id: string;
@@ -28,6 +47,7 @@ interface CoinPackage {
   first_purchase_bonus?: boolean;
   effective_coins_per_dollar?: number;
   best_value?: boolean;
+  google_play_product_id?: string;
 }
 
 interface BuyCoinsModalProps {
@@ -43,6 +63,89 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
   const [error, setError] = useState<string | null>(null);
   const [isFirstPurchase, setIsFirstPurchase] = useState(false);
   const [bonusPercentage, setBonusPercentage] = useState(0);
+  const [iapConnected, setIapConnected] = useState(false);
+  const purchaseListeners = useRef<any[]>([]);
+
+  // Initialize Google Play Billing
+  useEffect(() => {
+    if (visible && RNIap && Platform.OS === 'android') {
+      initializeIAP();
+    }
+    return () => {
+      cleanupIAP();
+    };
+  }, [visible]);
+
+  const initializeIAP = async () => {
+    try {
+      await RNIap.initConnection();
+      setIapConnected(true);
+
+      // Listen for purchase updates
+      const purchaseUpdateSub = RNIap.purchaseUpdatedListener(
+        async (purchase: any) => {
+          await handlePurchaseUpdate(purchase);
+        }
+      );
+      const purchaseErrorSub = RNIap.purchaseErrorListener(
+        (err: any) => {
+          if (err.code !== 'E_USER_CANCELLED') {
+            setError(`Purchase failed: ${err.message}`);
+          }
+          setPurchasing(null);
+        }
+      );
+      purchaseListeners.current = [purchaseUpdateSub, purchaseErrorSub];
+    } catch (err) {
+      console.log('IAP not available:', err);
+      setIapConnected(false);
+    }
+  };
+
+  const cleanupIAP = () => {
+    purchaseListeners.current.forEach(sub => sub?.remove?.());
+    purchaseListeners.current = [];
+    if (RNIap && iapConnected) {
+      RNIap.endConnection();
+    }
+  };
+
+  const handlePurchaseUpdate = async (purchase: any) => {
+    if (!user) return;
+
+    try {
+      // Verify with backend
+      const response = await fetch(`${apiUrl}/api/users/${user.id}/verify-google-purchase`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product_id: purchase.productId,
+          purchase_token: purchase.purchaseToken,
+          user_id: user.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Acknowledge/consume the purchase
+        await RNIap.finishTransaction({ purchase, isConsumable: true });
+        
+        Alert.alert(
+          'Purchase Complete!',
+          `You received ${data.coins_granted} coins!${data.bonus_coins > 0 ? ` (includes ${data.bonus_coins} bonus coins!)` : ''}`,
+          [{ text: 'Awesome!', onPress: () => { refreshData(); onClose(); } }]
+        );
+      } else {
+        setError('Purchase verification failed');
+      }
+    } catch (err) {
+      console.error('Purchase verification error:', err);
+      setError('Failed to verify purchase');
+    } finally {
+      setPurchasing(null);
+    }
+  };
 
   useEffect(() => {
     if (visible && user) {
@@ -55,7 +158,6 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
     
     try {
       setLoading(true);
-      // Use the user-specific endpoint to get bonus info
       const response = await fetch(`${apiUrl}/api/users/${user.id}/coin-packages`);
       const data = await response.json();
       setPackages(data.packages || []);
@@ -69,24 +171,41 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
     }
   };
 
-  const handlePurchase = async (packageId: string) => {
+  const handlePurchase = async (pkg: CoinPackage) => {
     if (!user) return;
     
-    setPurchasing(packageId);
+    setPurchasing(pkg.id);
     setError(null);
-    
+
+    // Use Google Play Billing on Android if available
+    if (Platform.OS === 'android' && RNIap && iapConnected) {
+      try {
+        const googleProductId = GOOGLE_PLAY_PRODUCTS[pkg.id];
+        if (!googleProductId) {
+          setError('Product not configured');
+          setPurchasing(null);
+          return;
+        }
+        await RNIap.requestPurchase({ skus: [googleProductId] });
+        // Purchase result handled by purchaseUpdatedListener
+      } catch (err: any) {
+        if (err.code !== 'E_USER_CANCELLED') {
+          setError('Failed to start purchase');
+        }
+        setPurchasing(null);
+      }
+      return;
+    }
+
+    // Fallback to Stripe for web/unsupported
     try {
-      // Get the origin URL for redirects - use environment variable for Expo compatibility
       const originUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
-      
       const response = await fetch(`${apiUrl}/api/users/${user.id}/purchase-coins`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: user.id,
-          package_id: packageId,
+          package_id: pkg.id,
           origin_url: originUrl,
         }),
       });
@@ -94,7 +213,6 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
       const data = await response.json();
       
       if (data.checkout_url) {
-        // Open Stripe checkout in browser
         if (Platform.OS === 'web') {
           window.location.href = data.checkout_url;
         } else {
@@ -121,123 +239,109 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
     }
   };
 
-  // Footer component for the content
   const FooterContent = () => (
     <View style={styles.footer}>
       <Text style={styles.footerText}>
-        Secure payment powered by Stripe
+        {Platform.OS === 'android' && iapConnected
+          ? 'Secure payment via Google Play'
+          : 'Secure payment powered by Stripe'}
       </Text>
-      <View style={styles.iapNote}>
-        <Ionicons name="information-circle-outline" size={14} color="#888" />
-        <Text style={styles.iapNoteText}>
-          In-App Purchases coming soon
-        </Text>
-      </View>
     </View>
   );
 
-  // Item separator for spacing
   const ItemSeparator = () => <View style={{ height: 10 }} />;
 
   return (
     <Modal
       visible={visible}
-      transparent
       animationType="slide"
+      transparent={true}
       onRequestClose={onClose}
     >
       <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
+        <View style={styles.container}>
+          {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>Buy Coins</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Ionicons name="close" size={24} color="#fff" />
+            <TouchableOpacity onPress={onClose} style={styles.closeButton} data-testid="close-buy-coins">
+              <Ionicons name="close-circle" size={28} color="#888" />
             </TouchableOpacity>
           </View>
+          
+          {isFirstPurchase && (
+            <View style={styles.bonusBanner}>
+              <Ionicons name="star" size={18} color="#FFD700" />
+              <Text style={styles.bonusText}>
+                First purchase bonus: {bonusPercentage}% extra coins!
+              </Text>
+              <Ionicons name="star" size={18} color="#FFD700" />
+            </View>
+          )}
+          
+          <Text style={styles.subtitle}>Choose a coin package</Text>
 
-          <ScrollView 
-            style={styles.scrollContent}
-            contentContainerStyle={styles.scrollContentContainer}
-            showsVerticalScrollIndicator={true}
-            scrollEnabled={true}
-          >
-            {isFirstPurchase && (
-              <View style={styles.firstPurchaseBanner}>
-                <Text style={styles.firstPurchaseIcon}>🎉</Text>
-                <View style={styles.firstPurchaseTextContainer}>
-                  <Text style={styles.firstPurchaseTitle}>First Purchase Bonus!</Text>
-                  <Text style={styles.firstPurchaseSubtitle}>
-                    Get {bonusPercentage}% extra coins on your first purchase!
-                  </Text>
-                </View>
-              </View>
-            )}
-
-            <Text style={styles.subtitle}>Choose a coin package</Text>
-
-            {loading ? (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#FFD700" />
-              </View>
-            ) : error ? (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>{error}</Text>
-                <TouchableOpacity onPress={fetchPackages} style={styles.retryButton}>
-                  <Text style={styles.retryText}>Retry</Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View style={styles.packagesContainer}>
-                {packages.map((pkg) => (
+          {error && (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+              <TouchableOpacity onPress={() => setError(null)}>
+                <Ionicons name="close-circle" size={18} color="#ff6b6b" />
+              </TouchableOpacity>
+            </View>
+          )}
+          
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#FFD700" />
+              <Text style={styles.loadingText}>Loading packages...</Text>
+            </View>
+          ) : (
+            <ScrollView 
+              style={styles.packageList}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.packageListContent}
+            >
+              {packages.map((pkg, index) => (
+                <React.Fragment key={pkg.id}>
+                  {index > 0 && <ItemSeparator />}
                   <TouchableOpacity
-                    key={pkg.id}
                     style={[
                       styles.packageCard,
-                      pkg.best_value && styles.packageCardBestValue,
+                      pkg.best_value && styles.bestValueCard,
                     ]}
-                    onPress={() => handlePurchase(pkg.id)}
+                    onPress={() => handlePurchase(pkg)}
                     disabled={purchasing !== null}
+                    data-testid={`buy-package-${pkg.id}`}
                   >
                     {pkg.best_value && (
                       <View style={styles.bestValueBadge}>
                         <Text style={styles.bestValueText}>BEST VALUE</Text>
                       </View>
                     )}
-                    
-                    <Text style={styles.packageIcon}>{getPackageIcon(pkg.id)}</Text>
-                    <Text style={styles.packageName}>{pkg.name}</Text>
-                    
-                    <View style={styles.coinsContainer}>
-                      {pkg.bonus_coins && pkg.bonus_coins > 0 ? (
-                        <>
-                          <Text style={styles.packageCoins}>{pkg.total_coins?.toLocaleString()}</Text>
-                          <View style={styles.bonusBadge}>
-                            <Text style={styles.bonusText}>+{pkg.bonus_coins}</Text>
-                          </View>
-                        </>
-                      ) : (
-                        <Text style={styles.packageCoins}>{pkg.coins.toLocaleString()}</Text>
-                      )}
-                      <Text style={styles.coinsLabel}>Coins</Text>
-                    </View>
-                    
-                    <View style={[
-                      styles.priceButton,
-                      pkg.best_value && styles.priceButtonBestValue,
-                    ]}>
-                      {purchasing === pkg.id ? (
-                        <ActivityIndicator size="small" color="#000" />
-                      ) : (
-                        <Text style={styles.priceText}>${pkg.price.toFixed(2)}</Text>
-                      )}
+                    <View style={styles.packageRow}>
+                      <Text style={styles.packageIcon}>{getPackageIcon(pkg.id)}</Text>
+                      <View style={styles.packageInfo}>
+                        <Text style={styles.packageName}>{pkg.name}</Text>
+                        <Text style={styles.packageCoins}>
+                          {pkg.total_coins || pkg.coins} coins
+                          {pkg.bonus_coins ? ` (${pkg.bonus_coins} bonus!)` : ''}
+                        </Text>
+                      </View>
+                      <View style={styles.priceContainer}>
+                        {purchasing === pkg.id ? (
+                          <ActivityIndicator size="small" color="#FFD700" />
+                        ) : (
+                          <Text style={styles.priceText}>
+                            ${pkg.price.toFixed(2)}
+                          </Text>
+                        )}
+                      </View>
                     </View>
                   </TouchableOpacity>
-                ))}
-              </View>
-            )}
-
-            <FooterContent />
-          </ScrollView>
+                </React.Fragment>
+              ))}
+              <FooterContent />
+            </ScrollView>
+          )}
         </View>
       </View>
     </Modal>
@@ -247,194 +351,155 @@ export default function BuyCoinsModal({ visible, onClose }: BuyCoinsModalProps) 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'flex-end',
   },
-  modalContainer: {
+  container: {
     backgroundColor: '#1a1a2e',
-    borderRadius: 20,
-    padding: 20,
-    width: '100%',
-    maxWidth: 400,
-    maxHeight: '95%',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    maxHeight: SCREEN_HEIGHT * 0.75,
+    paddingBottom: 32,
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 4,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '800',
     color: '#FFD700',
+    flex: 1,
+    textAlign: 'center',
   },
   closeButton: {
-    padding: 4,
+    position: 'absolute',
+    right: 16,
+    top: 16,
   },
-  firstPurchaseBanner: {
-    backgroundColor: 'rgba(76, 175, 80, 0.2)',
-    borderRadius: 12,
-    padding: 12,
+  bonusBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#4CAF50',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 215, 0, 0.15)',
+    paddingVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 8,
+    gap: 6,
+    marginTop: 4,
   },
-  firstPurchaseIcon: {
-    fontSize: 28,
-    marginRight: 12,
-  },
-  firstPurchaseTextContainer: {
-    flex: 1,
-  },
-  firstPurchaseTitle: {
-    color: '#4CAF50',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  firstPurchaseSubtitle: {
-    color: '#81C784',
-    fontSize: 12,
+  bonusText: {
+    color: '#FFD700',
+    fontWeight: '700',
+    fontSize: 13,
   },
   subtitle: {
+    color: '#aaa',
     fontSize: 14,
-    color: '#888',
-    marginBottom: 16,
-  },
-  loadingContainer: {
-    padding: 40,
-    alignItems: 'center',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 12,
   },
   errorContainer: {
-    padding: 20,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(255, 59, 48, 0.15)',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginHorizontal: 16,
+    borderRadius: 8,
+    marginBottom: 8,
   },
   errorText: {
     color: '#ff6b6b',
-    marginBottom: 12,
-  },
-  retryButton: {
-    backgroundColor: '#333',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  retryText: {
-    color: '#fff',
-  },
-  scrollContent: {
+    fontSize: 13,
     flex: 1,
   },
-  scrollContentContainer: {
-    paddingBottom: 20,
+  loadingContainer: {
+    alignItems: 'center',
+    paddingVertical: 40,
   },
-  packagesContainer: {
-    gap: 10,
+  loadingText: {
+    color: '#aaa',
+    marginTop: 12,
+  },
+  packageList: {
+    paddingHorizontal: 16,
+  },
+  packageListContent: {
+    paddingBottom: 16,
   },
   packageCard: {
-    backgroundColor: '#252540',
-    borderRadius: 10,
-    padding: 12,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#333',
-    position: 'relative',
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
   },
-  packageCardBestValue: {
+  bestValueCard: {
     borderColor: '#FFD700',
-    backgroundColor: '#2a2a45',
+    backgroundColor: 'rgba(255, 215, 0, 0.08)',
   },
   bestValueBadge: {
     position: 'absolute',
-    top: -8,
+    top: -10,
+    right: 12,
     backgroundColor: '#FFD700',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 10,
   },
   bestValueText: {
     color: '#000',
-    fontSize: 7,
-    fontWeight: 'bold',
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  packageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   packageIcon: {
-    fontSize: 20,
-    marginBottom: 2,
+    fontSize: 32,
+    marginRight: 12,
+  },
+  packageInfo: {
+    flex: 1,
   },
   packageName: {
-    fontSize: 11,
-    fontWeight: 'bold',
     color: '#fff',
-    textAlign: 'center',
-  },
-  coinsContainer: {
-    alignItems: 'center',
-    marginVertical: 2,
+    fontSize: 16,
+    fontWeight: '700',
   },
   packageCoins: {
-    fontSize: 18,
-    fontWeight: 'bold',
     color: '#FFD700',
+    fontSize: 13,
+    fontWeight: '600',
+    marginTop: 2,
   },
-  coinsLabel: {
-    fontSize: 9,
-    color: '#888',
-    marginTop: 0,
-  },
-  bonusBadge: {
-    backgroundColor: '#4CAF50',
-    paddingHorizontal: 4,
-    paddingVertical: 1,
-    borderRadius: 4,
-    marginTop: 1,
-  },
-  bonusText: {
-    color: '#fff',
-    fontSize: 7,
-    fontWeight: 'bold',
-  },
-  savingsText: {
-    fontSize: 8,
-    color: '#888',
-    marginBottom: 4,
-    textAlign: 'center',
-  },
-  priceButton: {
-    backgroundColor: '#FFD700',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 14,
-    minWidth: 60,
+  priceContainer: {
+    backgroundColor: 'rgba(255, 215, 0, 0.2)',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 10,
+    minWidth: 70,
     alignItems: 'center',
-  },
-  priceButtonBestValue: {
-    backgroundColor: '#FFD700',
   },
   priceText: {
-    color: '#000',
-    fontSize: 12,
-    fontWeight: 'bold',
+    color: '#FFD700',
+    fontSize: 16,
+    fontWeight: '800',
   },
   footer: {
-    marginTop: 10,
     alignItems: 'center',
+    marginTop: 16,
   },
   footerText: {
     color: '#666',
-    fontSize: 10,
-  },
-  iapNote: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 6,
-    gap: 4,
-  },
-  iapNoteText: {
-    color: '#888',
-    fontSize: 9,
+    fontSize: 12,
   },
 });

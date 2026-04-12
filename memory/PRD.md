@@ -84,9 +84,10 @@ A mobile card collecting app featuring thrash/death metal parody cards. Users op
 - [ ] Series 5 base cards + variants (awaiting user uploads)
 
 ### P1 - High Priority
+- [x] Google Play Billing integration (react-native-iap + backend verification)
 - [ ] EAS Build Version 15 (after quota reset ~May 1)
+- [ ] Configure Google Play Console products (thrash_kan_kidz_coins_200/500/1000)
 - [ ] Restore card flip animations in Collection view
-- [ ] Google Play Billing integration (replace Stripe for Android)
 
 ### P2 - Medium Priority
 - [ ] User-to-user card trading feature
