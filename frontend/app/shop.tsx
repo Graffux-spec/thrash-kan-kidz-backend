@@ -156,7 +156,8 @@ export default function ShopScreen() {
       shakeAnimation.start();
 
       // Call API while shaking
-      const response = await fetch(`${apiUrl}/api/users/${user.id}/spin`, {
+      const seriesParam = spinPool?.current_series ? `?series=${spinPool.current_series}` : '';
+      const response = await fetch(`${apiUrl}/api/users/${user.id}/spin${seriesParam}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });

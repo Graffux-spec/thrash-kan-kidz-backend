@@ -1407,7 +1407,7 @@ async def get_spin_config():
     }
 
 @api_router.post("/users/{user_id}/spin")
-async def spin_wheel(user_id: str):
+async def spin_wheel(user_id: str, series: int = None):
     """Spin the wheel to get a random card from the user's current unlocked series"""
     user = await db.users.find_one({"id": user_id})
     if not user:
@@ -1425,10 +1425,13 @@ async def spin_wheel(user_id: str):
     
     # Get current series (the highest unlocked series that's not completed)
     completed_series = user.get("completed_series", [])
-    uncompleted = [s for s in unlocked_series if s not in completed_series]
-    current_series = max(uncompleted) if uncompleted else max(unlocked_series)
+    if series and series in unlocked_series:
+        current_series = series
+    else:
+        uncompleted = [s for s in unlocked_series if s not in completed_series]
+        current_series = max(uncompleted) if uncompleted else max(unlocked_series)
     
-    # Get available cards for the spin (only from current series)
+    # Get available cards for the spin (from selected series only)
     series_cards = await db.cards.find({
         "series": current_series,
         "rarity": "common",
