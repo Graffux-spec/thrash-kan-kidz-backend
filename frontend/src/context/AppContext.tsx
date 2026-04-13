@@ -2,6 +2,9 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
+// Set global axios timeout for Render cold starts
+axios.defaults.timeout = 30000;
+
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || '';
 
 interface User {
