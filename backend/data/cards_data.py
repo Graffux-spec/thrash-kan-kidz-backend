@@ -85,10 +85,10 @@ CARD_IMAGE_URLS = {
     "silly_mille": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/8u8d1laz_file_00000000b8cc71fd995dc5490bb39137.png",
     "mille_gorezza": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/g91wp9yv_file_000000002b6871f8adc873413d3619f3.png",
     # Mille Vanille Variants
-    "silly_mille_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/yxz0k3vt_file_0000000064a071f5aa5f311ef7df96ec.png",
-    "silly_mille_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/c4ieu7h8_file_00000000d45c722f8144b642c24a0ed1.png",
-    "silly_mille_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/rnv4fjhr_file_00000000a3e471fbbd30932d141bb0fc.png",
-    "silly_mille_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/55afmtp5_file_00000000888071fb925da62eb81eea9f.png",
+    "silly_mille_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/wwgnflpv_enhanced-1775799159617.jpg",
+    "silly_mille_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/jv49m4ea_enhanced-1775799218430.jpg",
+    "silly_mille_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/umsa3hrt_file_00000000e6f871fb9da072c633096d05.png",
+    "silly_mille_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xkx7z7in_enhanced-1775799305264.jpg",
     # Mille Gorezza Variants
     "mille_gorezza_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ow7acz7e_file_00000000924471fdb60a336062ff095a.png",
     "mille_gorezza_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/z0rbyxim_file_00000000620c71fdb6ba2e714e615181.png",
@@ -619,10 +619,10 @@ CARD_BACK_IMAGE_URLS = {
     "silly_mille": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2aoozxap_file_00000000c09471fd9e6ee92622783d07.png",
     "mille_gorezza": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/1asg9g5i_file_00000000674c71f5a6ddd9c12c7ffcdb.png",
     # Mille Vanille Variants
-    "silly_mille_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/yxz0k3vt_file_0000000064a071f5aa5f311ef7df96ec.png",
-    "silly_mille_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/c4ieu7h8_file_00000000d45c722f8144b642c24a0ed1.png",
-    "silly_mille_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/rnv4fjhr_file_00000000a3e471fbbd30932d141bb0fc.png",
-    "silly_mille_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/55afmtp5_file_00000000888071fb925da62eb81eea9f.png",
+    "silly_mille_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/wwgnflpv_enhanced-1775799159617.jpg",
+    "silly_mille_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/jv49m4ea_enhanced-1775799218430.jpg",
+    "silly_mille_hellfire": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/umsa3hrt_file_00000000e6f871fb9da072c633096d05.png",
+    "silly_mille_cosmic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xkx7z7in_enhanced-1775799305264.jpg",
     # Mille Gorezza Variants (use same as front)
     "mille_gorezza_toxic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ow7acz7e_file_00000000924471fdb60a336062ff095a.png",
     "mille_gorezza_electric": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/z0rbyxim_file_00000000620c71fdb6ba2e714e615181.png",
