@@ -15,7 +15,7 @@
     },
     "android": {
       "package": "com.thrashkankidz.app",
-      "versionCode": 18,
+      "versionCode": 19,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#000000"
@@ -42,6 +42,7 @@
       "typedRoutes": true
     },
     "extra": {
+      "backendUrl": "https://thrash-kan-kidz-api.onrender.com",
       "eas": {
         "projectId": "1a56af79-9611-437c-93d8-e781a78d99bf"
       }
