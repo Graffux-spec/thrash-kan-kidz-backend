@@ -511,12 +511,22 @@ export default function ShopScreen() {
                   style={styles.cardTouchable}
                   data-testid="reveal-card-btn"
                 >
-                  {/* Show pack cover on back, card front when flipped */}
-                  <Image
-                    source={{ uri: showFrontImage && spinResult ? spinResult.won_card.front_image_url : packCoverImage }}
-                    style={styles.revealedCardImage}
-                    resizeMode="cover"
-                  />
+                  {/* Pack cover (before flip) */}
+                  {!showFrontImage && (
+                    <Image
+                      source={{ uri: packCoverImage }}
+                      style={styles.revealedCardImage}
+                      resizeMode="cover"
+                    />
+                  )}
+                  {/* Card front (after flip) */}
+                  {showFrontImage && spinResult && (
+                    <Image
+                      source={{ uri: spinResult.won_card.front_image_url }}
+                      style={styles.revealedCardImage}
+                      resizeMode="cover"
+                    />
+                  )}
                 </TouchableOpacity>
               </Animated.View>
             )}
