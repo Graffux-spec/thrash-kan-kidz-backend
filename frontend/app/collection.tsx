@@ -200,6 +200,7 @@ export default function CollectionScreen() {
   const ownedSeries2Commons = userCards.filter(uc => uc.card.series === 2 && uc.card.rarity === 'common' && !uc.card.base_card_id).length;
   const ownedSeries3Commons = userCards.filter(uc => uc.card.series === 3 && uc.card.rarity === 'common' && !uc.card.base_card_id).length;
   const ownedSeries4Commons = userCards.filter(uc => uc.card.series === 4 && uc.card.rarity === 'common' && !uc.card.base_card_id).length;
+  const ownedSeries5Commons = userCards.filter(uc => uc.card.series === 5 && uc.card.rarity === 'common' && !uc.card.base_card_id).length;
   
   const totalOwned = userCards.length;
 
@@ -217,6 +218,7 @@ export default function CollectionScreen() {
           <Text style={styles.seriesProgressText}>S2: {ownedSeries2Commons}/16</Text>
           <Text style={styles.seriesProgressText}>S3: {ownedSeries3Commons}/16</Text>
           <Text style={styles.seriesProgressText}>S4: {ownedSeries4Commons}/16</Text>
+          <Text style={styles.seriesProgressText}>S5: {ownedSeries5Commons}/16</Text>
           {ownedVariants.length > 0 && (
             <Text style={styles.variantProgressText}>+{ownedVariants.length} Variants</Text>
           )}

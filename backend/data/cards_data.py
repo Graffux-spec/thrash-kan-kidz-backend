@@ -160,7 +160,7 @@ CARD_IMAGE_URLS = {
     "jeff_possess_ya_s2_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/0wcfw7ln_file_00000000414c71f5b0779143a7f60123.png",
     "jeff_possess_ya_s2_biomechanical": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/cu4c31u3_file_0000000047d4722fa70d135c54f6eeb8.png",
     "chef_becerra": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/iz6crfrh_enhanced-1771278405486.jpg",
-    # Chef Becerra Variants
+    # Jeff Possess Ya (B) Variants
     "chef_becerra_bloodbath": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/x7y4u9qv_file_000000003dcc722f9493a7b764ccbd7a.png",
     "chef_becerra_ice": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ylq0jem0_file_00000000561071f59a0d40c1717ff235.png",
     "chef_becerra_psychedelic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ocoxl9fb_file_000000002968722f9b43e07d92424afe.png",
@@ -2528,7 +2528,7 @@ INITIAL_CARDS = [
         "band": "Pussessed",
         "card_type": "A"
     },
-    # Chef Becerra Variants
+    # Jeff Possess Ya Variants
     {
         "id": "card_jeff_possess_ya_s2_bloodbath",
         "name": "Jeff Possess Ya (Bloodbath)",
@@ -2579,8 +2579,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_jeff_possess_ya_s2_biomechanical",
-        "name": "Chef Becerra (Biomechanical)",
-        "description": "The Biomechanical variant of Chef Becerra. His cyborg kitchen serves up mechanized meals of terror.",
+        "name": "Jeff Possess Ya (Biomechanical)",
+        "description": "The Biomechanical variant of Jeff Possess Ya. His cyborg kitchen serves up mechanized meals of terror.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_biomechanical"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_biomechanical"],

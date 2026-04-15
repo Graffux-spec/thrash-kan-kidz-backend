@@ -759,6 +759,35 @@ async def seed_database():
     
     if card_count >= expected_count:
         logger.info(f"Database already has {card_count} cards (expected {expected_count}), skipping seed")
+        # Force-fix any known name corrections even when skipping full seed
+        name_fixes = {
+            "card_jeff_possess_ya_s2": {
+                "name": "Jeff Possess Ya",
+            },
+            "card_jeff_possess_ya_s2_bloodbath": {
+                "name": "Jeff Possess Ya (Bloodbath)",
+                "description": "The Bloodbath variant of Jeff Possess Ya. His kitchen is now a slaughterhouse. Every dish comes with a side of fresh carnage."
+            },
+            "card_jeff_possess_ya_s2_ice": {
+                "name": "Jeff Possess Ya (Ice)",
+                "description": "The Ice variant of Jeff Possess Ya. His frozen cuisine keeps the meat fresh forever. Served ice cold, literally."
+            },
+            "card_jeff_possess_ya_s2_psychedelic": {
+                "name": "Jeff Possess Ya (Psychedelic)",
+                "description": "The Psychedelic variant of Jeff Possess Ya. His recipes include rainbow spices from another dimension."
+            },
+            "card_jeff_possess_ya_s2_biomechanical": {
+                "name": "Jeff Possess Ya (Biomechanical)",
+                "description": "The Biomechanical variant of Jeff Possess Ya. His cyborg kitchen serves up mechanized meals of terror."
+            },
+        }
+        for card_id, updates in name_fixes.items():
+            result = await db.cards.update_one(
+                {"id": card_id, "name": {"$ne": updates["name"]}},
+                {"$set": updates}
+            )
+            if result.modified_count > 0:
+                logger.info(f"Fixed card name: {card_id} -> {updates['name']}")
         return
     
     logger.info(f"Database has {card_count}/{expected_count} cards, seeding...")
