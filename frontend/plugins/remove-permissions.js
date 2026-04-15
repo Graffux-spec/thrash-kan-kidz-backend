@@ -4,7 +4,12 @@ module.exports = function removePermissionsPlugin(config) {
   return withAndroidManifest(config, async (config) => {
     const manifest = config.modResults.manifest;
     
-    // Remove READ_MEDIA_IMAGES and any other unwanted permissions
+    // Ensure tools namespace is declared
+    if (!manifest.$) {
+      manifest.$ = {};
+    }
+    manifest.$["xmlns:tools"] = "http://schemas.android.com/tools";
+    
     const removePermissions = [
       "android.permission.READ_MEDIA_IMAGES",
       "android.permission.READ_MEDIA_VIDEO",
@@ -12,10 +17,23 @@ module.exports = function removePermissionsPlugin(config) {
       "android.permission.WRITE_EXTERNAL_STORAGE",
     ];
     
-    if (manifest["uses-permission"]) {
-      manifest["uses-permission"] = manifest["uses-permission"].filter(
-        (perm) => !removePermissions.includes(perm.$?.["android:name"])
-      );
+    if (!manifest["uses-permission"]) {
+      manifest["uses-permission"] = [];
+    }
+    
+    // Remove existing entries for these permissions
+    manifest["uses-permission"] = manifest["uses-permission"].filter(
+      (perm) => !removePermissions.includes(perm.$?.["android:name"])
+    );
+    
+    // Add them back with tools:node="remove" so they get stripped from merged manifest
+    for (const perm of removePermissions) {
+      manifest["uses-permission"].push({
+        $: {
+          "android:name": perm,
+          "tools:node": "remove",
+        },
+      });
     }
     
     return config;
