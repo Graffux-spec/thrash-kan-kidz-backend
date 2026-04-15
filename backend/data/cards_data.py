@@ -2517,7 +2517,7 @@ INITIAL_CARDS = [
     # Band 4: Pussessed
     {
         "id": "card_jeff_possess_ya_s2",
-        "name": "Chef Becerra",
+        "name": "Jeff Possess Ya",
         "description": "For his gourmet zombies, Chef Becerra puts the flesh in flesh-eating. This soup of the day is shredded limb-sine meat.",
         "rarity": "common",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2"],
@@ -2531,8 +2531,8 @@ INITIAL_CARDS = [
     # Chef Becerra Variants
     {
         "id": "card_jeff_possess_ya_s2_bloodbath",
-        "name": "Chef Becerra (Bloodbath)",
-        "description": "The Bloodbath variant of Chef Becerra. His kitchen is now a slaughterhouse. Every dish comes with a side of fresh carnage.",
+        "name": "Jeff Possess Ya (Bloodbath)",
+        "description": "The Bloodbath variant of Jeff Possess Ya. His kitchen is now a slaughterhouse. Every dish comes with a side of fresh carnage.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_bloodbath"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_bloodbath"],
@@ -2547,8 +2547,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_jeff_possess_ya_s2_ice",
-        "name": "Chef Becerra (Ice)",
-        "description": "The Ice variant of Chef Becerra. His frozen cuisine keeps the meat fresh forever. Served ice cold, literally.",
+        "name": "Jeff Possess Ya (Ice)",
+        "description": "The Ice variant of Jeff Possess Ya. His frozen cuisine keeps the meat fresh forever. Served ice cold, literally.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_ice"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_ice"],
@@ -2563,8 +2563,8 @@ INITIAL_CARDS = [
     },
     {
         "id": "card_jeff_possess_ya_s2_psychedelic",
-        "name": "Chef Becerra (Psychedelic)",
-        "description": "The Psychedelic variant of Chef Becerra. His recipes include rainbow spices from another dimension.",
+        "name": "Jeff Possess Ya (Psychedelic)",
+        "description": "The Psychedelic variant of Jeff Possess Ya. His recipes include rainbow spices from another dimension.",
         "rarity": "variant",
         "front_image_url": CARD_IMAGE_URLS["jeff_possess_ya_s2_psychedelic"],
         "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_psychedelic"],
