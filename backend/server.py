@@ -1473,8 +1473,32 @@ async def spin_wheel(user_id: str, series: int = None):
     if not series_cards:
         raise HTTPException(status_code=400, detail="No cards available to spin in current series")
     
-    # Pick a random card
-    won_card = random.choice(series_cards)
+    # Get user's owned cards and quantities for this series
+    series_card_ids = [c["id"] for c in series_cards]
+    user_cards_in_series = await db.user_cards.find({
+        "user_id": user_id,
+        "card_id": {"$in": series_card_ids}
+    }).to_list(100)
+    
+    owned_quantities = {uc["card_id"]: uc.get("quantity", 1) for uc in user_cards_in_series}
+    
+    # Filter out cards that already have 6 duplicates
+    MAX_DUPLICATES = 6
+    eligible_cards = [c for c in series_cards if owned_quantities.get(c["id"], 0) < MAX_DUPLICATES]
+    
+    if not eligible_cards:
+        raise HTTPException(status_code=400, detail="You have max duplicates of all cards in this series! Try trading for variants.")
+    
+    # Prioritize unowned cards (70% chance for unowned, 30% for duplicates)
+    unowned_cards = [c for c in eligible_cards if c["id"] not in owned_quantities]
+    owned_cards = [c for c in eligible_cards if c["id"] in owned_quantities]
+    
+    if unowned_cards and owned_cards and random.random() < 0.7:
+        won_card = random.choice(unowned_cards)
+    elif unowned_cards and not owned_cards:
+        won_card = random.choice(unowned_cards)
+    else:
+        won_card = random.choice(eligible_cards)
     
     # Deduct coins and track spending
     new_coins = user.get("coins", 0) - SPIN_COST
