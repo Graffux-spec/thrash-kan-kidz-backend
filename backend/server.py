@@ -934,7 +934,7 @@ async def register(request: RegisterRequest):
     new_user = User(
         username=request.username,
         password_hash=password_hash,
-        coins=100  # Starting coins
+        coins=500  # Starting coins
     )
     
     await db.users.insert_one(new_user.model_dump())
@@ -2526,6 +2526,20 @@ async def get_user_coin_packages(user_id: str):
         "is_first_purchase": is_first_purchase,
         "first_purchase_bonus_percentage": FIRST_PURCHASE_BONUS_PERCENTAGE if is_first_purchase else 0
     }
+
+@api_router.post("/admin/add-coins/{user_id}")
+async def admin_add_coins(user_id: str, request: Request):
+    """Admin endpoint to add coins to a user"""
+    body = await request.json()
+    amount = body.get("amount", 0)
+    if amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be positive")
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    new_coins = user.get("coins", 0) + amount
+    await db.users.update_one({"id": user_id}, {"$set": {"coins": new_coins}})
+    return {"username": user["username"], "coins": new_coins}
 
 @api_router.post("/users/{user_id}/purchase-coins")
 async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_request: Request):
