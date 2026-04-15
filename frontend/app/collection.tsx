@@ -443,9 +443,10 @@ const styles = StyleSheet.create({
   },
   seriesProgress: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'center',
     marginTop: 8,
-    gap: 12,
+    gap: 8,
   },
   seriesProgressText: {
     fontSize: 12,
