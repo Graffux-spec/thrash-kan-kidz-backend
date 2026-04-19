@@ -49,9 +49,14 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - Switched to expo-image for trade-in and spinner result images (fixes blank images on Android for large PNGs)
 - Fixed Mille Vanille variant descriptions (said "Silly Mille" instead of "Mille Vanille")
 - Bigger spin result card image (180x260) with background fallback
+- Friends system backend complete (send/accept/reject requests, search by username/code, friend codes, trade gating)
+- Transferred Hellbound cards (100) to hellboundjeff@gmail.com account
+
+## In Progress
+- Friends system frontend (Trade page UI: friends list, add friends, pending requests)
 
 ## Upcoming
-- P1: Confirm Google Play Store review (Internal Testing track)
+- P1: Confirm Google Play Store review
 - P2: Series 6+ content (awaiting user request)
 
 ## Backlog
