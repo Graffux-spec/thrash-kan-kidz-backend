@@ -780,14 +780,23 @@ async def seed_database():
                 "name": "Jeff Possess Ya (Biomechanical)",
                 "description": "The Biomechanical variant of Jeff Possess Ya. His cyborg kitchen serves up mechanized meals of terror."
             },
+            "card_chum_araya_hellfire": {
+                "front_image_url": CARD_IMAGE_URLS["chum_araya_hellfire"],
+                "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya_hellfire"],
+            },
+            "card_chum_araya_cosmic": {
+                "front_image_url": CARD_IMAGE_URLS["chum_araya_cosmic"],
+                "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya_cosmic"],
+            },
         }
         for card_id, updates in name_fixes.items():
-            result = await db.cards.update_one(
-                {"id": card_id, "name": {"$ne": updates["name"]}},
-                {"$set": updates}
-            )
+            query = {"id": card_id}
+            if "name" in updates:
+                query["name"] = {"$ne": updates["name"]}
+            result = await db.cards.update_one(query, {"$set": updates})
             if result.modified_count > 0:
-                logger.info(f"Fixed card name: {card_id} -> {updates['name']}")
+                label = updates.get("name", "images")
+                logger.info(f"Fixed card: {card_id} -> {label}")
         return
     
     logger.info(f"Database has {card_count}/{expected_count} cards, seeding...")
