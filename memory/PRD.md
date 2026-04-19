@@ -33,10 +33,15 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - Series 4: 16 base + 64 variants + 1 reward = 81 cards
 - Series 5: 16 base + 64 variants + 1 reward = 81 cards
 
-## Completed (April 15, 2026)
-- Fixed "Jeff Possess Ya" card names in DB (was "Chef Becerra" for S2 A-type base + 4 variants)
-- Added forced DB name correction in seed_database() that runs even when seed is skipped
-- Added Series 5 tally (S5: X/16) to Collection page header
+## Completed (April 19, 2026)
+- In-app feedback system (Profile → Send Feedback) with 1-5 star ratings + text
+- Backend endpoints: POST /api/feedback, GET /api/feedback (admin)
+- Fixed user cards crash (missing acquired_at/quantity fields) — affected Drifter7 and others
+- New users start with 500 coins (was 100)
+- Admin coin top-up endpoint: POST /api/admin/add-coins/{user_id}
+- Fixed "Jeff Possess Ya" card names in DB
+- Added Series 5 tally with flexWrap layout fix
+- Force-pushed code to Graffux-spec repo for Render deployment
 
 ## Upcoming
 - P1: Confirm Google Play Store review (Internal Testing track)
