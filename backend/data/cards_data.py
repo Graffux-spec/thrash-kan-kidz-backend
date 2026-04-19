@@ -345,8 +345,8 @@ CARD_IMAGE_URLS = {
     "tardy_donald_stoned": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/877v5hho_file_00000000e83871f582b24ea4849aea53.png",
     "party_tardy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xcp7rubw_enhanced-1771260959725.jpg",
     "party_tardy_skeletal": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/i290dlo9_file_00000000ca9871f5a0aa7343a03e1d89.png",
-    "party_tardy_oceanic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/raih3ab9_file_00000000676871f58458a04e4bbe5f62.png",
-    "party_tardy_diamond": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dvwxs6lo_file_000000002a5471f5ba219c1b112402c3.png",
+    "party_tardy_oceanic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dvwxs6lo_file_000000002a5471f5ba219c1b112402c3.png",
+    "party_tardy_diamond": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/raih3ab9_file_00000000676871f58458a04e4bbe5f62.png",
     "party_tardy_stoned": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/sm9zovp0_file_000000004fa4722f8c66b7177b72f5fc.png",
     # Band 2: Deaf
     "emo_chuck": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/myssxyf1_enhanced-1771263476980.jpg",

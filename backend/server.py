@@ -788,6 +788,12 @@ async def seed_database():
                 "front_image_url": CARD_IMAGE_URLS["chum_araya_cosmic"],
                 "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya_cosmic"],
             },
+            "card_party_tardy_oceanic": {
+                "front_image_url": CARD_IMAGE_URLS["party_tardy_oceanic"],
+            },
+            "card_party_tardy_diamond": {
+                "front_image_url": CARD_IMAGE_URLS["party_tardy_diamond"],
+            },
         }
         for card_id, updates in name_fixes.items():
             query = {"id": card_id}
