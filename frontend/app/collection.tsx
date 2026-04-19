@@ -28,6 +28,7 @@ interface Card {
   back_image_url: string;
   coin_cost: number;
   series?: number;
+  series_reward?: number;
   band?: string;
   card_type?: string;
   base_card_id?: string;
@@ -196,7 +197,10 @@ export default function CollectionScreen() {
         if (a.name !== b.name) return (a.name || '').localeCompare(b.name || '');
         return (a.variant_name || '').localeCompare(b.variant_name || '');
       });
-    return [...base, ...variants];
+    // Reward cards for this series (series_reward matches, rarity is rare/epic)
+    const rewards = allCards
+      .filter(c => c.series_reward === series && (c.rarity === 'rare' || c.rarity === 'epic'));
+    return [...base, ...rewards, ...variants];
   };
 
   const getSeriesStats = (series: number) => {
