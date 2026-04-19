@@ -42,6 +42,13 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - Fixed "Jeff Possess Ya" card names in DB
 - Added Series 5 tally with flexWrap layout fix
 - Force-pushed code to Graffux-spec repo for Render deployment
+- Collapsible series sections in Collection page (tap to expand/collapse each series)
+- Reward cards now visible in their respective series section
+- Swapped Chum Araya Hellfire/Cosmic images (were reversed)
+- Swapped Party Tardy Diamond/Oceanic images (were reversed)
+- Switched to expo-image for trade-in and spinner result images (fixes blank images on Android for large PNGs)
+- Fixed Mille Vanille variant descriptions (said "Silly Mille" instead of "Mille Vanille")
+- Bigger spin result card image (180x260) with background fallback
 
 ## Upcoming
 - P1: Confirm Google Play Store review (Internal Testing track)
