@@ -1022,13 +1022,15 @@ const styles = StyleSheet.create({
   },
   resultCardContainer: {
     marginBottom: 12,
+    alignItems: 'center',
   },
   resultCardImage: {
-    width: 140,
-    height: 180,
+    width: 180,
+    height: 260,
     borderRadius: 10,
     borderWidth: 2,
     borderColor: '#FFD700',
+    backgroundColor: '#333',
   },
   resultCardName: {
     fontSize: 18,
