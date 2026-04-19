@@ -11,6 +11,7 @@ import {
   Modal,
   Dimensions,
 } from 'react-native';
+import { Image as ExpoImage } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../src/context/AppContext';
@@ -333,10 +334,10 @@ export default function ShopScreen() {
             
             {spinResult && (
               <View style={styles.resultCardContainer}>
-                <Image
+                <ExpoImage
                   source={{ uri: spinResult.won_card.front_image_url }}
                   style={styles.resultCardImage}
-                  resizeMode="contain"
+                  contentFit="contain"
                 />
               </View>
             )}

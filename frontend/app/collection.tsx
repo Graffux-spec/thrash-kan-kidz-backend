@@ -11,6 +11,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
+import { Image as ExpoImage } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../src/context/AppContext';
@@ -248,10 +249,10 @@ export default function CollectionScreen() {
           <Text style={styles.tradeInSubtitle}>Trade 5 duplicates for a rare variant!</Text>
           {tradeInEligible.map((item) => (
             <View key={item.card.id} style={styles.tradeInCard}>
-              <Image 
+              <ExpoImage
                 source={{ uri: item.card.front_image_url }}
                 style={styles.tradeInImage}
-                resizeMode="cover"
+                contentFit="cover"
               />
               <View style={styles.tradeInInfo}>
                 <Text style={styles.tradeInName}>{item.card.name}</Text>
@@ -323,10 +324,10 @@ export default function CollectionScreen() {
                 <Text style={styles.tradeResultText}>
                   You received a {tradeInResult.won_variant?.variant_name} variant!
                 </Text>
-                <Image
+                <ExpoImage
                   source={{ uri: tradeInResult.won_variant?.front_image_url }}
                   style={styles.tradeResultImage}
-                  resizeMode="contain"
+                  contentFit="contain"
                 />
                 <Text style={styles.tradeResultText}>
                   {tradeInResult.variants_owned}/{tradeInResult.variants_total} variants collected
