@@ -2541,6 +2541,33 @@ async def admin_add_coins(user_id: str, request: Request):
     await db.users.update_one({"id": user_id}, {"$set": {"coins": new_coins}})
     return {"username": user["username"], "coins": new_coins}
 
+@api_router.post("/feedback")
+async def submit_feedback(request: Request):
+    """Submit user feedback"""
+    body = await request.json()
+    user_id = body.get("user_id", "")
+    username = body.get("username", "")
+    rating = body.get("rating", 0)
+    message = body.get("message", "")
+    if not message.strip():
+        raise HTTPException(status_code=400, detail="Feedback message is required")
+    feedback = {
+        "id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "username": username,
+        "rating": rating,
+        "message": message.strip(),
+        "created_at": datetime.utcnow().isoformat()
+    }
+    await db.feedback.insert_one(feedback)
+    return {"success": True, "message": "Thank you for your feedback!"}
+
+@api_router.get("/feedback")
+async def get_all_feedback():
+    """Get all feedback (admin)"""
+    feedback_list = await db.feedback.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return feedback_list
+
 @api_router.post("/users/{user_id}/purchase-coins")
 async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_request: Request):
     """Create a Stripe checkout session for purchasing coins"""

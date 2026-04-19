@@ -9,6 +9,7 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -23,6 +24,10 @@ export default function ProfileScreen() {
   const [editing, setEditing] = useState(false);
   const [bio, setBio] = useState(user?.bio || '');
   const [saving, setSaving] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackRating, setFeedbackRating] = useState(0);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [sendingFeedback, setSendingFeedback] = useState(false);
 
   if (!user) {
     return (
@@ -65,6 +70,43 @@ export default function ProfileScreen() {
         },
       ]
     );
+  };
+
+  const handleSubmitFeedback = async () => {
+    if (!feedbackMessage.trim()) {
+      Alert.alert('Error', 'Please write your feedback');
+      return;
+    }
+    if (feedbackRating === 0) {
+      Alert.alert('Error', 'Please select a rating');
+      return;
+    }
+    setSendingFeedback(true);
+    try {
+      const response = await fetch(`${apiUrl}/api/feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: user.id,
+          username: user.username,
+          rating: feedbackRating,
+          message: feedbackMessage.trim(),
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        Alert.alert('Thank You!', 'Your feedback has been submitted. We appreciate it!');
+        setShowFeedback(false);
+        setFeedbackRating(0);
+        setFeedbackMessage('');
+      } else {
+        Alert.alert('Error', data.detail || 'Failed to submit feedback');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to submit feedback. Please try again.');
+    } finally {
+      setSendingFeedback(false);
+    }
   };
 
   // Calculate stats
@@ -289,6 +331,21 @@ export default function ProfileScreen() {
             </View>
             <Ionicons name="chevron-forward" size={20} color="#666" />
           </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => setShowFeedback(true)}
+            data-testid="send-feedback-btn"
+          >
+            <View style={[styles.actionIconContainer, { backgroundColor: 'rgba(156, 39, 176, 0.1)' }]}>
+              <Ionicons name="chatbubble-ellipses" size={24} color="#CE93D8" />
+            </View>
+            <View style={styles.actionTextContainer}>
+              <Text style={styles.actionTitle}>Send Feedback</Text>
+              <Text style={styles.actionSubtitle}>Help us improve the app</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#666" />
+          </TouchableOpacity>
         </View>
 
         {/* Logout Button */}
@@ -310,9 +367,82 @@ export default function ProfileScreen() {
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Thrash Kan Kidz v1.0</Text>
-          <Text style={styles.footerSubtext}>Collect 'em all! 🤘</Text>
+          <Text style={styles.footerSubtext}>Collect 'em all!</Text>
         </View>
       </ScrollView>
+
+      {/* Feedback Modal */}
+      <Modal
+        visible={showFeedback}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setShowFeedback(false)}
+      >
+        <View style={styles.feedbackOverlay}>
+          <View style={styles.feedbackModal}>
+            <TouchableOpacity
+              style={styles.feedbackCloseBtn}
+              onPress={() => setShowFeedback(false)}
+            >
+              <Ionicons name="close" size={24} color="#fff" />
+            </TouchableOpacity>
+
+            <Text style={styles.feedbackTitle}>Send Feedback</Text>
+            <Text style={styles.feedbackSubtitle}>How are you enjoying Thrash Kan Kidz?</Text>
+
+            {/* Star Rating */}
+            <View style={styles.ratingContainer}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <TouchableOpacity
+                  key={star}
+                  onPress={() => setFeedbackRating(star)}
+                  data-testid={`rating-star-${star}`}
+                >
+                  <Ionicons
+                    name={star <= feedbackRating ? 'star' : 'star-outline'}
+                    size={40}
+                    color={star <= feedbackRating ? '#FFD700' : '#555'}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+            <Text style={styles.ratingLabel}>
+              {feedbackRating === 0 ? 'Tap to rate' :
+               feedbackRating === 1 ? 'Needs work' :
+               feedbackRating === 2 ? 'Could be better' :
+               feedbackRating === 3 ? 'Pretty good' :
+               feedbackRating === 4 ? 'Love it!' : 'THRASH APPROVED!'}
+            </Text>
+
+            {/* Message Input */}
+            <TextInput
+              style={styles.feedbackInput}
+              placeholder="Tell us what you think... bugs, suggestions, favorite cards?"
+              placeholderTextColor="#666"
+              value={feedbackMessage}
+              onChangeText={setFeedbackMessage}
+              multiline
+              maxLength={500}
+              data-testid="feedback-message-input"
+            />
+            <Text style={styles.charCount}>{feedbackMessage.length}/500</Text>
+
+            {/* Submit Button */}
+            <TouchableOpacity
+              style={[styles.feedbackSubmitBtn, sendingFeedback && { opacity: 0.5 }]}
+              onPress={handleSubmitFeedback}
+              disabled={sendingFeedback}
+              data-testid="submit-feedback-btn"
+            >
+              {sendingFeedback ? (
+                <ActivityIndicator size="small" color="#000" />
+              ) : (
+                <Text style={styles.feedbackSubmitText}>SUBMIT FEEDBACK</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -661,5 +791,84 @@ const styles = StyleSheet.create({
     color: '#444',
     fontSize: 12,
     marginTop: 4,
+  },
+  // Feedback Modal
+  feedbackOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  feedbackModal: {
+    width: '90%',
+    backgroundColor: '#1a1a2e',
+    borderRadius: 20,
+    padding: 24,
+    borderWidth: 2,
+    borderColor: '#9C27B0',
+  },
+  feedbackCloseBtn: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    zIndex: 10,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 20,
+    padding: 6,
+  },
+  feedbackTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  feedbackSubtitle: {
+    fontSize: 14,
+    color: '#aaa',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  ratingLabel: {
+    fontSize: 14,
+    color: '#CE93D8',
+    textAlign: 'center',
+    fontWeight: '600',
+    marginBottom: 16,
+  },
+  feedbackInput: {
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 12,
+    padding: 14,
+    color: '#fff',
+    fontSize: 14,
+    minHeight: 100,
+    textAlignVertical: 'top',
+    borderWidth: 1,
+    borderColor: '#333',
+  },
+  charCount: {
+    fontSize: 11,
+    color: '#666',
+    textAlign: 'right',
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  feedbackSubmitBtn: {
+    backgroundColor: '#FFD700',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  feedbackSubmitText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
