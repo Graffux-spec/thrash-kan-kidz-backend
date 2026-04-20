@@ -10,12 +10,14 @@ import {
   Easing,
   Modal,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { Image as ExpoImage } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../src/context/AppContext';
 import BuyCoinsModal from '../src/components/BuyCoinsModal';
+import { DailyWheelModal } from '../src/components/DailyWheelModal';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -48,11 +50,18 @@ export default function ShopScreen() {
   const [showSeriesComplete, setShowSeriesComplete] = useState(false);
   const [showBuyCoins, setShowBuyCoins] = useState(false);
   const [spinPool, setSpinPool] = useState<SpinPoolData | null>(null);
-  const [spinConfig, setSpinConfig] = useState({ spin_cost: 50 });
+  const [spinConfig, setSpinConfig] = useState({ spin_cost: 75 });
   const [selectedSeries, setSelectedSeries] = useState<number | null>(null);
   const [packState, setPackState] = useState<'idle' | 'shaking' | 'opening' | 'revealed'>('idle');
   const [cardFlipped, setCardFlipped] = useState(false);
   const [showFrontImage, setShowFrontImage] = useState(false);
+  
+  // Daily wheel & medals
+  const [showDailyWheel, setShowDailyWheel] = useState(false);
+  const [wheelStreak, setWheelStreak] = useState(0);
+  const [medals, setMedals] = useState(0);
+  const [freePacks, setFreePacks] = useState(0);
+  const [dailyWheelChecked, setDailyWheelChecked] = useState(false);
   
   // Animation values
   const shakeAnim = useRef(new Animated.Value(0)).current;
@@ -83,7 +92,63 @@ export default function ShopScreen() {
 
   useEffect(() => {
     fetchSpinData();
+    checkDailyWheel();
   }, [user]);
+
+  const checkDailyWheel = async () => {
+    if (!user || dailyWheelChecked) return;
+    try {
+      const res = await fetch(`${apiUrl}/api/users/${user.id}/daily-wheel`);
+      const data = await res.json();
+      setMedals(data.medals || 0);
+      setFreePacks(data.free_packs || 0);
+      setWheelStreak(data.wheel_streak || 0);
+      if (data.can_spin) {
+        setShowDailyWheel(true);
+      }
+      setDailyWheelChecked(true);
+    } catch (err) {
+      console.error('Error checking daily wheel:', err);
+    }
+  };
+
+  const handleWheelSpin = async () => {
+    const res = await fetch(`${apiUrl}/api/users/${user.id}/daily-wheel/spin`, { method: 'POST' });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || 'Failed to spin');
+    }
+    const data = await res.json();
+    setMedals(data.medals || 0);
+    setFreePacks(data.free_packs || 0);
+    setWheelStreak(data.streak || 0);
+    refreshData();
+    return data;
+  };
+
+  const handleReroll = async () => {
+    if (!spinResult?.won_cards || !user) return;
+    try {
+      const series = selectedSeries || 1;
+      const old_card_ids = spinResult.won_cards.map((c: any) => c.card.id);
+      const res = await fetch(`${apiUrl}/api/users/${user.id}/reroll`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ series, old_card_ids }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        Alert.alert('Error', err.detail || 'Failed to reroll');
+        return;
+      }
+      const data = await res.json();
+      setSpinResult({ ...spinResult, won_cards: data.won_cards, won_card: data.won_cards[0]?.card });
+      setMedals(data.remaining_medals);
+      refreshData();
+    } catch (err) {
+      Alert.alert('Error', 'Failed to reroll');
+    }
+  };
 
   const fetchSpinData = async (series?: number) => {
     if (!user) return;
@@ -357,6 +422,14 @@ export default function ShopScreen() {
                 {spinResult?.series_completion?.series_completed ? 'Continue...' : 'Awesome!'}
               </Text>
             </TouchableOpacity>
+            
+            {/* Reroll Button */}
+            {medals >= 3 && spinResult?.won_cards && (
+              <TouchableOpacity style={styles.rerollButton} onPress={handleReroll} data-testid="reroll-btn">
+                <Ionicons name="refresh" size={16} color="#000" />
+                <Text style={styles.rerollText}>REROLL (3 Medals)</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Modal>
@@ -408,9 +481,15 @@ export default function ShopScreen() {
           </View>
           <View style={styles.coinSection}>
             <View style={styles.coinDisplay}>
-              <Text style={styles.coinIcon}>💰</Text>
+              <Text style={styles.coinIcon}>coins</Text>
               <Text style={styles.coinText}>{user.coins}</Text>
             </View>
+            {medals > 0 && (
+              <View style={styles.medalDisplay}>
+                <Ionicons name="medal" size={16} color="#FF9800" />
+                <Text style={styles.medalText}>{medals}</Text>
+              </View>
+            )}
             <TouchableOpacity 
               style={styles.buyCoinsButton}
               onPress={() => setShowBuyCoins(true)}
@@ -608,6 +687,14 @@ export default function ShopScreen() {
           </View>
         )}
       </ScrollView>
+
+      {/* Daily Wheel Modal */}
+      <DailyWheelModal
+        visible={showDailyWheel}
+        onClose={() => setShowDailyWheel(false)}
+        onSpin={handleWheelSpin}
+        streak={wheelStreak}
+      />
     </SafeAreaView>
   );
 }
@@ -687,6 +774,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#FFD700',
+  },
+  medalDisplay: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
+    gap: 4,
+  },
+  medalText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FF9800',
   },
   buyCoinsButton: {
     flexDirection: 'row',
@@ -1103,6 +1204,21 @@ const styles = StyleSheet.create({
   closeResultText: {
     color: '#000',
     fontSize: 15,
+    fontWeight: 'bold',
+  },
+  rerollButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FF9800',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    marginTop: 8,
+    gap: 6,
+  },
+  rerollText: {
+    color: '#000',
+    fontSize: 13,
     fontWeight: 'bold',
   },
   // Series Complete Modal
