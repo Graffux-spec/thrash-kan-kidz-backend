@@ -53,7 +53,15 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - Transferred Hellbound cards (100) to hellboundjeff@gmail.com account
 
 ## In Progress
-- Friends system frontend (Trade page UI: friends list, add friends, pending requests)
+- COMPLETED: Daily Wheel + Medal System + Pack Reroll
+
+## Completed (April 20, 2026)
+- Daily Spin Wheel: Popup on app open, 8 prize slices, 7-day streak bonus, animated spin
+- Medal System: Earn from wheel, spend on rerolls (3 medals) or free packs (10 medals)
+- Pack Reroll: After opening, spend 3 medals to replace all 3 cards with new random ones
+- 3-card packs at 75 coins (was 1 card at 50)
+- Friends system: Search by username/code, send/accept requests, gate trading behind friendship
+- Friends UI on Trade page with tabs, friend codes, and trade-with button
 
 ## Upcoming
 - P1: Confirm Google Play Store review
