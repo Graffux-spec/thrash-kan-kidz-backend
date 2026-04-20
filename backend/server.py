@@ -153,6 +153,20 @@ class SpinWheelRequest(BaseModel):
 # Spin Wheel Configuration
 # =====================
 SPIN_COST = 75  # Coins per pack (3 cards)
+REROLL_COST_MEDALS = 3  # Medals to reroll all 3 cards
+FREE_PACK_COST_MEDALS = 10  # Medals for a free pack
+
+# Daily Wheel Configuration
+DAILY_WHEEL_PRIZES = [
+    {"type": "coins", "amount": 25, "label": "25 Coins", "weight": 25},
+    {"type": "coins", "amount": 50, "label": "50 Coins", "weight": 20},
+    {"type": "coins", "amount": 100, "label": "100 Coins", "weight": 15},
+    {"type": "coins", "amount": 200, "label": "200 Coins", "weight": 5},
+    {"type": "medals", "amount": 1, "label": "1 Medal", "weight": 20},
+    {"type": "medals", "amount": 3, "label": "3 Medals", "weight": 10},
+    {"type": "medals", "amount": 5, "label": "5 Medals", "weight": 3},
+    {"type": "free_pack", "amount": 1, "label": "Free Pack!", "weight": 2},
+]
 
 # =====================
 # Series Configuration
@@ -2769,6 +2783,221 @@ async def get_friend_requests(user_id: str):
     }, {"_id": 0}).to_list(100)
     
     return {"incoming": incoming, "outgoing": outgoing}
+
+# =====================
+# Daily Wheel & Medals System
+# =====================
+
+@api_router.get("/users/{user_id}/daily-wheel")
+async def get_daily_wheel_status(user_id: str):
+    """Check if user can spin the daily wheel"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    last_wheel_spin = user.get("last_wheel_spin", "")
+    can_spin = last_wheel_spin != today
+    medals = user.get("medals", 0)
+    free_packs = user.get("free_packs", 0)
+    wheel_streak = user.get("wheel_streak", 0)
+    
+    return {
+        "can_spin": can_spin,
+        "medals": medals,
+        "free_packs": free_packs,
+        "wheel_streak": wheel_streak,
+        "prizes": DAILY_WHEEL_PRIZES,
+        "last_spin": last_wheel_spin,
+        "reroll_cost": REROLL_COST_MEDALS,
+        "free_pack_cost": FREE_PACK_COST_MEDALS,
+    }
+
+@api_router.post("/users/{user_id}/daily-wheel/spin")
+async def spin_daily_wheel(user_id: str):
+    """Spin the daily wheel for a prize"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    last_wheel_spin = user.get("last_wheel_spin", "")
+    
+    if last_wheel_spin == today:
+        raise HTTPException(status_code=400, detail="Already spun today! Come back tomorrow.")
+    
+    # Check streak
+    yesterday = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
+    old_streak = user.get("wheel_streak", 0)
+    new_streak = (old_streak + 1) if last_wheel_spin == yesterday else 1
+    
+    # Pick weighted random prize
+    # On 7-day streak, guarantee a big prize
+    if new_streak >= 7 and new_streak % 7 == 0:
+        big_prizes = [p for p in DAILY_WHEEL_PRIZES if p["type"] == "free_pack" or (p["type"] == "medals" and p["amount"] >= 5) or (p["type"] == "coins" and p["amount"] >= 200)]
+        prize = random.choice(big_prizes) if big_prizes else random.choice(DAILY_WHEEL_PRIZES)
+    else:
+        weights = [p["weight"] for p in DAILY_WHEEL_PRIZES]
+        prize = random.choices(DAILY_WHEEL_PRIZES, weights=weights, k=1)[0]
+    
+    # Apply prize
+    update = {
+        "last_wheel_spin": today,
+        "wheel_streak": new_streak,
+    }
+    
+    if prize["type"] == "coins":
+        update["coins"] = user.get("coins", 0) + prize["amount"]
+    elif prize["type"] == "medals":
+        update["medals"] = user.get("medals", 0) + prize["amount"]
+    elif prize["type"] == "free_pack":
+        update["free_packs"] = user.get("free_packs", 0) + prize["amount"]
+    
+    await db.users.update_one({"id": user_id}, {"$set": update})
+    
+    return {
+        "success": True,
+        "prize": prize,
+        "streak": new_streak,
+        "streak_bonus": new_streak >= 7 and new_streak % 7 == 0,
+        "medals": update.get("medals", user.get("medals", 0)),
+        "coins": update.get("coins", user.get("coins", 0)),
+        "free_packs": update.get("free_packs", user.get("free_packs", 0)),
+    }
+
+@api_router.post("/users/{user_id}/reroll")
+async def reroll_pack(user_id: str, request: Request):
+    """Reroll all 3 cards in a pack for medals"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    medals = user.get("medals", 0)
+    if medals < REROLL_COST_MEDALS:
+        raise HTTPException(status_code=400, detail=f"Need {REROLL_COST_MEDALS} medals to reroll. You have {medals}.")
+    
+    body = await request.json()
+    series = body.get("series", 1)
+    old_card_ids = body.get("old_card_ids", [])
+    
+    # Get available cards for the series
+    series_cards = await db.cards.find({
+        "series": series,
+        "rarity": "common",
+        "available": True,
+        "engagement_milestone": None
+    }).to_list(100)
+    
+    if not series_cards:
+        raise HTTPException(status_code=400, detail="No cards available")
+    
+    # Remove old cards from collection
+    for card_id in old_card_ids:
+        existing = await db.user_cards.find_one({"user_id": user_id, "card_id": card_id})
+        if existing:
+            if existing.get("quantity", 1) > 1:
+                await db.user_cards.update_one({"id": existing["id"]}, {"$inc": {"quantity": -1}})
+            else:
+                await db.user_cards.delete_one({"id": existing["id"]})
+    
+    # Pick 3 new random cards
+    won_cards = random.choices(series_cards, k=3)
+    
+    cards_result = []
+    for won_card in won_cards:
+        existing_user_card = await db.user_cards.find_one({"user_id": user_id, "card_id": won_card["id"]})
+        is_duplicate = existing_user_card is not None
+        if existing_user_card:
+            await db.user_cards.update_one({"id": existing_user_card["id"]}, {"$inc": {"quantity": 1}})
+        else:
+            user_card = UserCard(user_id=user_id, card_id=won_card["id"])
+            await db.user_cards.insert_one(user_card.dict())
+        cards_result.append({"card": Card(**won_card), "is_duplicate": is_duplicate})
+    
+    # Deduct medals
+    new_medals = medals - REROLL_COST_MEDALS
+    await db.users.update_one({"id": user_id}, {"$set": {"medals": new_medals}})
+    
+    return {
+        "success": True,
+        "won_cards": cards_result,
+        "remaining_medals": new_medals,
+    }
+
+@api_router.post("/users/{user_id}/redeem-free-pack")
+async def redeem_free_pack(user_id: str, request: Request):
+    """Use a free pack or spend medals for a free pack"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    body = await request.json()
+    series = body.get("series", 1)
+    use_medals = body.get("use_medals", False)
+    
+    free_packs = user.get("free_packs", 0)
+    medals = user.get("medals", 0)
+    
+    if use_medals:
+        if medals < FREE_PACK_COST_MEDALS:
+            raise HTTPException(status_code=400, detail=f"Need {FREE_PACK_COST_MEDALS} medals. You have {medals}.")
+        await db.users.update_one({"id": user_id}, {"$set": {"medals": medals - FREE_PACK_COST_MEDALS}})
+    elif free_packs > 0:
+        await db.users.update_one({"id": user_id}, {"$set": {"free_packs": free_packs - 1}})
+    else:
+        raise HTTPException(status_code=400, detail="No free packs available")
+    
+    # Get cards for the series
+    series_cards = await db.cards.find({
+        "series": series,
+        "rarity": "common",
+        "available": True,
+        "engagement_milestone": None
+    }).to_list(100)
+    
+    if not series_cards:
+        raise HTTPException(status_code=400, detail="No cards available")
+    
+    won_cards = random.choices(series_cards, k=3)
+    
+    cards_result = []
+    for won_card in won_cards:
+        existing_user_card = await db.user_cards.find_one({"user_id": user_id, "card_id": won_card["id"]})
+        is_duplicate = existing_user_card is not None
+        if existing_user_card:
+            await db.user_cards.update_one({"id": existing_user_card["id"]}, {"$inc": {"quantity": 1}})
+        else:
+            user_card = UserCard(user_id=user_id, card_id=won_card["id"])
+            await db.user_cards.insert_one(user_card.dict())
+        cards_result.append({"card": Card(**won_card), "is_duplicate": is_duplicate})
+    
+    # Check series completion
+    series_completion = await check_series_completion(user_id, series)
+    
+    updated_user = await db.users.find_one({"id": user_id})
+    
+    return {
+        "success": True,
+        "won_cards": cards_result,
+        "remaining_coins": updated_user.get("coins", 0),
+        "remaining_medals": updated_user.get("medals", 0),
+        "remaining_free_packs": updated_user.get("free_packs", 0),
+        "series_completion": series_completion,
+    }
+
+@api_router.get("/users/{user_id}/medals")
+async def get_medals(user_id: str):
+    """Get user's medal count and available rewards"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "medals": user.get("medals", 0),
+        "free_packs": user.get("free_packs", 0),
+        "reroll_cost": REROLL_COST_MEDALS,
+        "free_pack_cost": FREE_PACK_COST_MEDALS,
+    }
 
 @api_router.post("/users/{user_id}/purchase-coins")
 async def create_coin_checkout(user_id: str, request: CoinPurchaseRequest, http_request: Request):
