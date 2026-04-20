@@ -21,9 +21,11 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface SpinResult {
   won_card: any;
+  won_cards?: { card: any; is_duplicate: boolean }[];
   rarity: string;
   is_duplicate: boolean;
   remaining_coins: number;
+  pack_size?: number;
   series_completion?: any;
 }
 
@@ -328,28 +330,25 @@ export default function ShopScreen() {
       <Modal visible={showResult} transparent animationType="fade" onRequestClose={closeResult}>
         <View style={styles.resultOverlay}>
           <View style={styles.resultContainer}>
-            <Text style={styles.resultTitle}>
-              {spinResult?.is_duplicate ? '📦 Duplicate!' : '🎉 New Card!'}
-            </Text>
+            <Text style={styles.resultTitle}>Pack Opened!</Text>
             
-            {spinResult && (
-              <View style={styles.resultCardContainer}>
-                <ExpoImage
-                  source={{ uri: spinResult.won_card.front_image_url }}
-                  style={styles.resultCardImage}
-                  contentFit="contain"
-                />
-              </View>
-            )}
-            
-            <Text style={styles.resultCardName}>{spinResult?.won_card?.name}</Text>
-            <Text style={styles.resultBand}>
-              {spinResult?.won_card?.band} - Card {spinResult?.won_card?.card_type}
-            </Text>
-            
-            {spinResult?.is_duplicate && (
-              <View style={styles.duplicateBadge}>
-                <Text style={styles.duplicateText}>Added for trading!</Text>
+            {spinResult?.won_cards && (
+              <View style={styles.packCardsRow}>
+                {spinResult.won_cards.map((item: any, index: number) => (
+                  <View key={index} style={styles.packCardItem}>
+                    <View style={[styles.packCardImageWrap, item.is_duplicate && styles.packCardDupe]}>
+                      <ExpoImage
+                        source={{ uri: item.card.front_image_url }}
+                        style={styles.packCardImage}
+                        contentFit="contain"
+                      />
+                    </View>
+                    <Text style={styles.packCardName} numberOfLines={2}>{item.card.name}</Text>
+                    {item.is_duplicate && (
+                      <Text style={styles.packCardDupeLabel}>DUPE</Text>
+                    )}
+                  </View>
+                ))}
               </View>
             )}
             
@@ -1032,6 +1031,45 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#FFD700',
     backgroundColor: '#333',
+  },
+  packCardsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
+  packCardItem: {
+    flex: 1,
+    alignItems: 'center',
+    maxWidth: 110,
+  },
+  packCardImageWrap: {
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#FFD700',
+    overflow: 'hidden',
+    backgroundColor: '#333',
+  },
+  packCardDupe: {
+    borderColor: '#888',
+  },
+  packCardImage: {
+    width: 100,
+    height: 145,
+  },
+  packCardName: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 6,
+  },
+  packCardDupeLabel: {
+    color: '#FF9800',
+    fontSize: 9,
+    fontWeight: 'bold',
+    marginTop: 2,
   },
   resultCardName: {
     fontSize: 18,

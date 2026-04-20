@@ -152,7 +152,7 @@ class SpinWheelRequest(BaseModel):
 # =====================
 # Spin Wheel Configuration
 # =====================
-SPIN_COST = 50  # Coins per spin
+SPIN_COST = 75  # Coins per pack (3 cards)
 
 # =====================
 # Series Configuration
@@ -1562,32 +1562,9 @@ async def spin_wheel(user_id: str, series: int = None):
     if not series_cards:
         raise HTTPException(status_code=400, detail="No cards available to spin in current series")
     
-    # Get user's owned cards and quantities for this series
-    series_card_ids = [c["id"] for c in series_cards]
-    user_cards_in_series = await db.user_cards.find({
-        "user_id": user_id,
-        "card_id": {"$in": series_card_ids}
-    }).to_list(100)
-    
-    owned_quantities = {uc["card_id"]: uc.get("quantity", 1) for uc in user_cards_in_series}
-    
-    # Filter out cards that already have 6 duplicates
-    MAX_DUPLICATES = 6
-    eligible_cards = [c for c in series_cards if owned_quantities.get(c["id"], 0) < MAX_DUPLICATES]
-    
-    if not eligible_cards:
-        raise HTTPException(status_code=400, detail="You have max duplicates of all cards in this series! Try trading for variants.")
-    
-    # Prioritize unowned cards (70% chance for unowned, 30% for duplicates)
-    unowned_cards = [c for c in eligible_cards if c["id"] not in owned_quantities]
-    owned_cards = [c for c in eligible_cards if c["id"] in owned_quantities]
-    
-    if unowned_cards and owned_cards and random.random() < 0.7:
-        won_card = random.choice(unowned_cards)
-    elif unowned_cards and not owned_cards:
-        won_card = random.choice(unowned_cards)
-    else:
-        won_card = random.choice(eligible_cards)
+    # Pick 3 random cards (duplicates allowed across the pack)
+    PACK_SIZE = 3
+    won_cards = random.choices(series_cards, k=PACK_SIZE)
     
     # Deduct coins and track spending
     new_coins = user.get("coins", 0) - SPIN_COST
@@ -1598,22 +1575,29 @@ async def spin_wheel(user_id: str, series: int = None):
         {"$set": {"coins": new_coins, "total_spent_coins": new_total_spent}}
     )
     
-    # Add card to collection (or increase quantity if duplicate)
-    existing_user_card = await db.user_cards.find_one({
-        "user_id": user_id,
-        "card_id": won_card["id"]
-    })
-    
-    is_duplicate = existing_user_card is not None
-    
-    if existing_user_card:
-        await db.user_cards.update_one(
-            {"id": existing_user_card["id"]},
-            {"$inc": {"quantity": 1}}
-        )
-    else:
-        user_card = UserCard(user_id=user_id, card_id=won_card["id"])
-        await db.user_cards.insert_one(user_card.dict())
+    # Add each card to collection
+    cards_result = []
+    for won_card in won_cards:
+        existing_user_card = await db.user_cards.find_one({
+            "user_id": user_id,
+            "card_id": won_card["id"]
+        })
+        
+        is_duplicate = existing_user_card is not None
+        
+        if existing_user_card:
+            await db.user_cards.update_one(
+                {"id": existing_user_card["id"]},
+                {"$inc": {"quantity": 1}}
+            )
+        else:
+            user_card = UserCard(user_id=user_id, card_id=won_card["id"])
+            await db.user_cards.insert_one(user_card.dict())
+        
+        cards_result.append({
+            "card": Card(**won_card),
+            "is_duplicate": is_duplicate,
+        })
     
     # Check for series completion
     series_completion = await check_series_completion(user_id, current_series)
@@ -1626,11 +1610,12 @@ async def spin_wheel(user_id: str, series: int = None):
     
     return {
         "success": True,
-        "won_card": Card(**won_card),
-        "rarity": "common",
-        "is_duplicate": is_duplicate,
+        "won_cards": cards_result,
+        "won_card": cards_result[0]["card"],  # Backwards compat
+        "is_duplicate": cards_result[0]["is_duplicate"],  # Backwards compat
         "remaining_coins": new_coins,
         "spin_cost": SPIN_COST,
+        "pack_size": PACK_SIZE,
         "current_series": current_series,
         "series_completion": series_completion,
         "engagement_unlock": engagement_unlock
