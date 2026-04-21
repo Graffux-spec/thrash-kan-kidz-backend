@@ -2685,6 +2685,35 @@ async def get_all_feedback():
     feedback_list = await db.feedback.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return feedback_list
 
+@api_router.get("/feedback/view")
+async def view_feedback_page():
+    """View feedback as a nice HTML page"""
+    feedback_list = await db.feedback.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    stars_html = ""
+    for f in feedback_list:
+        rating = f.get("rating", 0)
+        stars = "★" * rating + "☆" * (5 - rating)
+        message = f.get("message", "").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
+        stars_html += f"""
+        <div style="background:#1a1a2e;border:1px solid #333;border-radius:12px;padding:16px;margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <strong style="color:#FFD700;font-size:16px;">{f.get('username','Anonymous')}</strong>
+                <span style="color:#FFD700;font-size:18px;">{stars}</span>
+            </div>
+            <p style="color:#ddd;margin:8px 0;font-size:14px;">{message}</p>
+            <small style="color:#666;">{f.get('created_at','')[:16]}</small>
+        </div>"""
+    
+    html = f"""<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Thrash Kan Kidz - Feedback</title></head>
+    <body style="background:#0f0f1a;color:#fff;font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+    <h1 style="color:#FFD700;text-align:center;">Tester Feedback</h1>
+    <p style="color:#888;text-align:center;">{len(feedback_list)} responses</p>
+    {stars_html}
+    </body></html>"""
+    from fastapi.responses import HTMLResponse
+    return HTMLResponse(content=html)
+
 # =====================
 # Friends System
 # =====================
