@@ -19,9 +19,9 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // Google Play product IDs mapped to package IDs
 const GOOGLE_PLAY_PRODUCTS: Record<string, string> = {
-  'small': 'thrash_kan_kidz_coins_200',
-  'medium': 'thrash_kan_kidz_coins_500',
-  'large': 'thrash_kan_kidz_coins_1000',
+  'small': 'thrash-kan-kidz-coins-200',
+  'medium': 'thrash-kan-kidz-coins-500',
+  'large': 'thrash-kan-kidz-coins-1000',
 };
 
 // react-native-iap is native-only, loaded dynamically at runtime on device builds
