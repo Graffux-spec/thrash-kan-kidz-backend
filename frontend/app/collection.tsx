@@ -63,10 +63,10 @@ const SimpleCard = ({
   if (!isOwned) {
     return (
       <View style={[styles.cardContainer, styles.mysteryCard]}>
-        <Image
+        <ExpoImage
           source={{ uri: MYSTERY_CARD_IMAGE }}
           style={styles.cardImage}
-          resizeMode="cover"
+          contentFit="cover"
         />
         <View style={styles.mysteryOverlay}>
           <Text style={styles.mysteryText}>?</Text>
@@ -77,10 +77,10 @@ const SimpleCard = ({
 
   return (
     <TouchableOpacity onPress={onPress} style={[styles.cardContainer, isVariant && styles.variantCardBorder]}>
-      <Image
+      <ExpoImage
         source={{ uri: card.front_image_url }}
         style={styles.cardImage}
-        resizeMode="cover"
+        contentFit="cover"
       />
       {quantity > 1 && (
         <View style={styles.quantityBadge}>
@@ -384,14 +384,14 @@ export default function CollectionScreen() {
             {selectedCard && (
               <ScrollView contentContainerStyle={styles.modalScrollContent}>
                 <TouchableOpacity onPress={() => setShowFront(!showFront)}>
-                  <Image
-                    source={{ uri: showFront ? selectedCard.card.front_image_url : selectedCard.card.back_image_url }}
+                  <ExpoImage
+                    source={{ uri: showFront ? selectedCard.card.front_image_url : (selectedCard.card.back_image_url || selectedCard.card.front_image_url) }}
                     style={styles.modalCardImage}
-                    resizeMode="contain"
+                    contentFit="contain"
                   />
                 </TouchableOpacity>
                 
-                <Text style={styles.tapHint}>Tap card to flip</Text>
+                <Text style={styles.tapHint}>Tap card to flip {showFront ? '(Front)' : '(Back)'}</Text>
 
                 <View style={styles.modalCardInfo}>
                   <Text style={styles.modalCardName}>{selectedCard.card.name}</Text>
@@ -797,6 +797,7 @@ const styles = StyleSheet.create({
     width: width * 0.7,
     height: width * 1.05,
     borderRadius: 12,
+    backgroundColor: '#333',
   },
   tapHint: {
     color: '#888',
