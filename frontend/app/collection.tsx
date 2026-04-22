@@ -58,11 +58,12 @@ const SimpleCard = ({
   onPress: () => void;
 }) => {
   const isVariant = !!card.base_card_id;
+  const isReward = card.rarity === 'rare' || card.rarity === 'epic';
 
   // If not owned, show mystery card
   if (!isOwned) {
     return (
-      <View style={[styles.cardContainer, styles.mysteryCard]}>
+      <View style={[styles.cardContainer, styles.mysteryCard, isReward && styles.rewardCardBorder]}>
         <ExpoImage
           source={{ uri: MYSTERY_CARD_IMAGE }}
           style={styles.cardImage}
@@ -71,12 +72,17 @@ const SimpleCard = ({
         <View style={styles.mysteryOverlay}>
           <Text style={styles.mysteryText}>?</Text>
         </View>
+        {isReward && (
+          <View style={styles.rewardBadge}>
+            <Text style={styles.rewardBadgeText}>REWARD</Text>
+          </View>
+        )}
       </View>
     );
   }
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.cardContainer, isVariant && styles.variantCardBorder]}>
+    <TouchableOpacity onPress={onPress} style={[styles.cardContainer, isVariant && styles.variantCardBorder, isReward && styles.rewardCardBorder]}>
       <ExpoImage
         source={{ uri: card.front_image_url }}
         style={styles.cardImage}
@@ -541,6 +547,29 @@ const styles = StyleSheet.create({
   variantCardBorder: {
     borderWidth: 2,
     borderColor: '#9C27B0',
+  },
+  rewardCardBorder: {
+    borderWidth: 3,
+    borderColor: '#FFD700',
+    shadowColor: '#FFD700',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  rewardBadge: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    backgroundColor: '#FFD700',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  rewardBadgeText: {
+    color: '#000',
+    fontSize: 7,
+    fontWeight: 'bold',
   },
   cardImage: {
     width: '100%',
