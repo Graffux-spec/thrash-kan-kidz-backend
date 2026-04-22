@@ -1,21 +1,26 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, Animated, Easing, Dimensions } from 'react-native';
+import { Image as ExpoImage } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+const WHEEL_IMAGE = 'https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/setdivo6_file_00000000ec5c722fb941eafbda99a3d2.png';
+
+// Prizes in clockwise order starting from top (matching the wheel image)
+// Image layout (clockwise from top): 200 coins, Free Pack, 25 coins, 1 medal, 50 coins, 3 medals, 100 coins, 5 medals
 const PRIZES = [
-  { type: 'coins', amount: 25, label: '25', color: '#4CAF50', icon: 'cash' },
-  { type: 'medals', amount: 1, label: '1', color: '#FF9800', icon: 'medal' },
-  { type: 'coins', amount: 50, label: '50', color: '#4CAF50', icon: 'cash' },
-  { type: 'medals', amount: 3, label: '3', color: '#FF9800', icon: 'medal' },
-  { type: 'coins', amount: 100, label: '100', color: '#2196F3', icon: 'cash' },
-  { type: 'medals', amount: 5, label: '5', color: '#E91E63', icon: 'medal' },
-  { type: 'coins', amount: 200, label: '200', color: '#9C27B0', icon: 'cash' },
-  { type: 'free_pack', amount: 1, label: 'FREE', color: '#FFD700', icon: 'gift' },
+  { type: 'coins', amount: 200, label: '200 Coins' },
+  { type: 'free_pack', amount: 1, label: 'Free Pack!' },
+  { type: 'coins', amount: 25, label: '25 Coins' },
+  { type: 'medals', amount: 1, label: '1 Medal' },
+  { type: 'coins', amount: 50, label: '50 Coins' },
+  { type: 'medals', amount: 3, label: '3 Medals' },
+  { type: 'coins', amount: 100, label: '100 Coins' },
+  { type: 'medals', amount: 5, label: '5 Medals' },
 ];
 
-const SLICE_ANGLE = 360 / PRIZES.length;
+const SLICE_ANGLE = 360 / PRIZES.length; // 45 degrees per slice
 
 interface DailyWheelModalProps {
   visible: boolean;
@@ -28,6 +33,7 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ visible, onClo
   const [spinning, setSpinning] = useState(false);
   const [result, setResult] = useState<any>(null);
   const spinAnim = useRef(new Animated.Value(0)).current;
+  const currentRotation = useRef(0);
 
   const handleSpin = async () => {
     if (spinning) return;
@@ -44,15 +50,21 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ visible, onClo
       );
       const targetIndex = prizeIndex >= 0 ? prizeIndex : 0;
 
-      // Calculate rotation: multiple full rotations + land on the prize
-      const targetAngle = 360 - (targetIndex * SLICE_ANGLE + SLICE_ANGLE / 2);
-      const totalRotation = 360 * 5 + targetAngle; // 5 full spins + target
+      // The pointer is at the top. We need to rotate the wheel so the target slice
+      // ends up at the top. Each slice is 45 degrees.
+      // Target angle to land on center of the prize slice
+      const targetAngle = targetIndex * SLICE_ANGLE + SLICE_ANGLE / 2;
+      // We want to spin backwards (clockwise visually) so subtract from 360
+      const landingAngle = 360 - targetAngle;
+      const totalRotation = 360 * 6 + landingAngle; // 6 full spins + landing
 
       spinAnim.setValue(0);
+      currentRotation.current = landingAngle;
+
       Animated.timing(spinAnim, {
         toValue: totalRotation,
-        duration: 4000,
-        easing: Easing.bezier(0.2, 0.8, 0.2, 1),
+        duration: 5000,
+        easing: Easing.bezier(0.15, 0.85, 0.2, 1),
         useNativeDriver: true,
       }).start(() => {
         setResult(data);
@@ -66,6 +78,7 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ visible, onClo
 
   const handleClose = () => {
     spinAnim.setValue(0);
+    currentRotation.current = 0;
     setResult(null);
     setSpinning(false);
     onClose();
@@ -76,12 +89,13 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ visible, onClo
     outputRange: ['0deg', '360deg'],
   });
 
-  const WHEEL_SIZE = Math.min(SCREEN_WIDTH - 80, 300);
+  const WHEEL_SIZE = Math.min(SCREEN_WIDTH - 40, 340);
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
       <View style={styles.overlay}>
         <View style={styles.container}>
+          {/* Close button */}
           <TouchableOpacity style={styles.closeBtn} onPress={handleClose} data-testid="close-wheel-btn">
             <Ionicons name="close" size={24} color="#fff" />
           </TouchableOpacity>
@@ -93,49 +107,20 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ visible, onClo
             </Text>
           )}
 
-          {/* Wheel */}
-          <View style={[styles.wheelContainer, { width: WHEEL_SIZE + 20, height: WHEEL_SIZE + 20 }]}>
-            {/* Pointer */}
-            <View style={styles.pointer}>
-              <Ionicons name="caret-down" size={32} color="#FFD700" />
-            </View>
-
+          {/* Wheel with image */}
+          <View style={[styles.wheelContainer, { width: WHEEL_SIZE, height: WHEEL_SIZE }]}>
             <Animated.View
               style={[
-                styles.wheel,
-                { width: WHEEL_SIZE, height: WHEEL_SIZE, borderRadius: WHEEL_SIZE / 2 },
+                styles.wheelImageWrap,
+                { width: WHEEL_SIZE, height: WHEEL_SIZE },
                 { transform: [{ rotate: wheelRotation }] },
               ]}
             >
-              {PRIZES.map((prize, index) => {
-                const rotation = index * SLICE_ANGLE;
-                return (
-                  <View
-                    key={index}
-                    style={[
-                      styles.slice,
-                      {
-                        transform: [
-                          { rotate: `${rotation}deg` },
-                          { translateY: -WHEEL_SIZE / 4 },
-                        ],
-                      },
-                    ]}
-                  >
-                    <View style={[styles.sliceContent, { backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)' }]}>
-                      <Ionicons
-                        name={prize.icon as any}
-                        size={18}
-                        color={prize.color}
-                      />
-                      <Text style={[styles.sliceText, { color: prize.color }]}>{prize.label}</Text>
-                    </View>
-                  </View>
-                );
-              })}
-              <View style={styles.wheelCenter}>
-                <Text style={styles.wheelCenterText}>SPIN</Text>
-              </View>
+              <ExpoImage
+                source={{ uri: WHEEL_IMAGE }}
+                style={{ width: WHEEL_SIZE, height: WHEEL_SIZE }}
+                contentFit="contain"
+              />
             </Animated.View>
           </View>
 
@@ -144,14 +129,15 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ visible, onClo
             <View style={styles.resultSection}>
               <Text style={styles.resultTitle}>You won!</Text>
               <Text style={styles.resultPrize}>{result.prize.label}</Text>
-              <Text style={styles.resultType}>
-                {result.prize.type === 'coins' ? 'Coins' : result.prize.type === 'medals' ? 'Medals' : 'Free Pack'}
-              </Text>
               {result.streak_bonus && <Text style={styles.streakBonus}>7-Day Streak Bonus!</Text>}
             </View>
           )}
 
-          {/* Spin Button */}
+          {result?.error && (
+            <Text style={styles.errorText}>{result.error}</Text>
+          )}
+
+          {/* Spin / Collect Button */}
           {!result ? (
             <TouchableOpacity
               style={[styles.spinButton, spinning && styles.spinButtonDisabled]}
@@ -159,11 +145,11 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ visible, onClo
               disabled={spinning}
               data-testid="spin-wheel-btn"
             >
-              <Text style={styles.spinButtonText}>{spinning ? 'SPINNING...' : 'SPIN!'}</Text>
+              <Text style={styles.spinButtonText}>{spinning ? 'SPINNING...' : 'SPIN YOUR FATE!'}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={styles.collectButton} onPress={handleClose} data-testid="collect-prize-btn">
-              <Text style={styles.collectButtonText}>COLLECT</Text>
+              <Text style={styles.collectButtonText}>REAP YOUR REWARDS!</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -173,27 +159,108 @@ export const DailyWheelModal: React.FC<DailyWheelModalProps> = ({ visible, onClo
 };
 
 const styles = StyleSheet.create({
-  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.92)', justifyContent: 'center', alignItems: 'center' },
-  container: { width: '90%', maxWidth: 360, backgroundColor: '#1a1a2e', borderRadius: 24, padding: 24, alignItems: 'center', borderWidth: 2, borderColor: '#FFD700' },
-  closeBtn: { position: 'absolute', top: 12, right: 12, zIndex: 10, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: 6 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#FFD700', marginBottom: 4 },
-  streak: { fontSize: 13, color: '#CE93D8', marginBottom: 12, textAlign: 'center' },
-  wheelContainer: { justifyContent: 'center', alignItems: 'center', marginVertical: 16 },
-  pointer: { position: 'absolute', top: -4, zIndex: 10 },
-  wheel: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#0f0f1a', borderWidth: 4, borderColor: '#FFD700' },
-  slice: { position: 'absolute', alignItems: 'center', width: 60, height: 60 },
-  sliceContent: { alignItems: 'center', padding: 6, borderRadius: 8, minWidth: 50 },
-  sliceText: { fontSize: 12, fontWeight: 'bold', marginTop: 2 },
-  wheelCenter: { width: 50, height: 50, borderRadius: 25, backgroundColor: '#FFD700', justifyContent: 'center', alignItems: 'center' },
-  wheelCenterText: { color: '#000', fontWeight: 'bold', fontSize: 12 },
-  resultSection: { alignItems: 'center', marginVertical: 12 },
-  resultTitle: { fontSize: 16, color: '#aaa', marginBottom: 4 },
-  resultPrize: { fontSize: 36, fontWeight: 'bold', color: '#FFD700' },
-  resultType: { fontSize: 14, color: '#888', marginTop: 2 },
-  streakBonus: { fontSize: 14, fontWeight: 'bold', color: '#E91E63', marginTop: 8 },
-  spinButton: { backgroundColor: '#FFD700', paddingHorizontal: 48, paddingVertical: 14, borderRadius: 24, marginTop: 8 },
-  spinButtonDisabled: { backgroundColor: '#555' },
-  spinButtonText: { color: '#000', fontSize: 18, fontWeight: 'bold' },
-  collectButton: { backgroundColor: '#4CAF50', paddingHorizontal: 48, paddingVertical: 14, borderRadius: 24, marginTop: 8 },
-  collectButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    width: '95%',
+    maxWidth: 380,
+    backgroundColor: '#0f0f1a',
+    borderRadius: 24,
+    padding: 20,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#8B0000',
+  },
+  closeBtn: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    zIndex: 10,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 20,
+    padding: 6,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#8B0000',
+    marginBottom: 4,
+    fontStyle: 'italic',
+  },
+  streak: {
+    fontSize: 13,
+    color: '#CE93D8',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  wheelContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  wheelImageWrap: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  resultSection: {
+    alignItems: 'center',
+    marginVertical: 12,
+  },
+  resultTitle: {
+    fontSize: 16,
+    color: '#aaa',
+    marginBottom: 4,
+  },
+  resultPrize: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFD700',
+  },
+  streakBonus: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#E91E63',
+    marginTop: 8,
+  },
+  errorText: {
+    color: '#F44336',
+    fontSize: 14,
+    marginVertical: 8,
+  },
+  spinButton: {
+    backgroundColor: '#8B0000',
+    paddingHorizontal: 48,
+    paddingVertical: 14,
+    borderRadius: 24,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: '#FFD700',
+  },
+  spinButtonDisabled: {
+    backgroundColor: '#333',
+    borderColor: '#555',
+  },
+  spinButtonText: {
+    color: '#FFD700',
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+  },
+  collectButton: {
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 36,
+    paddingVertical: 14,
+    borderRadius: 24,
+    marginTop: 8,
+  },
+  collectButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+  },
 });
