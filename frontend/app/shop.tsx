@@ -509,20 +509,29 @@ export default function ShopScreen() {
                 <TouchableOpacity
                   key={s}
                   style={[
-                    styles.seriesToggleBtn,
-                    spinPool.current_series === s && styles.seriesToggleBtnActive,
-                    spinPool.completed_series?.includes(s) && styles.seriesToggleBtnComplete,
+                    styles.seriesCoverBtn,
+                    spinPool.current_series === s && styles.seriesCoverBtnActive,
                   ]}
                   onPress={() => handleSeriesChange(s)}
                   data-testid={`series-toggle-${s}`}
                 >
-                  <Text style={[
-                    styles.seriesToggleText,
-                    spinPool.current_series === s && styles.seriesToggleTextActive,
-                  ]}>S{s}</Text>
-                  {spinPool.completed_series?.includes(s) && (
-                    <Ionicons name="checkmark-circle" size={12} color="#4CAF50" style={{ marginLeft: 2 }} />
-                  )}
+                  <ExpoImage
+                    source={{ uri: PACK_COVERS[s] || PACK_COVERS[1] }}
+                    style={styles.seriesCoverImage}
+                    contentFit="cover"
+                  />
+                  <View style={[
+                    styles.seriesCoverLabel,
+                    spinPool.current_series === s && styles.seriesCoverLabelActive,
+                  ]}>
+                    <Text style={[
+                      styles.seriesCoverText,
+                      spinPool.current_series === s && styles.seriesCoverTextActive,
+                    ]}>S{s}</Text>
+                    {spinPool.completed_series?.includes(s) && (
+                      <Ionicons name="checkmark-circle" size={12} color="#4CAF50" />
+                    )}
+                  </View>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -813,29 +822,39 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingVertical: 4,
   },
-  seriesToggleBtn: {
+  seriesCoverBtn: {
+    marginRight: 10,
+    borderRadius: 12,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.15)',
+    width: 70,
+  },
+  seriesCoverBtnActive: {
+    borderColor: '#FFD700',
+    borderWidth: 3,
+  },
+  seriesCoverImage: {
+    width: '100%',
+    height: 90,
+  },
+  seriesCoverLabel: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    paddingVertical: 4,
+    gap: 4,
   },
-  seriesToggleBtnActive: {
-    backgroundColor: 'rgba(255, 215, 0, 0.25)',
-    borderColor: '#FFD700',
+  seriesCoverLabelActive: {
+    backgroundColor: 'rgba(255, 215, 0, 0.2)',
   },
-  seriesToggleBtnComplete: {
-    borderColor: '#4CAF50',
-  },
-  seriesToggleText: {
+  seriesCoverText: {
     color: 'rgba(255,255,255,0.6)',
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
   },
-  seriesToggleTextActive: {
+  seriesCoverTextActive: {
     color: '#FFD700',
   },
   seriesProgress: {
