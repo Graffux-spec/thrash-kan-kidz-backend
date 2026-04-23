@@ -799,12 +799,12 @@ async def seed_database():
                 "description": "The Biomechanical variant of Jeff Possess Ya. His cyborg kitchen serves up mechanized meals of terror."
             },
             "card_chum_araya_hellfire": {
-                "front_image_url": CARD_IMAGE_URLS["chum_araya_hellfire"],
-                "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya_hellfire"],
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/d0ln8fri_enhanced-1774166976308.jpg",
+                "back_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/d0ln8fri_enhanced-1774166976308.jpg",
             },
             "card_chum_araya_cosmic": {
-                "front_image_url": CARD_IMAGE_URLS["chum_araya_cosmic"],
-                "back_image_url": CARD_BACK_IMAGE_URLS["chum_araya_cosmic"],
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/t7rcvvon_enhanced-1774166884359.jpg",
+                "back_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/t7rcvvon_enhanced-1774166884359.jpg",
             },
             "card_party_tardy_oceanic": {
                 "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dvwxs6lo_file_000000002a5471f5ba219c1b112402c3.png",
