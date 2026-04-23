@@ -2685,208 +2685,8 @@ async def admin_add_coins(user_id: str, request: Request):
     await db.users.update_one({"id": user_id}, {"$set": {"coins": new_coins}})
     return {"username": user["username"], "coins": new_coins}
 
-@api_router.post("/feedback")
-async def submit_feedback(request: Request):
-    """Submit user feedback"""
-    body = await request.json()
-    user_id = body.get("user_id", "")
-    username = body.get("username", "")
-    rating = body.get("rating", 0)
-    message = body.get("message", "")
-    if not message.strip():
-        raise HTTPException(status_code=400, detail="Feedback message is required")
-    feedback = {
-        "id": str(uuid.uuid4()),
-        "user_id": user_id,
-        "username": username,
-        "rating": rating,
-        "message": message.strip(),
-        "created_at": datetime.utcnow().isoformat()
-    }
-    await db.feedback.insert_one(feedback)
-    return {"success": True, "message": "Thank you for your feedback!"}
-
-@api_router.get("/feedback")
-async def get_all_feedback():
-    """Get all feedback (admin)"""
-    feedback_list = await db.feedback.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
-    return feedback_list
-
-@api_router.get("/feedback/view")
-async def view_feedback_page():
-    """View feedback as a nice HTML page"""
-    feedback_list = await db.feedback.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
-    stars_html = ""
-    for f in feedback_list:
-        rating = f.get("rating", 0)
-        stars = "★" * rating + "☆" * (5 - rating)
-        message = f.get("message", "").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
-        stars_html += f"""
-        <div style="background:#1a1a2e;border:1px solid #333;border-radius:12px;padding:16px;margin-bottom:12px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <strong style="color:#FFD700;font-size:16px;">{f.get('username','Anonymous')}</strong>
-                <span style="color:#FFD700;font-size:18px;">{stars}</span>
-            </div>
-            <p style="color:#ddd;margin:8px 0;font-size:14px;">{message}</p>
-            <small style="color:#666;">{f.get('created_at','')[:16]}</small>
-        </div>"""
-    
-    html = f"""<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Thrash Kan Kidz - Feedback</title></head>
-    <body style="background:#0f0f1a;color:#fff;font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
-    <h1 style="color:#FFD700;text-align:center;">Tester Feedback</h1>
-    <p style="color:#888;text-align:center;">{len(feedback_list)} responses</p>
-    {stars_html}
-    </body></html>"""
-    from fastapi.responses import HTMLResponse
-    return HTMLResponse(content=html)
-
-# =====================
-# Friends System
-# =====================
-
-@api_router.post("/friends/request")
-async def send_friend_request(request: Request):
-    """Send a friend request"""
-    body = await request.json()
-    from_user_id = body.get("from_user_id")
-    to_user_id = body.get("to_user_id")
-    
-    if from_user_id == to_user_id:
-        raise HTTPException(status_code=400, detail="Cannot add yourself as a friend")
-    
-    from_user = await db.users.find_one({"id": from_user_id})
-    to_user = await db.users.find_one({"id": to_user_id})
-    if not from_user or not to_user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Check if already friends
-    existing_friend = await db.friends.find_one({
-        "$or": [
-            {"user_id": from_user_id, "friend_id": to_user_id},
-            {"user_id": to_user_id, "friend_id": from_user_id}
-        ]
-    })
-    if existing_friend:
-        raise HTTPException(status_code=400, detail="Already friends")
-    
-    # Check if request already exists
-    existing_request = await db.friend_requests.find_one({
-        "from_user_id": from_user_id,
-        "to_user_id": to_user_id,
-        "status": "pending"
-    })
-    if existing_request:
-        raise HTTPException(status_code=400, detail="Friend request already sent")
-    
-    # Check if reverse request exists (they already sent us one)
-    reverse_request = await db.friend_requests.find_one({
-        "from_user_id": to_user_id,
-        "to_user_id": from_user_id,
-        "status": "pending"
-    })
-    if reverse_request:
-        # Auto-accept
-        await db.friend_requests.update_one(
-            {"id": reverse_request["id"]},
-            {"$set": {"status": "accepted"}}
-        )
-        await db.friends.insert_one({
-            "id": str(uuid.uuid4()),
-            "user_id": from_user_id,
-            "friend_id": to_user_id,
-            "created_at": datetime.utcnow().isoformat()
-        })
-        return {"success": True, "message": "You are now friends!", "auto_accepted": True}
-    
-    friend_req = {
-        "id": str(uuid.uuid4()),
-        "from_user_id": from_user_id,
-        "to_user_id": to_user_id,
-        "from_username": from_user.get("username", ""),
-        "to_username": to_user.get("username", ""),
-        "status": "pending",
-        "created_at": datetime.utcnow().isoformat()
-    }
-    await db.friend_requests.insert_one(friend_req)
-    return {"success": True, "message": "Friend request sent!"}
-
-@api_router.post("/friends/accept/{request_id}")
-async def accept_friend_request(request_id: str):
-    """Accept a friend request"""
-    freq = await db.friend_requests.find_one({"id": request_id, "status": "pending"})
-    if not freq:
-        raise HTTPException(status_code=404, detail="Friend request not found")
-    
-    await db.friend_requests.update_one(
-        {"id": request_id},
-        {"$set": {"status": "accepted"}}
-    )
-    
-    # Create friendship (bidirectional)
-    await db.friends.insert_one({
-        "id": str(uuid.uuid4()),
-        "user_id": freq["from_user_id"],
-        "friend_id": freq["to_user_id"],
-        "created_at": datetime.utcnow().isoformat()
-    })
-    
-    return {"success": True, "message": "Friend request accepted!"}
-
-@api_router.post("/friends/reject/{request_id}")
-async def reject_friend_request(request_id: str):
-    """Reject a friend request"""
-    freq = await db.friend_requests.find_one({"id": request_id, "status": "pending"})
-    if not freq:
-        raise HTTPException(status_code=404, detail="Friend request not found")
-    
-    await db.friend_requests.update_one(
-        {"id": request_id},
-        {"$set": {"status": "rejected"}}
-    )
-    return {"success": True, "message": "Friend request rejected"}
-
-@api_router.get("/friends/{user_id}")
-async def get_friends(user_id: str):
-    """Get user's friends list with friend counts"""
-    friends = await db.friends.find({
-        "$or": [{"user_id": user_id}, {"friend_id": user_id}]
-    }, {"_id": 0}).to_list(500)
-    
-    friend_ids = []
-    for f in friends:
-        if f["user_id"] == user_id:
-            friend_ids.append(f["friend_id"])
-        else:
-            friend_ids.append(f["user_id"])
-    
-    friends_data = []
-    for fid in friend_ids:
-        friend_user = await db.users.find_one({"id": fid}, {"_id": 0, "password_hash": 0})
-        if friend_user:
-            # Get friend's friend count
-            friend_count = await db.friends.count_documents({
-                "$or": [{"user_id": fid}, {"friend_id": fid}]
-            })
-            friend_user["friend_count"] = friend_count
-            friends_data.append(friend_user)
-    
-    return {"friends": friends_data, "count": len(friends_data)}
-
-@api_router.get("/friends/{user_id}/requests")
-async def get_friend_requests(user_id: str):
-    """Get pending friend requests for a user"""
-    incoming = await db.friend_requests.find({
-        "to_user_id": user_id,
-        "status": "pending"
-    }, {"_id": 0}).to_list(100)
-    
-    outgoing = await db.friend_requests.find({
-        "from_user_id": user_id,
-        "status": "pending"
-    }, {"_id": 0}).to_list(100)
-    
-    return {"incoming": incoming, "outgoing": outgoing}
+# Feedback and Friends endpoints live in /app/backend/routers/feedback.py and friends.py
+# They are mounted onto api_router at server startup (see end of this file).
 
 # =====================
 # Daily Wheel & Medals System
@@ -3571,6 +3371,13 @@ async def delete_account_page():
 </body>
 </html>
 """
+
+# Mount modular routers (feedback, friends). Must happen BEFORE include_router
+# so that the endpoints they define are registered on api_router.
+from routers import feedback as feedback_routes  # noqa: E402
+from routers import friends as friends_routes  # noqa: E402
+api_router.include_router(feedback_routes.router)
+api_router.include_router(friends_routes.router)
 
 # Include the router in the main app
 app.include_router(api_router)

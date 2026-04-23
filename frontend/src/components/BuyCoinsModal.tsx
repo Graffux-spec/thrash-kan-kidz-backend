@@ -10,23 +10,27 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useIAP, ErrorCode } from 'expo-iap';
 import { useApp } from '../context/AppContext';
 
-const GOOGLE_PLAY_PRODUCTS: Record<string, string> = {
-  'small': 'thrash_kan_kidz_coins_200',
-  'medium': 'thrash_kan_kidz_coins_500',
-  'large': 'thrash_kan_kidz_coins_1000',
+// Google Play product SKUs (must match products created in Play Console)
+const GOOGLE_PLAY_SKUS: Record<string, string> = {
+  small: 'thrash_kan_kidz_coins_200',
+  medium: 'thrash_kan_kidz_coins_500',
+  large: 'thrash_kan_kidz_coins_1000',
 };
 
-// IAP not available in this build - will be added when expo-iap is installed
-let useIAP: any = null;
+const SKU_LIST = Object.values(GOOGLE_PLAY_SKUS);
 
 interface CoinPackage {
   id: string;
   name: string;
   coins: number;
-  price: string;
-  bonus: number;
+  price: string | number;
+  bonus?: number;
+  total_coins?: number;
+  bonus_coins?: number;
+  first_purchase_bonus?: boolean;
 }
 
 interface BuyCoinsModalProps {
@@ -34,7 +38,6 @@ interface BuyCoinsModalProps {
   onClose: () => void;
 }
 
-// Wrapper component that handles IAP on Android
 function BuyCoinsContent({ visible, onClose }: BuyCoinsModalProps) {
   const { user, apiUrl, refreshData } = useApp();
   const [packages, setPackages] = useState<CoinPackage[]>([]);
@@ -44,61 +47,94 @@ function BuyCoinsContent({ visible, onClose }: BuyCoinsModalProps) {
   const [isFirstPurchase, setIsFirstPurchase] = useState(false);
   const [bonusPercentage, setBonusPercentage] = useState(0);
 
-  // Use expo-iap hook if available
-  const iap = useIAP ? useIAP({
-    onPurchaseSuccess: async (purchase: any) => {
+  const verifyWithBackend = useCallback(
+    async (purchase: any) => {
+      if (!user) return false;
+      const purchaseToken =
+        purchase?.purchaseToken ||
+        purchase?.purchaseTokenAndroid ||
+        purchase?.transactionReceipt;
+      const productId = purchase?.productId || purchase?.id;
+
+      if (!purchaseToken || !productId) {
+        setError('Purchase data incomplete');
+        return false;
+      }
+
       try {
-        // Verify purchase on backend
-        const response = await fetch(`${apiUrl}/api/users/${user?.id}/verify-google-purchase`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            purchase_token: purchase.purchaseToken || purchase.transactionReceipt,
-            product_id: purchase.productId,
-          }),
-        });
+        const response = await fetch(
+          `${apiUrl}/api/users/${user.id}/verify-google-purchase`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: user.id,
+              product_id: productId,
+              purchase_token: purchaseToken,
+            }),
+          }
+        );
         const data = await response.json();
-        if (data.success) {
-          Alert.alert('Success!', `${data.coins_added} coins added to your account!`);
+        if (response.ok && data.success) {
+          Alert.alert(
+            'Success!',
+            `${data.coins_granted} coins added to your account!`
+          );
           refreshData();
           onClose();
-        } else {
-          setError('Purchase verification failed');
+          return true;
+        }
+        setError(data?.detail || 'Purchase verification failed');
+        return false;
+      } catch (err) {
+        setError('Failed to verify purchase with server');
+        return false;
+      }
+    },
+    [user, apiUrl, refreshData, onClose]
+  );
+
+  const {
+    connected,
+    products,
+    fetchProducts,
+    requestPurchase,
+    finishTransaction,
+  } = useIAP({
+    onPurchaseSuccess: async (purchase: any) => {
+      try {
+        const verified = await verifyWithBackend(purchase);
+        // Finish the transaction regardless; consumable so Google removes it
+        try {
+          await finishTransaction({ purchase, isConsumable: true });
+        } catch (finishErr) {
+          console.warn('[IAP] finishTransaction error:', finishErr);
+        }
+        if (!verified) {
+          setError('Purchase completed but could not be credited. Contact support.');
         }
       } catch (err) {
-        setError('Failed to verify purchase');
+        setError('Purchase processing failed');
       } finally {
         setPurchasing(null);
       }
-      // Finish the transaction (consumable since they can buy again)
-      if (iap?.finishTransaction) {
-        await iap.finishTransaction({ purchase, isConsumable: true });
-      }
     },
     onPurchaseError: (err: any) => {
-      if (err?.code !== 'E_USER_CANCELLED') {
-        setError('Purchase failed. Please try again.');
+      if (err?.code !== ErrorCode?.UserCancelled && err?.code !== 'E_USER_CANCELLED') {
+        setError(err?.message || 'Purchase failed. Please try again.');
       }
       setPurchasing(null);
     },
-  }) : null;
+  });
 
-  useEffect(() => {
-    if (visible) {
-      fetchPackages();
-      // Fetch products from Google Play
-      if (iap?.connected && iap?.fetchProducts) {
-        const productIds = Object.values(GOOGLE_PLAY_PRODUCTS);
-        iap.fetchProducts(productIds);
-      }
-    }
-  }, [visible, iap?.connected]);
-
-  const fetchPackages = async () => {
+  // Fetch coin packages metadata from backend
+  const fetchPackages = useCallback(async () => {
     if (!user) return;
     setLoading(true);
     try {
-      const response = await fetch(`${apiUrl}/api/users/${user.id}/coin-packages`);
+      const response = await fetch(
+        `${apiUrl}/api/users/${user.id}/coin-packages`
+      );
       const data = await response.json();
       setPackages(data.packages || []);
       setIsFirstPurchase(data.is_first_purchase || false);
@@ -108,104 +144,172 @@ function BuyCoinsContent({ visible, onClose }: BuyCoinsModalProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, apiUrl]);
+
+  // Fetch Google Play products once connected
+  useEffect(() => {
+    if (visible && connected && Platform.OS === 'android') {
+      fetchProducts({ skus: SKU_LIST, type: 'in-app' }).catch((err) => {
+        console.warn('[IAP] fetchProducts error:', err);
+      });
+    }
+  }, [visible, connected, fetchProducts]);
+
+  useEffect(() => {
+    if (visible) {
+      setError(null);
+      fetchPackages();
+    }
+  }, [visible, fetchPackages]);
 
   const handlePurchase = async (pkg: CoinPackage) => {
     if (!user) return;
     setPurchasing(pkg.id);
     setError(null);
 
-    // Use Google Play Billing on Android
-    if (Platform.OS === 'android' && iap?.connected && iap?.requestPurchase) {
-      const googleProductId = GOOGLE_PLAY_PRODUCTS[pkg.id];
-      if (!googleProductId) {
-        setError('Product not configured');
-        setPurchasing(null);
-        return;
-      }
-      
-      // Find the product from fetched products
-      const product = iap.products?.find((p: any) => p.productId === googleProductId);
-      if (product) {
-        try {
-          await iap.requestPurchase(product);
-        } catch (err: any) {
-          if (err?.code !== 'E_USER_CANCELLED') {
-            setError('Failed to start purchase');
-          }
-          setPurchasing(null);
-        }
-      } else {
-        setError('Product not available in store');
-        setPurchasing(null);
-      }
+    if (Platform.OS !== 'android') {
+      setError('In-app purchases are only available on Android');
+      setPurchasing(null);
       return;
     }
 
-    // Fallback: just show error for non-Android
-    setError('In-app purchases are only available on Android');
-    setPurchasing(null);
+    if (!connected) {
+      setError('Connecting to Google Play... Please try again in a moment.');
+      setPurchasing(null);
+      return;
+    }
+
+    const sku = GOOGLE_PLAY_SKUS[pkg.id];
+    if (!sku) {
+      setError('Product not configured');
+      setPurchasing(null);
+      return;
+    }
+
+    const product = products?.find(
+      (p: any) => p.id === sku || p.productId === sku
+    );
+    if (!product) {
+      setError(
+        'Product not yet available in Google Play. Make sure you are signed into the account that has access to this testing track.'
+      );
+      setPurchasing(null);
+      return;
+    }
+
+    try {
+      await requestPurchase({
+        request: {
+          android: { skus: [sku] },
+          ios: { sku },
+        },
+        type: 'in-app',
+      });
+      // onPurchaseSuccess / onPurchaseError will handle the rest
+    } catch (err: any) {
+      if (err?.code !== 'E_USER_CANCELLED') {
+        setError(err?.message || 'Failed to start purchase');
+      }
+      setPurchasing(null);
+    }
   };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
+    >
       <View style={styles.overlay}>
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.title}>Buy Coins</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+            <Text style={styles.title} testID="buy-coins-title">
+              Buy Coins
+            </Text>
+            <TouchableOpacity
+              onPress={onClose}
+              style={styles.closeBtn}
+              testID="buy-coins-close-btn"
+            >
               <Ionicons name="close" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
 
           {error && (
             <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
+              <Text style={styles.errorText} testID="buy-coins-error-text">
+                {error}
+              </Text>
             </View>
           )}
 
           {isFirstPurchase && (
             <View style={styles.firstPurchaseBanner}>
               <Ionicons name="star" size={20} color="#FFD700" />
-              <Text style={styles.firstPurchaseText}>FIRST PURCHASE - {bonusPercentage}% BONUS COINS!</Text>
+              <Text style={styles.firstPurchaseText}>
+                FIRST PURCHASE - {bonusPercentage}% BONUS COINS!
+              </Text>
               <Ionicons name="star" size={20} color="#FFD700" />
             </View>
           )}
 
           {loading ? (
-            <ActivityIndicator size="large" color="#FFD700" style={{ marginVertical: 40 }} />
+            <ActivityIndicator
+              size="large"
+              color="#FFD700"
+              style={{ marginVertical: 40 }}
+            />
           ) : (
             <View style={styles.packagesContainer}>
-              {packages.map((pkg: any) => (
-                <TouchableOpacity
-                  key={pkg.id}
-                  style={[styles.packageCard, purchasing === pkg.id && styles.packageCardDisabled]}
-                  onPress={() => handlePurchase(pkg)}
-                  disabled={purchasing !== null}
-                >
-                  <View style={styles.packageInfo}>
-                    <Text style={styles.packageName}>{pkg.name}</Text>
-                    <Text style={styles.packageCoins}>
-                      {pkg.first_purchase_bonus ? `${pkg.total_coins} coins` : `${pkg.coins} coins`}
-                    </Text>
-                    {pkg.first_purchase_bonus && pkg.bonus_coins > 0 && (
-                      <Text style={styles.packageBonus}>+{pkg.bonus_coins} bonus coins!</Text>
-                    )}
-                  </View>
-                  <View style={styles.packagePriceContainer}>
-                    {purchasing === pkg.id ? (
-                      <ActivityIndicator size="small" color="#000" />
-                    ) : (
-                      <Text style={styles.packagePrice}>${pkg.price}</Text>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              ))}
+              {packages.map((pkg: any) => {
+                const sku = GOOGLE_PLAY_SKUS[pkg.id];
+                const storeProduct = products?.find(
+                  (p: any) => p.id === sku || p.productId === sku
+                );
+                const displayPrice =
+                  storeProduct?.displayPrice || `$${pkg.price}`;
+                return (
+                  <TouchableOpacity
+                    key={pkg.id}
+                    style={[
+                      styles.packageCard,
+                      purchasing === pkg.id && styles.packageCardDisabled,
+                    ]}
+                    onPress={() => handlePurchase(pkg)}
+                    disabled={purchasing !== null}
+                    testID={`buy-coins-package-${pkg.id}`}
+                  >
+                    <View style={styles.packageInfo}>
+                      <Text style={styles.packageName}>{pkg.name}</Text>
+                      <Text style={styles.packageCoins}>
+                        {pkg.first_purchase_bonus
+                          ? `${pkg.total_coins} coins`
+                          : `${pkg.coins} coins`}
+                      </Text>
+                      {pkg.first_purchase_bonus && pkg.bonus_coins > 0 && (
+                        <Text style={styles.packageBonus}>
+                          +{pkg.bonus_coins} bonus coins!
+                        </Text>
+                      )}
+                    </View>
+                    <View style={styles.packagePriceContainer}>
+                      {purchasing === pkg.id ? (
+                        <ActivityIndicator size="small" color="#000" />
+                      ) : (
+                        <Text style={styles.packagePrice}>{displayPrice}</Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           )}
 
-          {Platform.OS === 'android' && !iap?.connected && (
-            <Text style={styles.connectingText}>Connecting to Google Play...</Text>
+          {Platform.OS === 'android' && !connected && (
+            <Text style={styles.connectingText}>
+              Connecting to Google Play...
+            </Text>
           )}
         </View>
       </View>
@@ -213,7 +317,6 @@ function BuyCoinsContent({ visible, onClose }: BuyCoinsModalProps) {
   );
 }
 
-// Default export wrapper
 export default function BuyCoinsModal(props: BuyCoinsModalProps) {
   return <BuyCoinsContent {...props} />;
 }

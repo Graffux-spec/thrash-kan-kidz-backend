@@ -67,6 +67,19 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - P1: Confirm Google Play Store review
 - P2: Series 6+ content (awaiting user request)
 
+## Completed (April 23, 2026 — current session)
+- Restored IAP purchase flow with `expo-iap@4.2.1` (P1 unblocked)
+  - Added `expo-iap` + `expo-build-properties` (Kotlin 2.1.20) Expo plugins in app.json
+  - Replaced stubbed `BuyCoinsModal.tsx` with real `useIAP` hook-based flow: `fetchProducts` → `requestPurchase` → `onPurchaseSuccess` → backend verify → `finishTransaction({isConsumable: true})`
+  - Removed obsolete custom `billing-plugin.js` (expo-iap plugin now injects BILLING perm + Billing Library 8.x itself)
+  - Bumped Android `versionCode` 24 → 25, version 1.7.0 → 1.8.0 — user must trigger new EAS build & upload to Play Console
+- Backend modular refactor (phase 1) — P2 Backlog item started
+  - New `/app/backend/routers/` package with `feedback.py` (3 endpoints) and `friends.py` (5 endpoints) sub-routers mounted onto `api_router`
+  - Removed the inline endpoint implementations from `server.py` (3601 → 3407 lines, -194 lines)
+  - Deleted stale `/app/backend/routes/` folder (never imported, left over from a previous abandoned refactor)
+  - All curl tests pass: /api/feedback, /api/feedback/view, /api/friends/{id}, /api/friends/{id}/requests, plus unchanged endpoints /api/cards, /api/users, /api/daily-wheel, /api/goals, /api/coin-packages
+
 ## Backlog
-- Refactor server.py into route modules (auth, cards, shop, trades)
+- Refactor remaining server.py endpoints into `routers/` modules: `auth.py` (4 endpoints), `daily_wheel.py` (5 endpoints), `payments.py` (~6 endpoints), `cards.py`, `spin.py`, `trades.py`, `goals.py`
 - Split cards_data.py by series
+- Server-side Google Play purchase token validation against Google Play Developer API (currently backend trusts client token — low priority given closed testing only)
