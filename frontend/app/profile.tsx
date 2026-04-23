@@ -14,6 +14,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { Image as ExpoImage } from 'expo-image';
 import { useApp } from '../src/context/AppContext';
 
 const BACKGROUND_IMAGE = 'https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgy2com2_enhanced-1771247671181.jpg';
@@ -141,7 +142,7 @@ export default function ProfileScreen() {
 
         {/* Stats Grid */}
         <View style={styles.statsSection}>
-          <Text style={styles.sectionTitle}>📊 Your Stats</Text>
+          <ExpoImage source={{ uri: 'https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/lkv85a9v_enhanced-1776904351419.png' }} style={styles.headerImage} contentFit="contain" />
           <View style={styles.statsGrid}>
             <View style={styles.statCard}>
               <Text style={styles.statEmoji}>💰</Text>
@@ -520,6 +521,12 @@ const styles = StyleSheet.create({
   // Stats Section
   statsSection: {
     marginBottom: 24,
+  },
+  headerImage: {
+    width: 180,
+    height: 80,
+    alignSelf: 'center',
+    marginBottom: 8,
   },
   sectionTitle: {
     fontSize: 18,
