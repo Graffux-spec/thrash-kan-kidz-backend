@@ -1,5 +1,4 @@
 import { useAudioPlayer } from 'expo-audio';
-import { Platform } from 'react-native';
 
 // Sound assets
 const SOUNDS = {
@@ -14,9 +13,6 @@ const SOUNDS = {
 export type SoundName = keyof typeof SOUNDS;
 
 export function useSoundPlayer(name: SoundName) {
-  if (Platform.OS === 'web') {
-    return { play: () => {} };
-  }
   const player = useAudioPlayer(SOUNDS[name]);
   return {
     play: () => {

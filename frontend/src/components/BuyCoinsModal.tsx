@@ -18,16 +18,8 @@ const GOOGLE_PLAY_PRODUCTS: Record<string, string> = {
   'large': 'thrash_kan_kidz_coins_1000',
 };
 
-// Dynamically import expo-iap to avoid crashes on web
+// IAP not available in this build - will be added when expo-iap is installed
 let useIAP: any = null;
-try {
-  if (Platform.OS === 'android') {
-    const expoIap = require('expo-iap');
-    useIAP = expoIap.useIAP;
-  }
-} catch (e) {
-  console.log('expo-iap not available');
-}
 
 interface CoinPackage {
   id: string;
