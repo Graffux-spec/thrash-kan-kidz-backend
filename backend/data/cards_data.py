@@ -224,8 +224,8 @@ CARD_IMAGE_URLS = {
     "nobby_blitz": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/da8apu4g_file_000000002df871fd8b305fcf9ab03516.png",
     "bobby_blitzed": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lu063bq0_enhanced-1773629964983.jpg",
     # Band 2: Meadow Church
-    "david_whine": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/w5ur6z1n_enhanced-1771761544757.jpg",
-    "david_slayne": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/lbqueqph_enhanced-1771761582312.jpg",
+    "david_whine": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/n5qr2tit_enhanced-1771761544757.jpg",
+    "david_slayne": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/k397xir5_file_00000000e10c722fa904bebd4e778a90.png",
     # Band 3: Sabutt
     "martini_walkyier": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/gcw3jipf_enhanced-1771761620137.jpg",
     "martin_wankyier": "https://customer-assets.emergentagent.com/job_d9b7563a-44d0-4dcc-ab9c-25c405b50d3f/artifacts/c2di7ijf_enhanced-1771761620137.jpg",
