@@ -77,8 +77,20 @@ export const CardPickerModal: React.FC<CardPickerModalProps> = ({
 
   const fetchState = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch(`${apiUrl}/api/users/${userId}/card-picker`);
+      if (!res.ok) {
+        // Backend probably hasn't deployed the new endpoints yet
+        setError(
+          res.status === 404
+            ? 'Card Picker not available yet. The server is still updating, try again in a few minutes.'
+            : `Server error (${res.status}). Try again later.`
+        );
+        setCanPlay(false);
+        setCooldown(-1); // marker for "error state, not real cooldown"
+        return;
+      }
       const data = await res.json();
       setCanPlay(!!data.can_play);
       setCooldown(data.cooldown_seconds || 0);
@@ -91,7 +103,8 @@ export const CardPickerModal: React.FC<CardPickerModalProps> = ({
         setWonPrize(null);
       }
     } catch (_e) {
-      setError('Failed to load card picker');
+      setError('Failed to load Card Picker. Check your connection.');
+      setCooldown(-1);
     } finally {
       setLoading(false);
     }
@@ -184,10 +197,19 @@ export const CardPickerModal: React.FC<CardPickerModalProps> = ({
             <ActivityIndicator size="large" color="#FFD700" style={{ marginVertical: 60 }} />
           ) : !canPlay && !wonPrize ? (
             <View style={styles.cooldownContainer}>
-              <Ionicons name="time" size={48} color="#FFD700" />
-              <Text style={styles.cooldownText}>
-                Come back in {formatCooldown(cooldown)}
-              </Text>
+              {error ? (
+                <>
+                  <Ionicons name="cloud-offline" size={48} color="#FF5252" />
+                  <Text style={styles.errorText}>{error}</Text>
+                </>
+              ) : (
+                <>
+                  <Ionicons name="time" size={48} color="#FFD700" />
+                  <Text style={styles.cooldownText}>
+                    Come back in {formatCooldown(cooldown)}
+                  </Text>
+                </>
+              )}
             </View>
           ) : wonPrize ? (
             <View style={styles.wonContainer}>

@@ -432,7 +432,7 @@ export default function ShopScreen() {
                   >
                     <ExpoImage
                       source={{ uri: spinResult.won_cards[revealIndex].card.front_image_url }}
-                      style={styles.packCardImage}
+                      style={styles.packCardSoloImage}
                       contentFit="contain"
                     />
                   </View>
@@ -1278,8 +1278,7 @@ const styles = StyleSheet.create({
   packCardSolo: {
     borderWidth: 3,
     borderRadius: 12,
-    transform: [{ scale: 1.6 }],
-    marginVertical: 40,
+    marginVertical: 24,
   },
   packCardDupe: {
     borderColor: '#888',
@@ -1287,6 +1286,10 @@ const styles = StyleSheet.create({
   packCardImage: {
     width: 100,
     height: 145,
+  },
+  packCardSoloImage: {
+    width: 200,
+    height: 290,
   },
   packCardName: {
     color: '#fff',
