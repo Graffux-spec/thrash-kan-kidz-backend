@@ -16,6 +16,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Image as ExpoImage } from 'expo-image';
 import { useApp } from '../src/context/AppContext';
+import Constants from 'expo-constants';
 
 const BACKGROUND_IMAGE = 'https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgy2com2_enhanced-1771247671181.jpg';
 
@@ -367,7 +368,9 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Thrash Kan Kidz v1.0</Text>
+          <Text style={styles.footerText}>
+            Thrash Kan Kidz v{Constants.expoConfig?.version || '?'} (build {Constants.expoConfig?.android?.versionCode || '?'})
+          </Text>
           <Text style={styles.footerSubtext}>Collect 'em all!</Text>
         </View>
       </ScrollView>
