@@ -337,8 +337,8 @@ export default function ShopScreen() {
         setTimeout(() => {
           setRevealIndex(0);
           setShowResult(true);
-          // Play axe impact for the first card reveal
-          axeImpactSound.play();
+          // Play axe impact for the first card reveal (wrapped in try to prevent crash)
+          try { axeImpactSound.play(); } catch (_e) { /* ignore */ }
           if (spinResult?.won_cards?.every((c: any) => c.is_duplicate)) {
             setTimeout(() => dupeSound.play(), 500);
           }
@@ -426,13 +426,13 @@ export default function ShopScreen() {
                   <View
                     style={[
                       styles.packCardImageWrap,
-                      styles.packCardSolo,
                       spinResult.won_cards[revealIndex].is_duplicate && styles.packCardDupe,
                     ]}
                   >
                     <ExpoImage
+                      key={`reveal-${revealIndex}`}
                       source={{ uri: spinResult.won_cards[revealIndex].card.front_image_url }}
-                      style={styles.packCardSoloImage}
+                      style={styles.packCardImage}
                       contentFit="contain"
                     />
                   </View>
@@ -450,7 +450,7 @@ export default function ShopScreen() {
               <TouchableOpacity
                 style={styles.closeResultButton}
                 onPress={() => {
-                  axeImpactSound.play();
+                  try { axeImpactSound.play(); } catch (_e) { /* ignore */ }
                   setRevealIndex(revealIndex + 1);
                 }}
                 data-testid="next-card-btn"
@@ -1284,12 +1284,8 @@ const styles = StyleSheet.create({
     borderColor: '#888',
   },
   packCardImage: {
-    width: 100,
-    height: 145,
-  },
-  packCardSoloImage: {
-    width: 200,
-    height: 290,
+    width: 140,
+    height: 200,
   },
   packCardName: {
     color: '#fff',
