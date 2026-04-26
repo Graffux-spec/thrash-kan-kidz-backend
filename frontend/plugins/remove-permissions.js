@@ -15,6 +15,7 @@ module.exports = function removePermissionsPlugin(config) {
       "android.permission.READ_MEDIA_VIDEO",
       "android.permission.READ_EXTERNAL_STORAGE",
       "android.permission.WRITE_EXTERNAL_STORAGE",
+      "android.permission.RECORD_AUDIO",
     ];
     
     if (!manifest["uses-permission"]) {
