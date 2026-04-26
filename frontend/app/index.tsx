@@ -108,7 +108,7 @@ export default function HomeScreen() {
           <View style={styles.loginContent}>
             {/* Logo */}
             <Image
-              source={{ uri: 'https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/tf5khv09_enhanced-1771280968644.jpg' }}
+              source={{ uri: 'https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/gxse2ebd_Screenshot_20260423_212101_Gallery.png' }}
               style={styles.logoImage}
               resizeMode="contain"
             />
