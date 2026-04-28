@@ -17,6 +17,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image as ExpoImage } from 'expo-image';
 import { useApp } from '../src/context/AppContext';
 import Constants from 'expo-constants';
+import { Switch } from 'react-native';
+import { useSoundSettings, setSfxEnabled, setMusicEnabled } from '../src/utils/sounds';
 
 const BACKGROUND_IMAGE = 'https://customer-assets.emergentagent.com/job_earn-cards/artifacts/zgy2com2_enhanced-1771247671181.jpg';
 
@@ -24,6 +26,7 @@ export default function ProfileScreen() {
   const { user, userCards, userGoals, allCards, logout, updateProfile, apiUrl } = useApp();
   const router = useRouter();
   const [editing, setEditing] = useState(false);
+  const soundSettings = useSoundSettings();
   const [bio, setBio] = useState(user?.bio || '');
   const [saving, setSaving] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -355,6 +358,37 @@ export default function ProfileScreen() {
           <Ionicons name="log-out-outline" size={24} color="#ff6b6b" />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
+
+        {/* Sound Settings */}
+        <View style={styles.settingsSection}>
+          <Text style={styles.settingsTitle}>Sound Settings</Text>
+          <View style={styles.settingRow}>
+            <View style={styles.settingLabelWrap}>
+              <Ionicons name="volume-high" size={20} color="#FFD700" />
+              <Text style={styles.settingLabel}>Sound Effects</Text>
+            </View>
+            <Switch
+              value={soundSettings.sfxEnabled}
+              onValueChange={setSfxEnabled}
+              trackColor={{ false: '#333', true: '#FFD700' }}
+              thumbColor={soundSettings.sfxEnabled ? '#fff' : '#888'}
+              testID="sfx-toggle"
+            />
+          </View>
+          <View style={styles.settingRow}>
+            <View style={styles.settingLabelWrap}>
+              <Ionicons name="musical-notes" size={20} color="#FFD700" />
+              <Text style={styles.settingLabel}>Music</Text>
+            </View>
+            <Switch
+              value={soundSettings.musicEnabled}
+              onValueChange={setMusicEnabled}
+              trackColor={{ false: '#333', true: '#FFD700' }}
+              thumbColor={soundSettings.musicEnabled ? '#fff' : '#888'}
+              testID="music-toggle"
+            />
+          </View>
+        </View>
 
         {/* Legal Section */}
         <View style={styles.legalSection}>
@@ -771,6 +805,37 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   // Legal Section
+  settingsSection: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    padding: 16,
+    backgroundColor: 'rgba(26, 26, 46, 0.85)',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.25)',
+  },
+  settingsTitle: {
+    color: '#FFD700',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  settingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+  },
+  settingLabelWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  settingLabel: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '500',
+  },
   legalSection: {
     alignItems: 'center',
     marginBottom: 16,

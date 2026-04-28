@@ -1,5 +1,6 @@
 import { useAudioPlayer } from 'expo-audio';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Sound assets
 const SOUNDS = {
@@ -23,13 +24,87 @@ const SOUNDS = {
 
 export type SoundName = keyof typeof SOUNDS;
 
+// Any sound classified as background music — toggled by the music switch.
+// Everything else is a SFX.
+const MUSIC_SOUNDS: SoundName[] = ['collection_bg'];
+
+// ============================================================================
+// Mute state store (persisted in AsyncStorage, reactive via useSoundSettings)
+// ============================================================================
+
+const SFX_KEY = 'tkk_sfx_enabled';
+const MUSIC_KEY = 'tkk_music_enabled';
+
+type Settings = { sfxEnabled: boolean; musicEnabled: boolean };
+let settings: Settings = { sfxEnabled: true, musicEnabled: true };
+const listeners = new Set<() => void>();
+let hydrated = false;
+
+function notifyListeners() {
+  listeners.forEach((l) => l());
+}
+
+async function hydrate() {
+  if (hydrated) return;
+  hydrated = true;
+  try {
+    const [sfx, music] = await Promise.all([
+      AsyncStorage.getItem(SFX_KEY),
+      AsyncStorage.getItem(MUSIC_KEY),
+    ]);
+    settings = {
+      sfxEnabled: sfx === null ? true : sfx === 'true',
+      musicEnabled: music === null ? true : music === 'true',
+    };
+    notifyListeners();
+  } catch (_e) {
+    // keep defaults
+  }
+}
+// Kick off hydration immediately on module load
+hydrate();
+
+export async function setSfxEnabled(enabled: boolean) {
+  settings = { ...settings, sfxEnabled: enabled };
+  await AsyncStorage.setItem(SFX_KEY, enabled ? 'true' : 'false');
+  notifyListeners();
+}
+
+export async function setMusicEnabled(enabled: boolean) {
+  settings = { ...settings, musicEnabled: enabled };
+  await AsyncStorage.setItem(MUSIC_KEY, enabled ? 'true' : 'false');
+  notifyListeners();
+}
+
+export function useSoundSettings(): Settings {
+  return useSyncExternalStore(
+    (cb) => {
+      listeners.add(cb);
+      return () => listeners.delete(cb);
+    },
+    () => settings,
+    () => settings
+  );
+}
+
+function isMuted(name: SoundName): boolean {
+  return MUSIC_SOUNDS.includes(name)
+    ? !settings.musicEnabled
+    : !settings.sfxEnabled;
+}
+
+// ============================================================================
+// Players
+// ============================================================================
+
 /**
- * One-shot sound player. Wraps native errors so audio failures never crash the app.
+ * One-shot sound player. Respects the SFX mute toggle.
  */
 export function useSoundPlayer(name: SoundName) {
   const player = useAudioPlayer(SOUNDS[name]);
   return {
     play: () => {
+      if (isMuted(name)) return;
       try {
         player.seekTo(0);
         player.play();
@@ -41,12 +116,29 @@ export function useSoundPlayer(name: SoundName) {
 }
 
 /**
- * Looping background music. start() begins playback, stop() pauses + rewinds.
- * Volume defaulted to 0.5 so it sits behind sound effects.
+ * Looping background music. Respects the music mute toggle.
+ * Also reacts to the toggle mid-playback: turning music off while
+ * Collection is open will pause immediately.
  */
 export function useLoopingPlayer(name: SoundName) {
   const player = useAudioPlayer(SOUNDS[name]);
   const startedRef = useRef(false);
+  const wantsPlayingRef = useRef(false);
+  const current = useSoundSettings();
+
+  // React to the music toggle while we're supposed to be playing
+  useEffect(() => {
+    if (!wantsPlayingRef.current) return;
+    try {
+      if (isMuted(name)) {
+        player.pause();
+      } else {
+        player.play();
+      }
+    } catch (_e) {
+      // ignore
+    }
+  }, [current.musicEnabled, name, player]);
 
   // Auto-stop on unmount
   useEffect(() => {
@@ -61,6 +153,8 @@ export function useLoopingPlayer(name: SoundName) {
 
   return {
     start: () => {
+      wantsPlayingRef.current = true;
+      if (isMuted(name)) return;
       try {
         if (!startedRef.current) {
           player.loop = true;
@@ -74,6 +168,7 @@ export function useLoopingPlayer(name: SoundName) {
       }
     },
     stop: () => {
+      wantsPlayingRef.current = false;
       try {
         player.pause();
         player.seekTo(0);
