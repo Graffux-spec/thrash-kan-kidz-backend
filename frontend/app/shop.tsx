@@ -154,7 +154,10 @@ export default function ShopScreen() {
       }
       const data = await res.json();
       setSpinResult({ ...spinResult, won_cards: data.won_cards, won_card: data.won_cards[0]?.card });
+      setRevealIndex(0);
       setMedals(data.remaining_medals);
+      // Play axe sound for fresh reveal
+      try { axeImpactSound.play(); } catch (_e) { /* ignore */ }
       refreshData();
     } catch (err) {
       Alert.alert('Error', 'Failed to reroll');
