@@ -469,12 +469,12 @@ export default function ShopScreen() {
             )}
 
             {/* Reroll Button - only show on final card */}
-            {medals >= 3 &&
+            {medals >= 1 &&
               spinResult?.won_cards &&
               revealIndex === spinResult.won_cards.length - 1 && (
                 <TouchableOpacity style={styles.rerollButton} onPress={handleReroll} data-testid="reroll-btn">
                   <Ionicons name="refresh" size={16} color="#000" />
-                  <Text style={styles.rerollText}>REROLL (3 Medals)</Text>
+                  <Text style={styles.rerollText}>REROLL (1 Medal)</Text>
                 </TouchableOpacity>
               )}
           </View>

@@ -153,7 +153,7 @@ class SpinWheelRequest(BaseModel):
 # Spin Wheel Configuration
 # =====================
 SPIN_COST = 75  # Coins per pack (3 cards)
-REROLL_COST_MEDALS = 3  # Medals to reroll all 3 cards
+REROLL_COST_MEDALS = 1  # Medals to reroll all 3 cards
 FREE_PACK_COST_MEDALS = 10  # Medals for a free pack
 
 # Daily Wheel Configuration
