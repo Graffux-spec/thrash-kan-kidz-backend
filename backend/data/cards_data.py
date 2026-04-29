@@ -571,6 +571,10 @@ CARD_IMAGE_URLS = {
     "dan_cements_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/46v8drpm_file_00000000ca2071fda8d9e4a7b1ac8dc9.png",
     "dan_cements_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/el8cszsh_file_0000000042e0722f8d178b9249433070.png",
     "handsome_dan": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/x87rgwl8_file_00000000f73871fd9500b90399106bd4.png",
+    "handsome_dan_stormy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/vqzrgtzm_file_00000000035c722fa670d9ceb4c77162.png",
+    "handsome_dan_decayed": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/fbrmt6lj_file_00000000ee2071f58ceb5c2e3c88b6d0.png",
+    "handsome_dan_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/90lr9u7q_file_0000000034bc71f584c3431ff30abaaa.png",
+    "handsome_dan_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/kp9auyns_file_000000001600720cb650f24d837abeff.png",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -7972,6 +7976,71 @@ INITIAL_CARDS = [
         "card_type": "A",
         "is_variant": True,
         "base_card_id": "card_dan_cements",
+        "variant_name": "Vintage"
+    },
+    # Handsome Dan Variants
+    {
+        "id": "card_handsome_dan_stormy",
+        "name": "Handsome Dan (Stormy)",
+        "description": "The Stormy variant of Handsome Dan. Soaking wet hair, rain in his face, lightning behind him -- pretty boy turns ugly weather into a thrash anthem.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["handsome_dan_stormy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_stormy"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Decel",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_handsome_dan",
+        "variant_name": "Stormy"
+    },
+    {
+        "id": "card_handsome_dan_decayed",
+        "name": "Handsome Dan (Decayed)",
+        "description": "The Decayed variant of Handsome Dan. Beauty fades, riffs don't. Skin cracking, flesh peeling -- but the mic's still in his fist and the show goes on.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["handsome_dan_decayed"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_decayed"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Decel",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_handsome_dan",
+        "variant_name": "Decayed"
+    },
+    {
+        "id": "card_handsome_dan_camouflage",
+        "name": "Handsome Dan (Camouflage)",
+        "description": "The Camouflage variant of Handsome Dan. War-painted and stage-ready -- the pretty face is now a tactical weapon, melting faces from the trenches.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["handsome_dan_camouflage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_camouflage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Decel",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_handsome_dan",
+        "variant_name": "Camouflage"
+    },
+    {
+        "id": "card_handsome_dan_vintage",
+        "name": "Handsome Dan (Vintage)",
+        "description": "The Vintage variant of Handsome Dan. Black-and-white film grain, spotlight halo -- timeless thrash icon, frozen in monochrome glory.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["handsome_dan_vintage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_vintage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Decel",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_handsome_dan",
         "variant_name": "Vintage"
     },
 ]
