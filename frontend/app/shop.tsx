@@ -45,7 +45,7 @@ interface SpinPoolData {
 }
 
 export default function ShopScreen() {
-  const { user, apiUrl, refreshData } = useApp();
+  const { user, apiUrl, refreshData, userCards } = useApp();
   const [spinning, setSpinning] = useState(false);
   const [spinResult, setSpinResult] = useState<SpinResult | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -66,6 +66,41 @@ export default function ShopScreen() {
   const [medals, setMedals] = useState(0);
   const [freePacks, setFreePacks] = useState(0);
   const [dailyWheelChecked, setDailyWheelChecked] = useState(false);
+
+  // First-Variant celebration
+  // Captured at the moment "OPEN PACK!" is tapped: the set of variant_names the
+  // user already owned BEFORE this pack. Compared on each card reveal so the
+  // banner fires exactly once per variant_name the user has never pulled before.
+  const preOpenVariantsRef = useRef<Set<string>>(new Set());
+  const firedCelebrationsRef = useRef<Set<string>>(new Set());
+  const [celebrationVariant, setCelebrationVariant] = useState<string | null>(null);
+  const celebrationOpacity = useRef(new Animated.Value(0)).current;
+  const celebrationScale = useRef(new Animated.Value(0.5)).current;
+
+  const fireCelebration = (variantName: string) => {
+    setCelebrationVariant(variantName);
+    celebrationOpacity.setValue(0);
+    celebrationScale.setValue(0.5);
+    Animated.parallel([
+      Animated.timing(celebrationOpacity, { toValue: 1, duration: 220, useNativeDriver: true }),
+      Animated.spring(celebrationScale, { toValue: 1, friction: 5, tension: 90, useNativeDriver: true }),
+    ]).start();
+    try { prizeWonSound.play(); } catch (_e) { /* ignore */ }
+    setTimeout(() => {
+      Animated.timing(celebrationOpacity, { toValue: 0, duration: 280, useNativeDriver: true }).start(() => {
+        setCelebrationVariant(null);
+      });
+    }, 2400);
+  };
+
+  const maybeCelebrateForCard = (card: any) => {
+    const vname: string | undefined = card?.variant_name;
+    if (!vname) return;
+    if (preOpenVariantsRef.current.has(vname)) return;
+    if (firedCelebrationsRef.current.has(vname)) return;
+    firedCelebrationsRef.current.add(vname);
+    fireCelebration(vname);
+  };
 
   // Sound effects
   const drumRollSound = useSoundPlayer('drum_roll');
@@ -216,6 +251,15 @@ export default function ShopScreen() {
     setPackState('shaking');
     drumRollSound.play();
 
+    // Snapshot the variant_names this user already owned BEFORE this pack was opened.
+    // Used to detect first-time pulls of any variant theme (Stormy, Decayed, etc.).
+    preOpenVariantsRef.current = new Set(
+      userCards
+        .map((uc: any) => uc?.card?.variant_name)
+        .filter((v: any): v is string => typeof v === 'string' && v.length > 0)
+    );
+    firedCelebrationsRef.current = new Set();
+
     try {
       // Phase 1: Pack shaking animation (1.5 seconds)
       const shakeAnimation = Animated.loop(
@@ -347,6 +391,13 @@ export default function ShopScreen() {
           setShowResult(true);
           // Play axe impact for the first card reveal (wrapped in try to prevent crash)
           try { cardFlipSound.play(); } catch (_e) { /* ignore */ }
+          // First-Variant celebration check for card #1
+          if (spinResult?.won_cards?.[0]?.card) {
+            setTimeout(() => maybeCelebrateForCard(spinResult.won_cards![0].card), 600);
+          } else if (result?.won_cards?.[0]?.card) {
+            // spinResult state may not be updated yet within the same tick — fall back to fresh result
+            setTimeout(() => maybeCelebrateForCard(result.won_cards[0].card), 600);
+          }
           if (spinResult?.won_cards?.every((c: any) => c.is_duplicate)) {
             setTimeout(() => dupeSound.play(), 500);
           }
@@ -459,7 +510,11 @@ export default function ShopScreen() {
                 style={styles.closeResultButton}
                 onPress={() => {
                   try { cardFlipSound.play(); } catch (_e) { /* ignore */ }
-                  setRevealIndex(revealIndex + 1);
+                  const nextIdx = revealIndex + 1;
+                  setRevealIndex(nextIdx);
+                  // First-Variant celebration check for cards #2 / #3
+                  const nextCard = spinResult?.won_cards?.[nextIdx]?.card;
+                  if (nextCard) setTimeout(() => maybeCelebrateForCard(nextCard), 500);
                 }}
                 data-testid="next-card-btn"
               >
@@ -784,6 +839,28 @@ export default function ShopScreen() {
         userId={user.id}
         onPrizeWon={() => prizeWonSound.play()}
       />
+
+      {/* First-Variant Celebration Overlay — fires once per variant_name the user
+          had never owned before opening this pack. Auto-dismisses after ~2.4s. */}
+      {celebrationVariant && (
+        <Animated.View
+          pointerEvents="none"
+          style={[styles.celebrationOverlay, { opacity: celebrationOpacity }]}
+          data-testid="first-variant-celebration"
+        >
+          <Animated.View
+            style={[
+              styles.celebrationCard,
+              { transform: [{ scale: celebrationScale }] },
+            ]}
+          >
+            <Text style={styles.celebrationFire}>🔥</Text>
+            <Text style={styles.celebrationLabel}>FIRST VARIANT!</Text>
+            <Text style={styles.celebrationVariantName}>{celebrationVariant.toUpperCase()}</Text>
+            <Text style={styles.celebrationTagline}>added to your collection</Text>
+          </Animated.View>
+        </Animated.View>
+      )}
     </SafeAreaView>
   );
 }
@@ -792,6 +869,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0f0f1a',
+  },
+  // First-Variant celebration overlay
+  celebrationOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    zIndex: 9999,
+  },
+  celebrationCard: {
+    backgroundColor: '#1a0a0a',
+    borderWidth: 3,
+    borderColor: '#FFD700',
+    paddingHorizontal: 36,
+    paddingVertical: 28,
+    borderRadius: 16,
+    alignItems: 'center',
+    shadowColor: '#FFD700',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.9,
+    shadowRadius: 24,
+  },
+  celebrationFire: {
+    fontSize: 48,
+    marginBottom: 4,
+  },
+  celebrationLabel: {
+    color: '#FFD700',
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: 2,
+    marginBottom: 4,
+  },
+  celebrationVariantName: {
+    color: '#fff',
+    fontSize: 32,
+    fontWeight: '900',
+    letterSpacing: 1,
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  celebrationTagline: {
+    color: '#bbb',
+    fontSize: 12,
+    fontStyle: 'italic',
   },
   backgroundImage: {
     position: 'absolute',

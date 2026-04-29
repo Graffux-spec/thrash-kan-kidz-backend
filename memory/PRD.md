@@ -64,10 +64,12 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - Friends UI on Trade page with tabs, friend codes, and trade-with button
 
 ## Upcoming
-- P1: Confirm Google Play Store review
-- P0: Series 6 content — Bands 1–5 + Reward card COMPLETE. 3 bands remaining (6, 7, 8). Variants use new theme: Stormy / Decayed / Camouflage / Vintage.
+- P1: Apply for Google Play Production Access on Day 14 (4 days after April 29). Use draft answers in `/app/memory/play_production_questionnaire.md`.
+- P0: Series 6 content — Bands 1–5 + Reward card COMPLETE. 3 bands remaining (6, 7, 8).
 
-## Completed (April 29, 2026 — Series 6 progress)
+## Completed (April 29, 2026)
+
+### Series 6 progress
 - Series 6 Band 1 "The Grate Catt": KATaclysm + KATatonic + 8 variants
 - Series 6 Band 2 "Mercyful Fart": King Diamondback + King Demond + 8 variants
 - Series 6 Band 3 "Anfrax": Frank Gello + Frank Bile-O + 8 variants
@@ -76,6 +78,25 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - Series 6 Reward Card: Nicklebag Darrell (Panterror, epic, unlocks at 96 cards)
 - Series 6 pack cover wired into shop.tsx
 - DB total: 456 cards.
+
+### Bug fixes
+- "Cards Collected" stat fixed in Profile (was showing 151%, now caps at 100%) — uses base-card-only filter.
+- `axeImpactSound` ReferenceError eliminated in shop.tsx (3 silent failures → cardFlipSound now actually fires on each card reveal).
+
+### Sound design overhaul
+- New SFX: drum_roll (OPEN PACK!), bag_tear (TAP TO REVEAL!), card_flip (each of 3 reveals).
+- All registered in `sounds.ts` shared global player layer (no Audio Track exhaustion).
+
+### Backend modularization (Phase 2 — safe scope only)
+- New: `routers/cards.py` (GET /cards, /cards/rare, /cards/epic, /cards/{card_id}). Self-contained Card model + Mongo connection.
+- New: `routers/static_pages.py` (root, /health, /download/*, /privacy-policy, /delete-account).
+- server.py: 3617 → 3448 lines (-4.7%). Auth, payments, IAP, spin, trades intentionally untouched ahead of production submission.
+
+### New features (UX retention)
+- **Per-band progress bars in Collection**: every series header now lists each band with `X/Y base + X/Y var` and a colored progress fill (green → gold when complete). Shows for all Series 1–6.
+- **First-Variant Pulled celebration**: full-screen overlay banner (🔥 + variant name) fires once when user pulls any card with a variant_name they didn't already own before the pack open. Per-variant-name dedup, auto-dismisses 2.4s, prizeWonSound triggered.
+- Series 6 added to Collection seriesNumbers list.
+- Series header "/16 base" hardcode → dynamic `stats.baseTotal` (handles Series 6's incomplete state correctly).
 
 ## Completed (April 28-29, 2026 — current session)
 - Sean Kill-Again reward card: new front image, back unchanged

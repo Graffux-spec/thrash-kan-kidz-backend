@@ -199,7 +199,7 @@ export default function CollectionScreen() {
   };
 
   // Group cards by series
-  const seriesNumbers = [1, 2, 3, 4, 5];
+  const seriesNumbers = [1, 2, 3, 4, 5, 6];
   const getSeriesCards = (series: number) => {
     const base = allCards
       .filter(c => c.series === series && !c.base_card_id && c.rarity !== 'rare' && c.rarity !== 'epic')
@@ -223,9 +223,41 @@ export default function CollectionScreen() {
   };
 
   const getSeriesStats = (series: number) => {
+    const baseTotal = allCards.filter(c => c.series === series && c.rarity === 'common' && !c.base_card_id).length;
+    const variantTotal = allCards.filter(c => c.series === series && c.base_card_id).length;
     const ownedBase = userCards.filter(uc => uc.card.series === series && uc.card.rarity === 'common' && !uc.card.base_card_id).length;
     const ownedVars = userCards.filter(uc => uc.card.series === series && uc.card.base_card_id).length;
-    return { ownedBase, ownedVars };
+    return { baseTotal, variantTotal, ownedBase, ownedVars };
+  };
+
+  // Per-band stats within a series — used by the new progress bars
+  const getBandsInSeries = (series: number): string[] => {
+    const bands = new Set<string>();
+    allCards.forEach(c => {
+      if (c.series === series && c.band && c.rarity !== 'rare' && c.rarity !== 'epic') {
+        bands.add(c.band);
+      }
+    });
+    return Array.from(bands).sort();
+  };
+
+  const getBandStats = (series: number, band: string) => {
+    const baseCards = allCards.filter(c => c.series === series && c.band === band && c.rarity === 'common' && !c.base_card_id);
+    const variantCards = allCards.filter(c => c.series === series && c.band === band && c.base_card_id);
+    const ownedBase = baseCards.filter(c => ownedCardIds.has(c.id)).length;
+    const ownedVars = variantCards.filter(c => ownedCardIds.has(c.id)).length;
+    const totalCards = baseCards.length + variantCards.length;
+    const totalOwned = ownedBase + ownedVars;
+    const pct = totalCards > 0 ? Math.round((totalOwned / totalCards) * 100) : 0;
+    const isComplete = totalCards > 0 && totalOwned === totalCards;
+    return {
+      baseTotal: baseCards.length,
+      variantTotal: variantCards.length,
+      ownedBase,
+      ownedVars,
+      pct,
+      isComplete,
+    };
   };
 
   const totalOwned = userCards.length;
@@ -313,6 +345,7 @@ export default function CollectionScreen() {
           const cards = getSeriesCards(series);
           const stats = getSeriesStats(series);
           const isCollapsed = collapsedSeries[series] || false;
+          const bands = getBandsInSeries(series);
           if (cards.length === 0) return null;
           return (
             <View key={series} style={styles.seriesSection} data-testid={`series-${series}-section`}>
@@ -324,7 +357,7 @@ export default function CollectionScreen() {
                 <View style={styles.seriesHeaderLeft}>
                   <Text style={styles.seriesHeaderTitle}>Series {series}</Text>
                   <Text style={styles.seriesHeaderStats}>
-                    {stats.ownedBase}/16 base{stats.ownedVars > 0 ? ` + ${stats.ownedVars} variants` : ''}
+                    {stats.ownedBase}/{stats.baseTotal} base{stats.ownedVars > 0 ? ` + ${stats.ownedVars} variants` : ''}
                   </Text>
                 </View>
                 <Ionicons 
@@ -333,6 +366,42 @@ export default function CollectionScreen() {
                   color="#FFD700" 
                 />
               </TouchableOpacity>
+              {!isCollapsed && bands.length > 0 && (
+                <View style={styles.bandProgressList} data-testid={`series-${series}-bands`}>
+                  {bands.map(band => {
+                    const bs = getBandStats(series, band);
+                    return (
+                      <View
+                        key={band}
+                        style={styles.bandProgressRow}
+                        data-testid={`band-progress-${series}-${band.replace(/\s+/g, '-').toLowerCase()}`}
+                      >
+                        <View style={styles.bandProgressTopRow}>
+                          <Text
+                            style={[styles.bandProgressName, bs.isComplete && styles.bandProgressNameComplete]}
+                            numberOfLines={1}
+                          >
+                            {bs.isComplete ? '✓ ' : ''}{band}
+                          </Text>
+                          <Text style={[styles.bandProgressCounts, bs.isComplete && styles.bandProgressNameComplete]}>
+                            {bs.ownedBase}/{bs.baseTotal}
+                            {bs.variantTotal > 0 ? ` + ${bs.ownedVars}/${bs.variantTotal} var` : ''}
+                          </Text>
+                        </View>
+                        <View style={styles.bandProgressBarTrack}>
+                          <View
+                            style={[
+                              styles.bandProgressBarFill,
+                              { width: `${bs.pct}%` },
+                              bs.isComplete && styles.bandProgressBarFillComplete,
+                            ]}
+                          />
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+              )}
               {!isCollapsed && (
                 <View style={styles.seriesCardGrid}>
                   {cards.map(card => renderCard(card))}
@@ -548,6 +617,52 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     paddingHorizontal: 4,
     paddingVertical: 4,
+  },
+  bandProgressList: {
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 215, 0, 0.18)',
+    gap: 8,
+  },
+  bandProgressRow: {
+    paddingVertical: 4,
+  },
+  bandProgressTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  bandProgressName: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+    flex: 1,
+    marginRight: 8,
+  },
+  bandProgressNameComplete: {
+    color: '#FFD700',
+  },
+  bandProgressCounts: {
+    color: '#bbb',
+    fontSize: 11,
+    fontVariant: ['tabular-nums'],
+  },
+  bandProgressBarTrack: {
+    height: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  bandProgressBarFill: {
+    height: '100%',
+    backgroundColor: '#4CAF50',
+    borderRadius: 3,
+  },
+  bandProgressBarFillComplete: {
+    backgroundColor: '#FFD700',
   },
   flashListContainer: {
     flex: 1,
