@@ -874,13 +874,13 @@ async def seed_database():
                 "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/9he2g2mb_file_00000000c02871f5972df5f0acf6b476.png",
             },
             "card_walter_trashler_magma": {
-                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/326y2dwl_file_000000003b0c71f79a98da618aa2f655.png",
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/qczj7ieb_enhanced-1777438361506.jpg",
             },
             "card_walter_trashler_cheesy": {
-                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/swogi45b_file_0000000065e871f59bb062386a0b9561.png",
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xarv9958_enhanced-1777438417383.jpg",
             },
             "card_walter_trashler_mutant": {
-                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hic2m052_file_000000009e7471f59ea0f92963c7691e.png",
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/6j1jk80n_enhanced-1777438461037.jpg",
             },
             "card_david_whine": {
                 "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/n5qr2tit_enhanced-1771761544757.jpg",

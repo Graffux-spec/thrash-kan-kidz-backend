@@ -509,9 +509,9 @@ CARD_IMAGE_URLS = {
     # Band 8: Riding Corpse
     "walter_trashler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/aqyov99f_file_00000000634871f5b7cb3181ea0ea9b0.png",
     "walter_trashler_shadow": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/9he2g2mb_file_00000000c02871f5972df5f0acf6b476.png",
-    "walter_trashler_magma": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/326y2dwl_file_000000003b0c71f79a98da618aa2f655.png",
-    "walter_trashler_cheesy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/swogi45b_file_0000000065e871f59bb062386a0b9561.png",
-    "walter_trashler_mutant": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hic2m052_file_000000009e7471f59ea0f92963c7691e.png",
+    "walter_trashler_magma": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/qczj7ieb_enhanced-1777438361506.jpg",
+    "walter_trashler_cheesy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xarv9958_enhanced-1777438417383.jpg",
+    "walter_trashler_mutant": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/6j1jk80n_enhanced-1777438461037.jpg",
     "wart_er_trachsler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/bhn1i0dt_file_00000000b57471fb9bb0f9388b3cbf20.png",
     "wart_er_trachsler_shadow": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/fhoc5400_file_00000000de3871fbbf6ae501acd1476a.png",
     "wart_er_trachsler_magma": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/kpj2uobd_file_0000000005fc71fb8ba2a68cf5da3703.png",
