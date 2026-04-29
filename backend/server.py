@@ -867,6 +867,21 @@ async def seed_database():
                 "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/bczdtpd6_file_00000000586471f7a0c781bec98345ab.png",
                 "back_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/soday9u4_file_00000000f24471f58503370fd35d90d9.png",
             },
+            "card_walter_trashler": {
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/aqyov99f_file_00000000634871f5b7cb3181ea0ea9b0.png",
+            },
+            "card_walter_trashler_shadow": {
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/9he2g2mb_file_00000000c02871f5972df5f0acf6b476.png",
+            },
+            "card_walter_trashler_magma": {
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/326y2dwl_file_000000003b0c71f79a98da618aa2f655.png",
+            },
+            "card_walter_trashler_cheesy": {
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/swogi45b_file_0000000065e871f59bb062386a0b9561.png",
+            },
+            "card_walter_trashler_mutant": {
+                "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hic2m052_file_000000009e7471f59ea0f92963c7691e.png",
+            },
             "card_david_whine": {
                 "front_image_url": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/n5qr2tit_enhanced-1771761544757.jpg",
             },
