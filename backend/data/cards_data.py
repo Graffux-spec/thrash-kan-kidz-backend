@@ -553,6 +553,9 @@ CARD_IMAGE_URLS = {
     "frank_bile_o_decayed": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2aca3ql2_file_000000005cec722f963400c3bf27b9d5.png",
     "frank_bile_o_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/u2aee09x_enhanced-1777241122305.jpg",
     "frank_bile_o_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/pfbilteq_file_00000000f6b471fda7b4caa7789cc495.png",
+    # Band 4: The Amused
+    "blaine_the_cook": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/s9831rwc_enhanced-1777165090615.jpg",
+    "blainiac_cooke": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/faq38rco_file_00000000b89c71fd839097f84e596803.png",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -823,6 +826,9 @@ CARD_BACK_IMAGE_URLS = {
     # Band 3: Anfrax
     "frank_gello": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/1vcu2a93_file_00000000a5ac71fd93ce9fe14cc0918a.png",
     "frank_bile_o": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/qqs33fah_file_00000000fd4c71fdb1820a52d97b12f0.png",
+    # Band 4: The Amused
+    "blaine_the_cook": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/k5eud52y_enhanced-1777165249234.jpg",
+    "blainiac_cooke": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/j6aukux4_enhanced-1777208154520.jpg",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -7700,5 +7706,32 @@ INITIAL_CARDS = [
         "is_variant": True,
         "base_card_id": "card_frank_bile_o",
         "variant_name": "Vintage"
+    },
+    # Band 4: The Amused
+    {
+        "id": "card_blaine_the_cook",
+        "name": "Blaine the Cook",
+        "description": "Blaine the Cook whips up sonic assaults in a boiling cauldron of sound and fury. His mixes are toxic, his beats are brutal, and his recipes are a crime against your eardrums! Battle cry: SERVED HOT AND HEAVY!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["blaine_the_cook"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["blaine_the_cook"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 6,
+        "band": "The Amused",
+        "card_type": "A"
+    },
+    {
+        "id": "card_blainiac_cooke",
+        "name": "Blainiac Cooke",
+        "description": "The maniacal frontman of THE AMUSED. A sonic assault of thrash and crossover chaos, Blainiac Cooke fronts the band with relentless energy, twisted humor, and complete disregard for the rules. Signature move: STAGE DIVE INTO DISASTER. \"We're not here to please you. We're here to destroy you.\"",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["blainiac_cooke"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["blainiac_cooke"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 6,
+        "band": "The Amused",
+        "card_type": "B"
     },
 ]
