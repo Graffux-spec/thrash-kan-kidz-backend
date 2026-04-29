@@ -549,6 +549,10 @@ CARD_IMAGE_URLS = {
     "frank_gello_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dut6q5d0_file_00000000ea2471fdb37755e2148bf81c.png",
     "frank_gello_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/1rtlt8ui_file_00000000ce9071fd9549a3fff018f74a.png",
     "frank_bile_o": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/byl7qdjf_file_00000000f00071f8becc60e0cbbe4352.png",
+    "frank_bile_o_stormy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/3k5bfa1k_file_00000000c52c722f83f9352003e8e6ef.png",
+    "frank_bile_o_decayed": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2aca3ql2_file_000000005cec722f963400c3bf27b9d5.png",
+    "frank_bile_o_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/u2aee09x_enhanced-1777241122305.jpg",
+    "frank_bile_o_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/pfbilteq_file_00000000f6b471fda7b4caa7789cc495.png",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -7630,6 +7634,71 @@ INITIAL_CARDS = [
         "card_type": "A",
         "is_variant": True,
         "base_card_id": "card_frank_gello",
+        "variant_name": "Vintage"
+    },
+    # Frank Bile-O Variants
+    {
+        "id": "card_frank_bile_o_stormy",
+        "name": "Frank Bile-O (Stormy)",
+        "description": "The Stormy variant of Frank Bile-O. Toxic sludge meets lightning -- his radioactive bass shakes the storm itself as electric rain melts the battlefield.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["frank_bile_o_stormy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_stormy"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Anfrax",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_frank_bile_o",
+        "variant_name": "Stormy"
+    },
+    {
+        "id": "card_frank_bile_o_decayed",
+        "name": "Frank Bile-O (Decayed)",
+        "description": "The Decayed variant of Frank Bile-O. Rotting in the forest with his bass still dripping slime -- even death can't stop the SLUDGE RAGER.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["frank_bile_o_decayed"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_decayed"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Anfrax",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_frank_bile_o",
+        "variant_name": "Decayed"
+    },
+    {
+        "id": "card_frank_bile_o_camouflage",
+        "name": "Frank Bile-O (Camouflage)",
+        "description": "The Camouflage variant of Frank Bile-O. Helmet on, dog tags jangling -- THRASH TILL DEATH! Toxic sludge bass from the jungle trenches.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["frank_bile_o_camouflage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_camouflage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Anfrax",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_frank_bile_o",
+        "variant_name": "Camouflage"
+    },
+    {
+        "id": "card_frank_bile_o_vintage",
+        "name": "Frank Bile-O (Vintage)",
+        "description": "The Vintage variant of Frank Bile-O. Black-and-white grain captures the slime-drenched mutant in timeless thrash -- classic filth, forever.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["frank_bile_o_vintage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_vintage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Anfrax",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_frank_bile_o",
         "variant_name": "Vintage"
     },
 ]
