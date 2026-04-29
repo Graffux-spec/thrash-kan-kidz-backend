@@ -529,6 +529,9 @@ CARD_IMAGE_URLS = {
     "katatonic_decayed": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dnafv4al_enhanced-1776539838272.jpg",
     "katatonic_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/l9i6191d_enhanced-1776539886056.jpg",
     "katatonic_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ffwbm5pa_file_00000000588071f7be86468d92c34a7f.png",
+    # Band 2: Mercyful Fart
+    "king_diamondback": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/pztu4v77_enhanced-1776648505044.jpg",
+    "king_demond": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/819p2mfe_enhanced-1776649198664.jpg",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -791,6 +794,9 @@ CARD_BACK_IMAGE_URLS = {
     # Band 1: The Grate Catt
     "kataclysm": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/c1x3j9oa_file_000000007e5071f581cb62f527131098.png",
     "katatonic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/mqrqjsju_file_00000000754071f58df8247a9b200d30.png",
+    # Band 2: Mercyful Fart
+    "king_diamondback": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/i4eb2gfz_enhanced-1776648626444.jpg",
+    "king_demond": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/pyhyvu64_enhanced-1776649967148.jpg",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -7337,5 +7343,32 @@ INITIAL_CARDS = [
         "is_variant": True,
         "base_card_id": "card_katatonic",
         "variant_name": "Vintage"
+    },
+    # Band 2: Mercyful Fart
+    {
+        "id": "card_king_diamondback",
+        "name": "King Diamondback",
+        "description": "The venomous frontman of MERCYFUL FART. With a forked tongue and lungs full of venom, King Diamondback's sinister screams will devour your soul and collapse your skull! Battle cry: DIE! DIE! MOSH! MOSH!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["king_diamondback"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["king_diamondback"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 6,
+        "band": "Mercyful Fart",
+        "card_type": "A"
+    },
+    {
+        "id": "card_king_demond",
+        "name": "King Demond",
+        "description": "The monstrous frontman of thrash metal titans MERCYFUL FART. King Demond's demonic screams from the fiery pits of Hell will melt your face, doom your soul to eternal mosh-domination, and make you DIE! DIE! MOSH!",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["king_demond"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["king_demond"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 6,
+        "band": "Mercyful Fart",
+        "card_type": "B"
     },
 ]
