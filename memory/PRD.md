@@ -65,7 +65,10 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 
 ## Upcoming
 - P1: Confirm Google Play Store review
-- P2: Series 6+ content (8 bands × 2 characters per band = 16 cards, awaiting user uploads)
+- P0: Series 6 content — Band 1 (The Grate Catt) COMPLETE (KATaclysm + KATatonic + 8 variants). 7 bands remaining + 1 reward card. Variants use new theme: Stormy / Decayed / Camouflage / Vintage.
+
+## Completed (April 29, 2026 — Series 6 progress)
+- Series 6 Band 1 "The Grate Catt" fully wired: KATaclysm + KATatonic base cards plus all 8 variants (Stormy, Decayed, Camouflage, Vintage) seeded into MongoDB. Total cards: 415.
 
 ## Completed (April 28-29, 2026 — current session)
 - Sean Kill-Again reward card: new front image, back unchanged

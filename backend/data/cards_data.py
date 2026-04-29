@@ -525,6 +525,10 @@ CARD_IMAGE_URLS = {
     "kataclysm_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/u1xvd7o4_enhanced-1777425062298.jpg",
     "kataclysm_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/cqmkidev_file_000000009ebc71f5a41b80a295e37a07.png",
     "katatonic": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/59gy34y7_enhanced-1776485138850.jpg",
+    "katatonic_stormy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/25hij53g_file_000000009a7071f7b69d8ab23ba8d8ea.png",
+    "katatonic_decayed": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/dnafv4al_enhanced-1776539838272.jpg",
+    "katatonic_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/l9i6191d_enhanced-1776539886056.jpg",
+    "katatonic_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/ffwbm5pa_file_00000000588071f7be86468d92c34a7f.png",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -7267,6 +7271,71 @@ INITIAL_CARDS = [
         "card_type": "A",
         "is_variant": True,
         "base_card_id": "card_kataclysm",
+        "variant_name": "Vintage"
+    },
+    # KATatonic Variants
+    {
+        "id": "card_katatonic_stormy",
+        "name": "KATatonic (Stormy)",
+        "description": "The Stormy variant of KATatonic. Drenched in rain, her undead riffs echo through thunderclaps -- every solo a lightning strike from beyond the grave.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["katatonic_stormy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_stormy"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "The Grate Catt",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_katatonic",
+        "variant_name": "Stormy"
+    },
+    {
+        "id": "card_katatonic_decayed",
+        "name": "KATatonic (Decayed)",
+        "description": "The Decayed variant of KATatonic. Putrid ooze drips from her fangs as she shreds undead riffs that rot the eardrums of the unworthy.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["katatonic_decayed"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_decayed"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "The Grate Catt",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_katatonic",
+        "variant_name": "Decayed"
+    },
+    {
+        "id": "card_katatonic_camouflage",
+        "name": "KATatonic (Camouflage)",
+        "description": "The Camouflage variant of KATatonic. Helmeted and warpainted, she stalks the battlefield -- her zombie shrieks the last sound her enemies ever hear.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["katatonic_camouflage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_camouflage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "The Grate Catt",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_katatonic",
+        "variant_name": "Camouflage"
+    },
+    {
+        "id": "card_katatonic_vintage",
+        "name": "KATatonic (Vintage)",
+        "description": "The Vintage variant of KATatonic. Black-and-white film grain frames her ghostly snarl -- classic horror in monochrome thrash.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["katatonic_vintage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_vintage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "The Grate Catt",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_katatonic",
         "variant_name": "Vintage"
     },
 ]
