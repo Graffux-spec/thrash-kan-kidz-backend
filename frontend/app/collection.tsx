@@ -166,6 +166,13 @@ export default function CollectionScreen() {
         fetchTradeInEligible();
       } else {
         Alert.alert('Trade-In Failed', data.detail || 'Could not complete trade-in');
+        // Stale state guard: a "Need 5 duplicates" error means the backend's
+        // current quantity is < 5 (likely from a prior trade). Drop this card
+        // from the visible list and resync from the backend so the user
+        // doesn't keep tapping a stale row.
+        setTradeInEligible(prev => prev.filter(item => item.card.id !== cardId));
+        refreshData();
+        fetchTradeInEligible();
       }
     } catch (error) {
       console.error('Trade-in error:', error);
