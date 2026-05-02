@@ -604,6 +604,10 @@ CARD_IMAGE_URLS = {
     "moses_howler_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/7yycc0k3_file_00000000664c71fdafbaaa05236091fe.png",
     "moses_howler_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/b2l2lw7h_file_00000000020871fdbc11412563de0e9e.png",
     "frantic_howler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hvscqulm_enhanced-1777692431547.jpg",
+    "frantic_howler_stormy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/y7nty8n2_file_00000000571071fdb3624f77968dfa19.png",
+    "frantic_howler_decayed": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/t0c7wbuf_file_00000000747871fd9d6fd6e5345555ab.png",
+    "frantic_howler_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/g5lvw0r1_file_00000000b7c871f89b0969e869668549.png",
+    "frantic_howler_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/exv5qso2_file_00000000b80c71fd923353c8e7053779.png",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -8485,6 +8489,71 @@ INITIAL_CARDS = [
         "card_type": "A",
         "is_variant": True,
         "base_card_id": "card_moses_howler",
+        "variant_name": "Vintage"
+    },
+    # Frantic Howler Variants
+    {
+        "id": "card_frantic_howler_stormy",
+        "name": "Frantic Howler (Stormy)",
+        "description": "The Stormy variant of Frantic Howler. Lightning splits the sky behind the Flying-V -- the storm itself headbangs while THRASH TILL DEATH echoes through the rain.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["frantic_howler_stormy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_stormy"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Succubus",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_frantic_howler",
+        "variant_name": "Stormy"
+    },
+    {
+        "id": "card_frantic_howler_decayed",
+        "name": "Frantic Howler (Decayed)",
+        "description": "The Decayed variant of Frantic Howler. Skin sloughs, the Flying-V rusts, the riff doesn't stop. NOISE IS MY RELIGION even when the body is gone.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["frantic_howler_decayed"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_decayed"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Succubus",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_frantic_howler",
+        "variant_name": "Decayed"
+    },
+    {
+        "id": "card_frantic_howler_camouflage",
+        "name": "Frantic Howler (Camouflage)",
+        "description": "The Camouflage variant of Frantic Howler. War-painted, battle-ready -- the Succubus army deploys, Flying-V slung like a rifle. THRASH OPS, MAXIMUM HOSTILE.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["frantic_howler_camouflage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_camouflage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Succubus",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_frantic_howler",
+        "variant_name": "Camouflage"
+    },
+    {
+        "id": "card_frantic_howler_vintage",
+        "name": "Frantic Howler (Vintage)",
+        "description": "The Vintage variant of Frantic Howler. Black-and-white film grain freezes the frenzy in time -- a relic of the LOUDER THAN HELL era, undiseased by decades.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["frantic_howler_vintage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_vintage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Succubus",
+        "card_type": "B",
+        "is_variant": True,
+        "base_card_id": "card_frantic_howler",
         "variant_name": "Vintage"
     },
 ]
