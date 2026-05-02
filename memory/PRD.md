@@ -68,9 +68,9 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - P1: Push final `/app/backend/server.py` + `cards_data.py` to Render so production gets Series 6 unlocked + the new milestone endpoint.
 
 ## Completed (May 2, 2026 — Series 6 unlock bug fix 🔓)
-- **Root cause**: `server.py` series-progression had hardcoded caps from the Series 1-5 era — `next_series <= 5`, `next_series <= 4`, and `range(1, 5)`. Series 6 could never enter any user's `unlocked_series`, so the spin/shop endpoint filtered it out entirely.
-- Fixed all three caps to support Series 6.
-- Added one-time startup migration: any user with `5 in completed_series` and not yet `6 in unlocked_series` is auto-backfilled. Verified live: **5 users updated** on first boot.
+- **Root cause**: `server.py` series-progression had legacy hardcoded caps from the Series 1-5 era — `next_series <= 5`, `next_series <= 4`, and `range(1, 5)`. Series 6 could **never** enter any user's `unlocked_series`, so the spin/shop endpoints filtered it out entirely.
+- **Refactor**: Added Series 6 to `SERIES_CONFIG` (with `card_nicklebag_darrell` reward + "Maximum Dose" description). Introduced `MAX_SERIES = max(SERIES_CONFIG.keys())` constant. All series caps (unlock logic, `next_series_unlocked`, `series-progress` loop, milestone validation, startup migration) now flow through `MAX_SERIES` — adding Series 7 in the future is a one-line `SERIES_CONFIG[7] = {...}` change.
+- **Migration**: Generalized the one-time `MAX_SERIES` unlock backfill — any user who completed `MAX_SERIES - 1` and didn't have `MAX_SERIES` unlocked gets it auto-added on next backend boot. Verified live: 5 users updated on first run for Series 6.
 - Verified `/api/users/{id}/spin-pool?series=6` returns all 16 base cards correctly.
 
 ## Completed (May 2, 2026 — SERIES 6 100% COMPLETE 🎉 + Milestone Celebration)
