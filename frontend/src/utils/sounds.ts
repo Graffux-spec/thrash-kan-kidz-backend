@@ -101,6 +101,12 @@ function isMuted(name: SoundName): boolean {
 
 /**
  * One-shot sound player. Respects the SFX mute toggle.
+ *
+ * Why the seek-then-play chain: expo-audio's `seekTo()` is async. If you
+ * call `play()` synchronously after it, the play often fires while the
+ * player position is still at the *end* of the previous playback, so it
+ * "ends immediately" = silence. Symptom: every Nth rapid replay drops out.
+ * Awaiting the seek before play guarantees a clean re-trigger every time.
  */
 export function useSoundPlayer(name: SoundName) {
   const player = useAudioPlayer(SOUNDS[name]);
@@ -108,8 +114,14 @@ export function useSoundPlayer(name: SoundName) {
     play: () => {
       if (isMuted(name)) return;
       try {
-        player.seekTo(0);
-        player.play();
+        const seekResult = player.seekTo(0) as unknown as
+          | Promise<void>
+          | undefined;
+        if (seekResult && typeof seekResult.then === 'function') {
+          seekResult.then(() => player.play()).catch(() => {});
+        } else {
+          player.play();
+        }
       } catch (_e) {
         // ignore
       }

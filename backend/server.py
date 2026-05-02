@@ -9,7 +9,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import base64
 import random
 import bcrypt
@@ -216,7 +216,33 @@ SERIES_CONFIG = {
 # Single source of truth for series progression. Bumping this to add Series 7+
 # automatically lifts the cap in unlock logic, progress endpoints, and the
 # milestone/share flows.
+#
+# Each entry may optionally include "release_date" (datetime, UTC). Series with
+# a release_date in the future are hidden from the public catalog/cards
+# endpoints and excluded from unlock progression — meaning content can be
+# uploaded to the DB ahead of time and flips on automatically at launch.
 MAX_SERIES = max(SERIES_CONFIG.keys())
+
+def is_series_released(series_num: int) -> bool:
+    """A series is released when its release_date is unset or in the past."""
+    cfg = SERIES_CONFIG.get(series_num)
+    if not cfg:
+        return False
+    release_date = cfg.get("release_date")
+    if release_date is None:
+        return True
+    now = datetime.now(timezone.utc)
+    if release_date.tzinfo is None:
+        release_date = release_date.replace(tzinfo=timezone.utc)
+    return now >= release_date
+
+def released_series_nums() -> List[int]:
+    return [n for n in sorted(SERIES_CONFIG.keys()) if is_series_released(n)]
+
+def current_max_series() -> int:
+    """Highest series number currently visible to players."""
+    rel = released_series_nums()
+    return rel[-1] if rel else 1
 
 class CoinPurchaseRequest(BaseModel):
     user_id: str
@@ -810,6 +836,15 @@ INITIAL_GOALS = [
         "target_value": 5,
         "reward_coins": 500,
         "reward_card_id": None
+    },
+    {
+        "id": "goal_all_variants_s6",
+        "title": "Series 6 Variant Master",
+        "description": "Collect every variant in Series 6",
+        "goal_type": "collect_all_variants_series",
+        "target_value": 6,
+        "reward_coins": 500,
+        "reward_card_id": None
     }
 ]
 
@@ -954,6 +989,18 @@ async def seed_database():
                 goal = Goal(**goal_data)
                 await db.goals.insert_one(goal.dict())
                 logger.info(f"Seeded goal: {goal.title}")
+                # Existing users won't have user_goals for newly-added goals.
+                # Backfill so the goal shows up on every existing player's
+                # Goals tab without them having to re-register.
+                user_ids = await db.users.distinct("id")
+                if user_ids:
+                    await db.user_goals.insert_many([
+                        UserGoal(user_id=uid, goal_id=goal.id).dict()
+                        for uid in user_ids
+                    ])
+                    logger.info(
+                        f"Backfilled '{goal.title}' for {len(user_ids)} existing user(s)"
+                    )
         return
     
     logger.info(f"Database has {card_count}/{expected_count} cards, seeding...")
@@ -1845,10 +1892,23 @@ async def check_series_completion(user_id: str, series_num: int):
     
     # Check if series is complete
     completed_series = user.get("completed_series", [])
-    
-    if owned_count >= required_count and series_num not in completed_series:
-        # Series completed! Mark as complete
-        completed_series.append(series_num)
+    series_config = SERIES_CONFIG.get(series_num, {})
+    rare_reward_id = series_config.get("rare_reward")
+
+    # Determine whether the user is *missing* the reward they should have.
+    # We previously gated on "series_num not in completed_series" but that
+    # caused the reward to be permanently skipped if the series was added to
+    # SERIES_CONFIG *after* the user already completed it (e.g., Series 6
+    # users who finished it before the config entry existed).
+    unlocked_rares = user.get("unlocked_rare_cards", [])
+    reward_already_granted = (
+        rare_reward_id is not None and rare_reward_id in unlocked_rares
+    )
+
+    if owned_count >= required_count and not reward_already_granted:
+        # Series completed! Mark as complete (idempotent thanks to set behavior)
+        if series_num not in completed_series:
+            completed_series.append(series_num)
         
         # Unlock next series
         unlocked_series = user.get("unlocked_series", [1])
@@ -1857,8 +1917,6 @@ async def check_series_completion(user_id: str, series_num: int):
             unlocked_series.append(next_series)
         
         # Get rare reward card for this series
-        series_config = SERIES_CONFIG.get(series_num, {})
-        rare_reward_id = series_config.get("rare_reward")
         rare_reward_card = None
         
         if rare_reward_id:
@@ -3611,6 +3669,51 @@ async def startup_event():
             logger.info(
                 f"Series {MAX_SERIES} unlock backfill: {backfill.modified_count} user(s) updated"
             )
+
+    # Series-reward backfill: grant the rare reward card to any user who owns
+    # all required commons of a series but never received the reward (this can
+    # happen when a series was added to SERIES_CONFIG *after* users already
+    # completed it — e.g., Series 6).
+    reward_grants = 0
+    for series_num, cfg in SERIES_CONFIG.items():
+        rare_reward_id = cfg.get("rare_reward")
+        if not rare_reward_id:
+            continue
+        series_card_ids = await db.cards.distinct(
+            "id", {"series": series_num, "rarity": "common"}
+        )
+        if not series_card_ids:
+            continue
+        # Pipeline: count distinct owned commons per user
+        owners = await db.user_cards.aggregate([
+            {"$match": {"card_id": {"$in": series_card_ids}}},
+            {"$group": {"_id": "$user_id", "owned": {"$addToSet": "$card_id"}}},
+            {"$match": {f"owned.{len(series_card_ids) - 1}": {"$exists": True}}},
+        ]).to_list(10000)
+        for o in owners:
+            uid = o["_id"]
+            existing_card = await db.user_cards.find_one(
+                {"user_id": uid, "card_id": rare_reward_id}
+            )
+            user_doc = await db.users.find_one({"id": uid}, {"_id": 0, "unlocked_rare_cards": 1})
+            already_unlocked = rare_reward_id in (
+                user_doc.get("unlocked_rare_cards", []) if user_doc else []
+            )
+            if existing_card and already_unlocked:
+                continue
+            if not existing_card:
+                user_card = UserCard(user_id=uid, card_id=rare_reward_id)
+                await db.user_cards.insert_one(user_card.dict())
+            await db.users.update_one(
+                {"id": uid},
+                {"$addToSet": {
+                    "unlocked_rare_cards": rare_reward_id,
+                    "completed_series": series_num,
+                }},
+            )
+            reward_grants += 1
+    if reward_grants:
+        logger.info(f"Series-reward backfill: granted {reward_grants} missing reward(s)")
     logger.info("Database seeded successfully")
 
 @app.on_event("shutdown")
