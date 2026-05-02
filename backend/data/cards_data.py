@@ -588,6 +588,10 @@ CARD_IMAGE_URLS = {
     "sadam_tranquilli_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/s9yelybc_file_00000000fdb071f8b09a5e2b5bb45b92.png",
     # Band 7: Diseased
     "king_browley": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2b4fzbq5_enhanced-1777676164475.jpg",
+    "king_browley_stormy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/r1tn9ixe_file_00000000d78c71fd88e23a99ced30573.png",
+    "king_browley_decayed": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/va5rsubu_file_00000000d68c71fda5887b70dd8e3218.png",
+    "king_browley_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/rhv0ok4d_file_00000000a4ec71fd97ddb4ec0f004d9e.png",
+    "king_browley_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hj9fxeot_file_000000006c0071fd8861c9b563e08b21.png",
     "king_fouley": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/yq9zaqif_enhanced-1777689481789.jpg",
     # Band 8: Succubus
     "moses_howler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xi36c461_enhanced-1777690529989.jpg",
@@ -8252,6 +8256,71 @@ INITIAL_CARDS = [
         "series": 6,
         "band": "Diseased",
         "card_type": "B"
+    },
+    # King BROWley Variants
+    {
+        "id": "card_king_browley_stormy",
+        "name": "King BROWley (Stormy)",
+        "description": "The Stormy variant of King BROWley. Drenched in rain, lightning behind THE BROW OF DOOM -- the storm itself bows to the maximum dose.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["king_browley_stormy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_stormy"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Diseased",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_king_browley",
+        "variant_name": "Stormy"
+    },
+    {
+        "id": "card_king_browley_decayed",
+        "name": "King BROWley (Decayed)",
+        "description": "The Decayed variant of King BROWley. Skin rotting off the bone, the brow still rules. DISEASED is not just the band -- it's the diagnosis.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["king_browley_decayed"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_decayed"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Diseased",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_king_browley",
+        "variant_name": "Decayed"
+    },
+    {
+        "id": "card_king_browley_camouflage",
+        "name": "King BROWley (Camouflage)",
+        "description": "The Camouflage variant of King BROWley. Full warpaint, full thrash regiment -- the brow goes tactical and the pit becomes a battlefield.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["king_browley_camouflage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_camouflage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Diseased",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_king_browley",
+        "variant_name": "Camouflage"
+    },
+    {
+        "id": "card_king_browley_vintage",
+        "name": "King BROWley (Vintage)",
+        "description": "The Vintage variant of King BROWley. Black-and-white film grain captures THE BROW OF DOOM in timeless thrash glory -- old-school, undiseased by time.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["king_browley_vintage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_vintage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Diseased",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_king_browley",
+        "variant_name": "Vintage"
     },
     # Band 8: Succubus
     {
