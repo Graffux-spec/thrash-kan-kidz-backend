@@ -161,7 +161,16 @@ export default function CollectionScreen() {
     const ownedIds = new Set(userCards.map(uc => uc.card.id));
     const alreadyClaimed = new Set(user.series_milestone_claimed || []);
 
-    for (let series = 1; series <= 6; series += 1) {
+    // Derive series list from cards we already have — no hardcoded cap.
+    const allSeriesNums = Array.from(
+      new Set(
+        allCards
+          .map(c => c.series ?? (c as any).series_reward)
+          .filter((s): s is number => typeof s === 'number' && s > 0),
+      ),
+    ).sort((a, b) => a - b);
+
+    for (const series of allSeriesNums) {
       if (alreadyClaimed.has(series)) continue;
       if (milestoneAttemptedRef.current.has(series)) continue;
 
@@ -326,8 +335,15 @@ export default function CollectionScreen() {
     setCollapsedSeries(prev => ({ ...prev, [series]: !prev[series] }));
   };
 
-  // Group cards by series
-  const seriesNumbers = [1, 2, 3, 4, 5, 6];
+  // Group cards by series — derived from allCards so adding Series 7+
+  // requires only a backend change, no frontend rebuild.
+  const seriesNumbers: number[] = Array.from(
+    new Set(
+      allCards
+        .map(c => c.series ?? (c as any).series_reward)
+        .filter((s): s is number => typeof s === 'number' && s > 0),
+    ),
+  ).sort((a, b) => a - b);
   const getSeriesCards = (series: number) => {
     const base = allCards
       .filter(c => c.series === series && !c.base_card_id && c.rarity !== 'rare' && c.rarity !== 'epic')

@@ -1694,6 +1694,27 @@ async def purchase_card(user_id: str, request: PurchaseCardRequest):
 # Spin Wheel System
 # =====================
 
+@api_router.get("/series/list")
+async def get_series_list():
+    """
+    Public series catalog. Frontend reads this to know how many series exist
+    and their metadata, so adding a new series only requires a backend
+    SERIES_CONFIG entry and a redeploy — no app rebuild needed.
+    """
+    return {
+        "max_series": MAX_SERIES,
+        "series": [
+            {
+                "series": num,
+                "name": cfg.get("name", f"Series {num}"),
+                "description": cfg.get("description", ""),
+                "cards_required": cfg.get("cards_required", 16),
+                "has_reward": bool(cfg.get("rare_reward")),
+            }
+            for num, cfg in sorted(SERIES_CONFIG.items())
+        ],
+    }
+
 @api_router.get("/spin/config")
 async def get_spin_config():
     """Get spin wheel configuration"""

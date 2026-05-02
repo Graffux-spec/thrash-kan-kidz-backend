@@ -69,9 +69,15 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 
 ## Completed (May 2, 2026 — Series 6 unlock bug fix 🔓)
 - **Root cause**: `server.py` series-progression had legacy hardcoded caps from the Series 1-5 era — `next_series <= 5`, `next_series <= 4`, and `range(1, 5)`. Series 6 could **never** enter any user's `unlocked_series`, so the spin/shop endpoints filtered it out entirely.
-- **Refactor**: Added Series 6 to `SERIES_CONFIG` (with `card_nicklebag_darrell` reward + "Maximum Dose" description). Introduced `MAX_SERIES = max(SERIES_CONFIG.keys())` constant. All series caps (unlock logic, `next_series_unlocked`, `series-progress` loop, milestone validation, startup migration) now flow through `MAX_SERIES` — adding Series 7 in the future is a one-line `SERIES_CONFIG[7] = {...}` change.
+- **Refactor**: Added Series 6 to `SERIES_CONFIG` (with `card_nicklebag_darrell` reward + "Maximum Dose" description). Introduced `MAX_SERIES = max(SERIES_CONFIG.keys())` constant. All series caps (unlock logic, `next_series_unlocked`, `series-progress` loop, milestone validation, startup migration) now flow through `MAX_SERIES`.
 - **Migration**: Generalized the one-time `MAX_SERIES` unlock backfill — any user who completed `MAX_SERIES - 1` and didn't have `MAX_SERIES` unlocked gets it auto-added on next backend boot. Verified live: 5 users updated on first run for Series 6.
-- Verified `/api/users/{id}/spin-pool?series=6` returns all 16 base cards correctly.
+
+### Future-proof series catalog (NEW)
+- New endpoint `GET /api/series/list` returning `{max_series, series: [{series, name, description, cards_required, has_reward}]}` — public, derived from `SERIES_CONFIG`.
+- Frontend `collection.tsx` refactored:
+  - `seriesNumbers` derived from `allCards` (unique sorted series values), not a hardcoded array.
+  - Milestone-detection effect iterates the derived list, no `<= 6` cap.
+- **Adding Series 7+ is now a single-line backend change**: `SERIES_CONFIG[7] = {...}`. All caps lift automatically. The frontend will pick up the new series the next time it fetches `allCards` — **no app rebuild required for new series content**.
 
 ## Completed (May 2, 2026 — SERIES 6 100% COMPLETE 🎉 + Milestone Celebration)
 - Series 6 Band 7 "Diseased": King Fouley variants (Stormy/Decayed/Camouflage/Vintage) wired into INITIAL_CARDS (URLs were present from prior session but card definitions were missing).
