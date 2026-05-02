@@ -593,6 +593,10 @@ CARD_IMAGE_URLS = {
     "king_browley_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/rhv0ok4d_file_00000000a4ec71fd97ddb4ec0f004d9e.png",
     "king_browley_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hj9fxeot_file_000000006c0071fd8861c9b563e08b21.png",
     "king_fouley": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/yq9zaqif_enhanced-1777689481789.jpg",
+    "king_fouley_stormy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2aqqjfoz_file_00000000899071fda4eacfb38f1e5ee8.png",
+    "king_fouley_decayed": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/6rg2rcp3_file_000000004a1071fdb679fe41da8cdcd9.png",
+    "king_fouley_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/f4o68e6x_file_000000002b7471fdbe24aa141e230955.png",
+    "king_fouley_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/0cn9crl1_file_00000000303471fda434cd1328101fc2.png",
     # Band 8: Succubus
     "moses_howler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xi36c461_enhanced-1777690529989.jpg",
     "frantic_howler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hvscqulm_enhanced-1777692431547.jpg",
