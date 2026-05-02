@@ -64,8 +64,29 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - Friends UI on Trade page with tabs, friend codes, and trade-with button
 
 ## Upcoming
-- P1: Apply for Google Play Production Access on Day 14 (4 days after April 29). Use draft answers in `/app/memory/play_production_questionnaire.md`.
-- P0: Series 6 content — Bands 1–5 + Reward card COMPLETE. 3 bands remaining (6, 7, 8).
+- P1: Apply for Google Play Production Access on Day 14. Use draft answers in `/app/memory/play_production_questionnaire.md`.
+- P0: Series 6 variants — Bands 6, 7, 8 still need 24 variant fronts (Stormy/Decayed/Camouflage/Vintage × 2 chars × 3 bands).
+
+## Completed (May 1, 2026 — Series 6 base cards complete + bug fixes + cloud build)
+
+### Series 6 base cards — ALL 8 BANDS COMPLETE
+- Band 6 "Butt Feast": Tranquilized Adam + Sadam Tranquilli
+- Band 7 "Diseased": King BROWley + King Fouley
+- Band 8 "Succubus": Moses Howler + Frantic Howler
+- DB total: 462 cards (all 16 Series 6 base characters now present).
+
+### Production-time bug fixes (April 30 / May 1)
+- Reroll cost mismatch: backend already had `REROLL_COST_MEDALS = 1` — needs Render redeploy.
+- Trade-In stale-row failure: FE now drops the failed row + refreshes from server on error.
+- Card Picker prize bug: backend was picking a RANDOM prize regardless of which pair the user matched. Now backend honors `prize_label` from FE; FE sends matched pair's label. Backward-compatible fallback retained.
+- Mickey Muir front art (base + 4 variants) refreshed via `name_fixes` dict — auto-updates production DB on next backend boot.
+
+### Cloud-build pipeline established (April 30)
+- Frontend pushed to `Graffux/thrash-kan-kidz-frontend`. Expo project linked to repo via "Build with GitHub" feature with `/frontend` base directory.
+- `eas-build-pre-install` hook added to package.json: runs `yarn install --ignore-engines` to pre-sync the lockfile, eliminating the `--frozen-lockfile` failures.
+- `packageManager` field removed from package.json (was forcing strict corepack lockfile checks).
+- `YARN_ENABLE_IMMUTABLE_INSTALLS=false` env added to eas.json production profile.
+- v1.8.4 / versionCode 54 ready to build.
 
 ## Completed (April 29, 2026)
 

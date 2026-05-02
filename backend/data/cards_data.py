@@ -581,6 +581,9 @@ CARD_IMAGE_URLS = {
     # Band 7: Diseased
     "king_browley": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2b4fzbq5_enhanced-1777676164475.jpg",
     "king_fouley": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/yq9zaqif_enhanced-1777689481789.jpg",
+    # Band 8: Succubus
+    "moses_howler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xi36c461_enhanced-1777690529989.jpg",
+    "frantic_howler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hvscqulm_enhanced-1777692431547.jpg",
 }
 
 CARD_BACK_IMAGE_URLS = {
@@ -863,6 +866,9 @@ CARD_BACK_IMAGE_URLS = {
     # Band 7: Diseased
     "king_browley": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/y72ev7xq_enhanced-1777676212318.jpg",
     "king_fouley": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/a4njy5ql_enhanced-1777690184528.jpg",
+    # Band 8: Succubus
+    "moses_howler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/6dbgtw1e_enhanced-1777692377435.jpg",
+    "frantic_howler": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/64mavwcx_enhanced-1777693007678.jpg",
 }
 
 # Rare card achievement requirements (Series completion rewards)
@@ -8107,6 +8113,33 @@ INITIAL_CARDS = [
         "available": True,
         "series": 6,
         "band": "Diseased",
+        "card_type": "B"
+    },
+    # Band 8: Succubus
+    {
+        "id": "card_moses_howler",
+        "name": "Moses Howler",
+        "description": "THE THRASH PROPHET. Sandals on stone, drumstick raised to the moon -- Moses delivers his commandments from the Mount Sinai of Steel. THOU SHALT THRASH. THOU SHALT KILL. The pit obeys.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["moses_howler"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["moses_howler"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 6,
+        "band": "Succubus",
+        "card_type": "A"
+    },
+    {
+        "id": "card_frantic_howler",
+        "name": "Frantic Howler",
+        "description": "Born to riff, built to destroy. SUCCUBUS's frenetic frontman -- Flying-V in hand, hair on fire, voice ripping the roof off. NOISE IS MY RELIGION. LOUDER THAN HELL.",
+        "rarity": "common",
+        "front_image_url": CARD_IMAGE_URLS["frantic_howler"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["frantic_howler"],
+        "coin_cost": 50,
+        "available": True,
+        "series": 6,
+        "band": "Succubus",
         "card_type": "B"
     },
 ]
