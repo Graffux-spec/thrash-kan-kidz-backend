@@ -577,6 +577,10 @@ CARD_IMAGE_URLS = {
     "handsome_dan_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/kp9auyns_file_000000001600720cb650f24d837abeff.png",
     # Band 6: Butt Feast
     "tranquilized_adam": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/o875w9uc_enhanced-1777631095906.jpg",
+    "tranquilized_adam_stormy": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/633wvge4_enhanced-1777694731437.jpg",
+    "tranquilized_adam_decayed": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/m3o3royr_file_00000000788c71fdbfbcded2d96c602b.png",
+    "tranquilized_adam_camouflage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/hj7s05dl_file_00000000a64c71fdb8b8a76543e0fc8f.png",
+    "tranquilized_adam_vintage": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/xki68zlp_file_000000000c1871f8a1162a64ad50bbea.png",
     "sadam_tranquilli": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/toksawb1_enhanced-1777631301982.jpg",
     # Band 7: Diseased
     "king_browley": "https://customer-assets.emergentagent.com/job_1bc0dac8-eaf6-4ea9-b00d-e58826a0a195/artifacts/2b4fzbq5_enhanced-1777676164475.jpg",
@@ -8087,6 +8091,71 @@ INITIAL_CARDS = [
         "series": 6,
         "band": "Butt Feast",
         "card_type": "B"
+    },
+    # Tranquilized Adam Variants
+    {
+        "id": "card_tranquilized_adam_stormy",
+        "name": "Tranquilized Adam (Stormy)",
+        "description": "The Stormy variant of Tranquilized Adam. Lightning explodes around the fallen frontman as the tranq sludge keeps flowing -- the storm itself can't wake him up.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tranquilized_adam_stormy"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_stormy"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Butt Feast",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_tranquilized_adam",
+        "variant_name": "Stormy"
+    },
+    {
+        "id": "card_tranquilized_adam_decayed",
+        "name": "Tranquilized Adam (Decayed)",
+        "description": "The Decayed variant of Tranquilized Adam. Moss-covered, rotting on the stage floor -- the sludge brew has done its worst, but the riff still drips on.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tranquilized_adam_decayed"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_decayed"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Butt Feast",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_tranquilized_adam",
+        "variant_name": "Decayed"
+    },
+    {
+        "id": "card_tranquilized_adam_camouflage",
+        "name": "Tranquilized Adam (Camouflage)",
+        "description": "The Camouflage variant of Tranquilized Adam. Down on the field, tranq dart still in -- BUTT FEAST tactical squad-down. Maximum dose, maximum chill.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tranquilized_adam_camouflage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_camouflage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Butt Feast",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_tranquilized_adam",
+        "variant_name": "Camouflage"
+    },
+    {
+        "id": "card_tranquilized_adam_vintage",
+        "name": "Tranquilized Adam (Vintage)",
+        "description": "The Vintage variant of Tranquilized Adam. Black-and-white film grain captures the tranq'd-out frontman in timeless thrash -- one for the archives.",
+        "rarity": "variant",
+        "front_image_url": CARD_IMAGE_URLS["tranquilized_adam_vintage"],
+        "back_image_url": CARD_BACK_IMAGE_URLS["variant_back_vintage"],
+        "coin_cost": 0,
+        "available": False,
+        "series": 6,
+        "band": "Butt Feast",
+        "card_type": "A",
+        "is_variant": True,
+        "base_card_id": "card_tranquilized_adam",
+        "variant_name": "Vintage"
     },
     # Band 7: Diseased
     {
