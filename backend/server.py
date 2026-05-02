@@ -69,6 +69,7 @@ class User(BaseModel):
     monthly_logins: dict = Field(default_factory=dict)  # Track logins per month {"YYYY-MM": [day1, day2...]}
     unlocked_series: List[int] = Field(default_factory=lambda: [1])  # Series user has access to (starts with series 1)
     completed_series: List[int] = Field(default_factory=list)  # Series user has fully completed
+    series_milestone_claimed: List[int] = Field(default_factory=list)  # Series the user has claimed the 100% completion milestone bonus for
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 # Auth request models
@@ -1982,6 +1983,93 @@ async def get_series_progress(user_id: str):
     return {
         "series": all_series,
         "current_series": max(s for s in unlocked_series if s not in completed_series) if [s for s in unlocked_series if s not in completed_series] else max(unlocked_series)
+    }
+
+SERIES_MILESTONE_MEDAL_REWARD = 200
+
+@api_router.post("/users/{user_id}/series-milestone/{series}")
+async def claim_series_milestone(user_id: str, series: int):
+    """
+    One-time celebration bonus when a user collects 100% of a series
+    (every base + every variant + the rare/epic reward card).
+    Idempotent: returns claimed=False if the user already received the bonus.
+    """
+    if series < 1 or series > 6:
+        raise HTTPException(status_code=400, detail="Invalid series number")
+
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    already_claimed = series in user.get("series_milestone_claimed", [])
+
+    # All cards that count toward 100% for this series
+    series_cards = await db.cards.find({
+        "$or": [
+            {"series": series},
+            {"series_reward": series},
+        ]
+    }, {"_id": 0, "id": 1}).to_list(500)
+    required_ids = {c["id"] for c in series_cards}
+
+    if not required_ids:
+        raise HTTPException(status_code=404, detail="No cards found for series")
+
+    user_cards = await db.user_cards.find(
+        {"user_id": user_id, "card_id": {"$in": list(required_ids)}}
+    ).to_list(1000)
+    owned_ids = {uc["card_id"] for uc in user_cards}
+
+    is_complete = required_ids.issubset(owned_ids)
+    total_required = len(required_ids)
+    total_owned = len(owned_ids & required_ids)
+
+    if already_claimed:
+        return {
+            "claimed": False,
+            "already_claimed": True,
+            "is_complete": is_complete,
+            "total_required": total_required,
+            "total_owned": total_owned,
+            "medals_awarded": 0,
+            "total_medals": user.get("medals", 0),
+            "series": series,
+        }
+
+    if not is_complete:
+        return {
+            "claimed": False,
+            "already_claimed": False,
+            "is_complete": False,
+            "total_required": total_required,
+            "total_owned": total_owned,
+            "medals_awarded": 0,
+            "total_medals": user.get("medals", 0),
+            "series": series,
+        }
+
+    # Atomically award the bonus
+    new_total_medals = user.get("medals", 0) + SERIES_MILESTONE_MEDAL_REWARD
+    await db.users.update_one(
+        {"id": user_id},
+        {
+            "$set": {"medals": new_total_medals},
+            "$addToSet": {"series_milestone_claimed": series},
+        },
+    )
+
+    series_name = SERIES_CONFIG.get(series, {}).get("name", f"Series {series}")
+
+    return {
+        "claimed": True,
+        "already_claimed": False,
+        "is_complete": True,
+        "total_required": total_required,
+        "total_owned": total_owned,
+        "medals_awarded": SERIES_MILESTONE_MEDAL_REWARD,
+        "total_medals": new_total_medals,
+        "series": series,
+        "series_name": series_name,
     }
 
 # =====================

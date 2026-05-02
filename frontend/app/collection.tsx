@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,9 @@ import {
   Alert,
   ScrollView,
   FlatList,
+  Animated,
+  Easing,
+  Share,
 } from 'react-native';
 import { Image as ExpoImage } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -118,7 +121,17 @@ export default function CollectionScreen() {
   const [tradeInResult, setTradeInResult] = useState<any>(null);
   const [isTrading, setIsTrading] = useState(false);
   const cardFlipSound = useSoundPlayer('card_flip');
+  const prizeWonSound = useSoundPlayer('prize_won');
   const collectionMusic = useLoopingPlayer('collection_bg');
+
+  // Series-completion milestone celebration (one-time per series, 200 medals)
+  const [milestone, setMilestone] = useState<{ series: number; medals: number } | null>(null);
+  const milestoneOpacity = useRef(new Animated.Value(0)).current;
+  const milestoneScale = useRef(new Animated.Value(0.6)).current;
+  const skullPulse = useRef(new Animated.Value(1)).current;
+  // Series numbers we've already attempted to claim this session, regardless of
+  // outcome — prevents repeated POSTs while user lingers on Collection tab.
+  const milestoneAttemptedRef = useRef<Set<number>>(new Set());
 
   // Play looping background music while Collection tab is focused
   useFocusEffect(
@@ -136,6 +149,98 @@ export default function CollectionScreen() {
       fetchTradeInEligible();
     }
   }, [user, userCards]);
+
+  // Series-completion milestone detection. Runs whenever userCards or allCards
+  // changes. For each fully-collected series the backend hasn't already paid
+  // out for, hit the milestone endpoint. Server is the source of truth — it
+  // decides whether to award and is idempotent.
+  useEffect(() => {
+    if (!user || allCards.length === 0 || userCards.length === 0) return;
+    if (milestone) return; // don't fire while another celebration is open
+
+    const ownedIds = new Set(userCards.map(uc => uc.card.id));
+    const alreadyClaimed = new Set(user.series_milestone_claimed || []);
+
+    for (let series = 1; series <= 6; series += 1) {
+      if (alreadyClaimed.has(series)) continue;
+      if (milestoneAttemptedRef.current.has(series)) continue;
+
+      const seriesCards = allCards.filter(
+        c => c.series === series || (c as any).series_reward === series,
+      );
+      if (seriesCards.length === 0) continue;
+
+      const ownsAll = seriesCards.every(c => ownedIds.has(c.id));
+      if (!ownsAll) continue;
+
+      // Eligible: claim + animate.
+      milestoneAttemptedRef.current.add(series);
+      void claimMilestone(series);
+      break; // one celebration at a time; the next focus pass picks up the next series
+    }
+  }, [user, userCards, allCards, milestone]);
+
+  const claimMilestone = async (series: number) => {
+    if (!user) return;
+    try {
+      const res = await fetch(
+        `${apiUrl}/api/users/${user.id}/series-milestone/${series}`,
+        { method: 'POST' },
+      );
+      const data = await res.json();
+      if (data?.claimed && data?.medals_awarded > 0) {
+        showMilestone(series, data.medals_awarded);
+        // Refresh global user/medal state in the background
+        refreshData();
+      }
+    } catch (err) {
+      console.error('Series milestone claim failed:', err);
+    }
+  };
+
+  const showMilestone = (series: number, medals: number) => {
+    setMilestone({ series, medals });
+    milestoneOpacity.setValue(0);
+    milestoneScale.setValue(0.6);
+    Animated.parallel([
+      Animated.timing(milestoneOpacity, { toValue: 1, duration: 260, useNativeDriver: true }),
+      Animated.spring(milestoneScale, { toValue: 1, friction: 5, tension: 80, useNativeDriver: true }),
+    ]).start();
+    // Skull pulse loop while overlay is visible
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(skullPulse, { toValue: 1.18, duration: 600, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+        Animated.timing(skullPulse, { toValue: 1.0, duration: 600, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+      ]),
+    ).start();
+    try { prizeWonSound.play(); } catch (_e) { /* ignore */ }
+  };
+
+  const dismissMilestone = () => {
+    Animated.timing(milestoneOpacity, {
+      toValue: 0,
+      duration: 240,
+      useNativeDriver: true,
+    }).start(() => {
+      skullPulse.stopAnimation();
+      skullPulse.setValue(1);
+      setMilestone(null);
+    });
+  };
+
+  const shareMilestone = async () => {
+    if (!milestone) return;
+    try {
+      await Share.share({
+        message:
+          `I just completed Series ${milestone.series} of THRASH KAN KIDZ! ` +
+          `Every base card. Every variant. THRASH TILL DEATH! ` +
+          `Get the game and try to beat me: https://thrashkankidz.com`,
+      });
+    } catch (err) {
+      console.error('Share failed:', err);
+    }
+  };
 
   const fetchTradeInEligible = async () => {
     if (!user) return;
@@ -510,6 +615,51 @@ export default function CollectionScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Series Completion Milestone — full-screen celebration with share */}
+      {milestone && (
+        <Animated.View
+          style={[styles.milestoneOverlay, { opacity: milestoneOpacity }]}
+          pointerEvents="auto"
+          data-testid="series-milestone-overlay"
+        >
+          <Animated.View
+            style={[styles.milestoneCard, { transform: [{ scale: milestoneScale }] }]}
+          >
+            <Animated.View style={{ transform: [{ scale: skullPulse }] }}>
+              <Text style={styles.milestoneSkull}>💀</Text>
+            </Animated.View>
+            <Text style={styles.milestoneFlames}>🔥 🤘 🔥</Text>
+            <Text style={styles.milestoneEyebrow}>SERIES COMPLETE!</Text>
+            <Text style={styles.milestoneTitle}>SERIES {milestone.series}</Text>
+            <Text style={styles.milestoneSubtitle}>100% COLLECTED</Text>
+            <View style={styles.milestoneRewardBox}>
+              <Text style={styles.milestoneRewardLabel}>BONUS REWARD</Text>
+              <Text style={styles.milestoneRewardValue}>+{milestone.medals} MEDALS</Text>
+            </View>
+            <Text style={styles.milestoneTagline}>
+              Every base. Every variant. Every reward. Thrash till death.
+            </Text>
+            <View style={styles.milestoneActions}>
+              <TouchableOpacity
+                style={styles.milestoneShareBtn}
+                onPress={shareMilestone}
+                data-testid="series-milestone-share-btn"
+              >
+                <Ionicons name="share-social" size={18} color="#0f0f1a" />
+                <Text style={styles.milestoneShareTxt}>BRAG TO YOUR CREW</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.milestoneCloseBtn}
+                onPress={dismissMilestone}
+                data-testid="series-milestone-close-btn"
+              >
+                <Text style={styles.milestoneCloseTxt}>HORNS UP!</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </Animated.View>
+      )}
     </SafeAreaView>
   );
 }
@@ -1009,5 +1159,134 @@ const styles = StyleSheet.create({
     color: '#FFD700',
     marginTop: 12,
     fontWeight: 'bold',
+  },
+  // Series Completion Milestone overlay
+  milestoneOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.82)',
+    zIndex: 10000,
+    paddingHorizontal: 24,
+  },
+  milestoneCard: {
+    backgroundColor: '#150505',
+    borderWidth: 3,
+    borderColor: '#FFD700',
+    paddingHorizontal: 28,
+    paddingTop: 24,
+    paddingBottom: 22,
+    borderRadius: 18,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 360,
+    shadowColor: '#FFD700',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 28,
+    elevation: 14,
+  },
+  milestoneSkull: {
+    fontSize: 64,
+    marginBottom: 2,
+  },
+  milestoneFlames: {
+    fontSize: 22,
+    marginBottom: 10,
+    letterSpacing: 4,
+  },
+  milestoneEyebrow: {
+    color: '#ff3b3b',
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 4,
+    marginBottom: 4,
+  },
+  milestoneTitle: {
+    color: '#FFD700',
+    fontSize: 38,
+    fontWeight: '900',
+    letterSpacing: 3,
+    marginBottom: 2,
+  },
+  milestoneSubtitle: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: 3,
+    marginBottom: 16,
+  },
+  milestoneRewardBox: {
+    borderWidth: 2,
+    borderColor: '#FFD700',
+    borderStyle: 'dashed',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 22,
+    marginBottom: 14,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 215, 0, 0.06)',
+  },
+  milestoneRewardLabel: {
+    color: '#FFD700',
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 3,
+    marginBottom: 2,
+  },
+  milestoneRewardValue: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: '900',
+    letterSpacing: 1,
+  },
+  milestoneTagline: {
+    color: '#bbb',
+    fontSize: 11,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginBottom: 18,
+    paddingHorizontal: 6,
+  },
+  milestoneActions: {
+    flexDirection: 'row',
+    gap: 10,
+    width: '100%',
+  },
+  milestoneShareBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#FFD700',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  milestoneShareTxt: {
+    color: '#0f0f1a',
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 1,
+  },
+  milestoneCloseBtn: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#FFD700',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  milestoneCloseTxt: {
+    color: '#FFD700',
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 1,
   },
 });

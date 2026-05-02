@@ -23,6 +23,7 @@ interface User {
   friend_count?: number;
   medals?: number;
   free_packs?: number;
+  series_milestone_claimed?: number[];
 }
 
 interface Card {

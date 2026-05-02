@@ -65,14 +65,28 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 
 ## Upcoming
 - P1: Apply for Google Play Production Access on Day 14. Use draft answers in `/app/memory/play_production_questionnaire.md`.
-- P1: Push final `/app/backend/data/cards_data.py` to Render so production sees Series 6 complete.
+- P1: Push final `/app/backend/data/cards_data.py` + `server.py` to Render so production sees Series 6 complete + the new milestone endpoint.
 
-## Completed (May 2, 2026 — SERIES 6 100% COMPLETE 🎉)
+## Completed (May 2, 2026 — SERIES 6 100% COMPLETE 🎉 + Milestone Celebration)
 - Series 6 Band 7 "Diseased": King Fouley variants (Stormy/Decayed/Camouflage/Vintage) wired into INITIAL_CARDS (URLs were present from prior session but card definitions were missing).
 - Series 6 Band 8 "Succubus": Moses Howler variants wired (URLs + INITIAL_CARDS).
 - Series 6 Band 8 "Succubus": Frantic Howler variants wired (URLs + INITIAL_CARDS).
 - DB total: 486 cards (was 474). All 12 inserts confirmed via `/api/cards/{id}` GET probes (HTTP 200, series=6).
-- Series 6 final tally: 16 base + 64 variants + 1 reward (Nicklebag Darrell) = 81 cards. Matches the format of Series 1-5.
+- Series 6 final tally: 16 base + 64 variants + 1 reward (Nicklebag Darrell) = 81 cards, matching Series 1-5.
+
+### Series Completion Milestone Celebration (NEW)
+- New User field `series_milestone_claimed: List[int]` (idempotency guard).
+- New endpoint `POST /api/users/{user_id}/series-milestone/{series}`:
+  - Validates user owns ALL cards (base + variants + reward) for the series (81 cards each).
+  - Atomically awards **+200 medals** and stamps the series into `series_milestone_claimed`.
+  - Idempotent: subsequent calls return `claimed=false, already_claimed=true`.
+  - Verified live: 1st call awards 200, 2nd call no-op, invalid series 400, partial collection rejected. Tested for both Series 1 and Series 6.
+- Frontend `collection.tsx`:
+  - On userCards/allCards change, scans all 6 series; for any 100%-complete series not yet claimed, fires the endpoint.
+  - Animated full-screen overlay: pulsing skull + flames + "SERIES X COMPLETE" + dashed gold "+200 MEDALS" reward + tagline.
+  - **Native Share button** ("BRAG TO YOUR CREW") → React Native `Share.share()` with pre-filled message and game URL → free organic marketing at production launch.
+  - Per-session attempt guard prevents repeated POSTs while user lingers on tab.
+  - `data-testid` added: `series-milestone-overlay`, `series-milestone-share-btn`, `series-milestone-close-btn`.
 
 ## Completed (May 1, 2026 — Series 6 base cards complete + bug fixes + cloud build)
 
