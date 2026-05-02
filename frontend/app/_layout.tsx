@@ -4,6 +4,7 @@ import { AppProvider, useApp } from '../src/context/AppContext';
 import { View, StyleSheet, Text, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSoundPlayer } from '../src/utils/sounds';
+import { ErrorBoundary } from '../src/components/ErrorBoundary';
 
 // Tab icon component using emojis for reliable rendering
 const TabIcon = ({ emoji, focused, badge }: { emoji: string; focused: boolean; badge?: number }) => (
@@ -149,9 +150,11 @@ function TabsNavigator() {
 
 export default function TabLayout() {
   return (
-    <AppProvider>
-      <TabsNavigator />
-    </AppProvider>
+    <ErrorBoundary>
+      <AppProvider>
+        <TabsNavigator />
+      </AppProvider>
+    </ErrorBoundary>
   );
 }
 

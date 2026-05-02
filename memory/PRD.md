@@ -67,10 +67,11 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - P1: Apply for Google Play Production Access on Day 14. Use draft answers in `/app/memory/play_production_questionnaire.md`.
 - P1: Push final `/app/backend/server.py` + `cards_data.py` to Render so production gets Series 6 unlocked + the new milestone endpoint.
 
-## Completed (May 2, 2026 — bug bash + flip animations + ANR fix)
-- **#13 ANR fix (CRITICAL)**: Play Console showed `[libhwui.so] android::uirenderer::ThreadL... Input dispatching timed out` (Unresponsive GPU + Native lock contention).
-  - **Root cause**: Collection screen renders 486 cards inline via `.map()`. Each `SimpleCardOwned` called `useSoundPlayer('card_flip')` → `useAudioPlayer()` → allocated a **native MediaPlayer/ExoPlayer instance per card** synchronously on mount. On slower devices the main thread blocked >5s = ANR.
-  - **Fix**: Hoisted `cardFlipSound` to the screen level — now a single shared player. Wrapped `SimpleCard` and `SimpleCardOwned` in `React.memo` so non-changed cards skip re-renders on parent state changes.
+## Completed (May 2, 2026 — bug bash + flip animations + ANR fix + crash logging)
+- **Crash-log infra (NEW)**:
+  - Backend: `POST /api/crash-log` accepts `{error, stack, component_stack, screen, user_id, platform, app_version, device_info, breadcrumbs}`. Persists to `db.crash_logs` with timestamp + client IP. Logs a WARNING line per crash (e.g., `CRASH [1.8.4 (56) | android | screen=collection | user=abc]: TypeError: ...`) for fast Render-log eyeballing. Truncates runaway stacks at 8KB.
+  - Frontend: new class-based `ErrorBoundary` at the app root (wraps `AppProvider` in `_layout.tsx`). Catches render-time JS errors, posts full context to the endpoint with `Platform.OS`, `version (versionCode)`, then renders a metal-themed fallback ("SOMETHING THRASHED TOO HARD") with a "HORNS UP & RETRY" button that resets state. Verified end-to-end via curl: backend WARNING log printed correctly with parsed fields.
+- **#13 ANR fix**: 486 native MediaPlayer instances per Collection mount → `cardFlipSound` hoisted to screen level + `React.memo` on cards. Crash via libhwui ANR root-cause closed.
 - **#3 Sound replay race fixed**: `seekTo→play` async chain.
 - **#5–9 Card art swaps fixed** + image-URL drift sync added.
 - **#10 Series 6 reward backfill**: gate fixed + retroactive migration.

@@ -7,7 +7,7 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timedelta, timezone
 import base64
@@ -1762,6 +1762,45 @@ async def purchase_card(user_id: str, request: PurchaseCardRequest):
 # =====================
 # Spin Wheel System
 # =====================
+
+# =====================
+# Crash / error reporting
+# =====================
+
+class CrashReport(BaseModel):
+    error: str
+    stack: Optional[str] = None
+    component_stack: Optional[str] = None
+    screen: Optional[str] = None
+    user_id: Optional[str] = None
+    platform: Optional[str] = None
+    app_version: Optional[str] = None
+    device_info: Optional[Dict[str, Any]] = None
+    breadcrumbs: Optional[List[str]] = None
+
+@api_router.post("/crash-log")
+async def post_crash_log(report: CrashReport, request: Request):
+    """
+    Lightweight client-side error capture. JS-thread render errors caught by the
+    React error boundary post here so we see crashes with full screen/action
+    context faster than Play Console can aggregate them.
+    """
+    payload = report.dict()
+    payload["id"] = str(uuid.uuid4())
+    payload["received_at"] = datetime.now(timezone.utc)
+    # Trim runaway payloads — clients are untrusted.
+    if payload.get("stack") and len(payload["stack"]) > 8000:
+        payload["stack"] = payload["stack"][:8000] + "...[truncated]"
+    if payload.get("component_stack") and len(payload["component_stack"]) > 8000:
+        payload["component_stack"] = payload["component_stack"][:8000] + "...[truncated]"
+    payload["client_ip"] = request.client.host if request.client else None
+    await db.crash_logs.insert_one(payload)
+    logger.warning(
+        f"CRASH [{payload.get('app_version')} | {payload.get('platform')} | "
+        f"screen={payload.get('screen')} | user={payload.get('user_id')}]: "
+        f"{payload['error'][:200]}"
+    )
+    return {"ok": True, "id": payload["id"]}
 
 @api_router.get("/series/list")
 async def get_series_list():
