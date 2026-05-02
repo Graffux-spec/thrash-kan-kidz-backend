@@ -51,16 +51,18 @@ interface UserCard {
 const MYSTERY_CARD_IMAGE = 'https://customer-assets.emergentagent.com/job_d1401514-883f-459a-9a0f-b23503598272/artifacts/tf5khv09_enhanced-1771280968644.jpg';
 
 // Simple Card Component - Shows mystery card if not owned
-const SimpleCard = ({ 
+const SimpleCard = React.memo(({ 
   card,
   isOwned,
   quantity,
-  onPress 
+  onPress,
+  cardFlipPlay,
 }: { 
   card: Card;
   isOwned: boolean;
   quantity: number;
   onPress: () => void;
+  cardFlipPlay: () => void;
 }) => {
   const isVariant = !!card.base_card_id;
   const isReward = card.rarity === 'rare' || card.rarity === 'epic';
@@ -93,34 +95,41 @@ const SimpleCard = ({
       onPress={onPress}
       isVariant={isVariant}
       isReward={isReward}
+      cardFlipPlay={cardFlipPlay}
     />
   );
-};
+});
+SimpleCard.displayName = 'SimpleCard';
 
 // Owned-card subcomponent so we can keep per-card flip animation state local.
 // Long-press flips the thumbnail in place; single tap still opens the detail modal.
-const SimpleCardOwned = ({
+//
+// Important: cardFlipPlay is hoisted from the parent screen so we don't
+// allocate 486 native audio players (one per card) when the Collection
+// mounts. That allocation pattern caused libhwui ANRs on slower devices.
+const SimpleCardOwned = React.memo(({
   card,
   quantity,
   onPress,
   isVariant,
   isReward,
+  cardFlipPlay,
 }: {
   card: Card;
   quantity: number;
   onPress: () => void;
   isVariant: boolean;
   isReward: boolean;
+  cardFlipPlay: () => void;
 }) => {
   const flipAnim = useRef(new Animated.Value(0)).current;
   const flippingRef = useRef(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  const cardFlipSound = useSoundPlayer('card_flip');
 
   const flip = () => {
     if (flippingRef.current) return;
     flippingRef.current = true;
-    cardFlipSound.play();
+    cardFlipPlay();
     const target = isFlipped ? 0 : 1;
     Animated.timing(flipAnim, {
       toValue: target,
@@ -186,7 +195,8 @@ const SimpleCardOwned = ({
       </View>
     </TouchableOpacity>
   );
-};
+});
+SimpleCardOwned.displayName = 'SimpleCardOwned';
 
 export default function CollectionScreen() {
   const { user, userCards, allCards, apiUrl, refreshData } = useApp();
@@ -517,6 +527,8 @@ export default function CollectionScreen() {
 
   const totalOwned = userCards.length;
 
+  const cardFlipPlay = cardFlipSound.play;
+
   const renderCard = (card: Card) => {
     const isOwned = ownedCardIds.has(card.id);
     const quantity = ownedCardQuantities[card.id] || 0;
@@ -527,6 +539,7 @@ export default function CollectionScreen() {
         card={card}
         isOwned={isOwned}
         quantity={quantity}
+        cardFlipPlay={cardFlipPlay}
         onPress={() => {
           if (isOwned && userCard) {
             setSelectedCard(userCard);

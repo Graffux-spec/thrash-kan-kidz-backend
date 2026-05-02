@@ -67,16 +67,16 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
 - P1: Apply for Google Play Production Access on Day 14. Use draft answers in `/app/memory/play_production_questionnaire.md`.
 - P1: Push final `/app/backend/server.py` + `cards_data.py` to Render so production gets Series 6 unlocked + the new milestone endpoint.
 
-## Completed (May 2, 2026 — bug bash + flip animations)
-- **#3 Sound replay race fixed**: `expo-audio` `seekTo()` is async; old code called `play()` synchronously after, sometimes firing while position was still at end → silence. Now `seekTo(0).then(play())` chain. Helps every SFX in the app.
-- **#5–9 Card art swaps fixed**: Frank Bile-O, Frank Gello, Tranquilized Adam, Blainiac Cooke, Sadam Tranquilli, and Frank Bile-O Decayed variant fronts replaced with correct artwork in `cards_data.py`.
-- **Image-URL drift sync added**: `seed_database` fast-path (when card_count matches expected) now syncs `front_image_url` / `back_image_url` from `cards_data.py` → DB on every boot. Fixed 8 cards on first boot. Future art swaps no longer require a destructive re-seed.
-- **#10 Series 6 reward backfill**: Bug — completion gate was `series_num not in completed_series`, which left users stranded if the series was added to `SERIES_CONFIG` after they completed it. Changed gate to "reward not yet owned". Added startup migration that scans every (user, series) and grants any missing reward + marks completed_series.
-- **#11 Series 6 in Goals**: Added `goal_all_variants_s6`. `seed_database` now backfills user_goals for all existing users when a new goal is added.
-- **#2 Card flip animations**:
-  - Card Detail modal: tap → 3D rotateY animation (450ms) with mid-flip texture swap.
-  - Collection grid thumbnail: long-press (250ms) → in-place flip animation. Single tap still opens modal. New `SimpleCardOwned` component manages local flip state per card.
-- **#4, #12** are already correct in code (REROLL_COST_MEDALS=1; Card Picker prize_label) — pending new EAS build to roll out to clients.
+## Completed (May 2, 2026 — bug bash + flip animations + ANR fix)
+- **#13 ANR fix (CRITICAL)**: Play Console showed `[libhwui.so] android::uirenderer::ThreadL... Input dispatching timed out` (Unresponsive GPU + Native lock contention).
+  - **Root cause**: Collection screen renders 486 cards inline via `.map()`. Each `SimpleCardOwned` called `useSoundPlayer('card_flip')` → `useAudioPlayer()` → allocated a **native MediaPlayer/ExoPlayer instance per card** synchronously on mount. On slower devices the main thread blocked >5s = ANR.
+  - **Fix**: Hoisted `cardFlipSound` to the screen level — now a single shared player. Wrapped `SimpleCard` and `SimpleCardOwned` in `React.memo` so non-changed cards skip re-renders on parent state changes.
+- **#3 Sound replay race fixed**: `seekTo→play` async chain.
+- **#5–9 Card art swaps fixed** + image-URL drift sync added.
+- **#10 Series 6 reward backfill**: gate fixed + retroactive migration.
+- **#11 Series 6 in Goals**: added + auto-backfilled to existing users.
+- **#2 Card flip animations**: 3D rotateY in modal (tap) + grid (long-press).
+- **#4, #12** correct in code; pending new EAS build to roll out.
 
 ### Future-proof series catalog (NEW)
 - New endpoint `GET /api/series/list` returning `{max_series, series: [{series, name, description, cards_required, has_reward}]}` — public, derived from `SERIES_CONFIG`.
