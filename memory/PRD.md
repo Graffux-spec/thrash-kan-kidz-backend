@@ -88,6 +88,11 @@ Mobile card-collecting app featuring thrash/death metal parody cards. Users open
   - Per-session attempt guard prevents repeated POSTs while user lingers on tab.
   - `data-testid` added: `series-milestone-overlay`, `series-milestone-share-btn`, `series-milestone-close-btn`.
 
+### Share-this-Card button (NEW, May 2 — virality boost)
+- "SHARE THIS CARD" button added to the Card Detail modal in Collection.
+- Uses `React.Native.Share.share()` with pre-filled metal-flavored caption (card name + variant + series + description + game URL) and the front image URL — every share becomes a free TikTok / Discord / IG ad.
+- `data-testid="card-share-btn"`.
+
 ## Completed (May 1, 2026 — Series 6 base cards complete + bug fixes + cloud build)
 
 ### Series 6 base cards — ALL 8 BANDS COMPLETE

@@ -242,6 +242,22 @@ export default function CollectionScreen() {
     }
   };
 
+  const shareCard = async (card: Card) => {
+    const variantBit = card.variant_name ? ` (${card.variant_name} Variant)` : '';
+    const seriesBit = card.series ? ` from Series ${card.series}` : '';
+    try {
+      await Share.share({
+        message:
+          `I just pulled ${card.name}${variantBit}${seriesBit} on THRASH KAN KIDZ! 🤘\n\n` +
+          `${card.description}\n\n` +
+          `Collect 'em all: https://thrashkankidz.com`,
+        url: card.front_image_url,
+      });
+    } catch (err) {
+      console.error('Card share failed:', err);
+    }
+  };
+
   const fetchTradeInEligible = async () => {
     if (!user) return;
     try {
@@ -609,6 +625,14 @@ export default function CollectionScreen() {
                   <Text style={styles.modalQuantity}>
                     Owned: x{selectedCard.quantity}
                   </Text>
+                  <TouchableOpacity
+                    style={styles.cardShareButton}
+                    onPress={() => shareCard(selectedCard.card)}
+                    data-testid="card-share-btn"
+                  >
+                    <Ionicons name="share-social" size={16} color="#0f0f1a" />
+                    <Text style={styles.cardShareButtonText}>SHARE THIS CARD</Text>
+                  </TouchableOpacity>
                 </View>
               </ScrollView>
             )}
@@ -1288,5 +1312,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '900',
     letterSpacing: 1,
+  },
+  // Share-this-card button inside Card Detail modal
+  cardShareButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFD700',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 16,
+    gap: 8,
+    alignSelf: 'stretch',
+  },
+  cardShareButtonText: {
+    color: '#0f0f1a',
+    fontSize: 13,
+    fontWeight: '900',
+    letterSpacing: 1.2,
   },
 });
